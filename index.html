@@ -2185,6 +2185,83 @@
         </div>
     </section>
 
+    <!-- Preview Bot -->
+    <section class="section" id="preview">
+        <div class="section-header reveal">
+            <div class="section-label">Anteprima</div>
+            <h2 class="section-title">Interfaccia del Bot</h2>
+        </div>
+
+        <div class="bot-preview reveal" style="max-width: 900px; margin: 0 auto; border-radius: 16px; overflow: hidden; box-shadow: 0 25px 80px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
+            <!-- Bot Header -->
+            <div style="background: linear-gradient(135deg, #0a0e17, #0d1220); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div style="width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, #638bff, #a78bfa); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white;">V</div>
+                    <div>
+                        <div style="font-size: 16px; font-weight: 700; color: #f4f7ff;">VaultSystemFx</div>
+                        <div style="font-size: 10px; color: #4a5568; text-transform: uppercase; letter-spacing: 0.1em;">Trading Bot</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; background: rgba(99,139,255,0.1); border: 1px solid rgba(99,139,255,0.3); border-radius: 50px; padding: 6px 14px;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: #34d399; box-shadow: 0 0 10px rgba(52,211,153,0.5); animation: pulse 2s infinite;"></div>
+                    <span style="font-size: 12px; font-weight: 600; color: #638bff;">Bot Attivo</span>
+                </div>
+            </div>
+
+            <!-- Bot Tabs -->
+            <div style="background: #0a0e17; display: flex; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 4px; overflow-x: auto;">
+                <div style="padding: 14px 18px; font-size: 13px; font-weight: 600; color: #638bff; border-bottom: 2px solid #638bff;">Dashboard</div>
+                <div style="padding: 14px 18px; font-size: 13px; color: #4a5568;">MT5</div>
+                <div style="padding: 14px 18px; font-size: 13px; color: #4a5568;">Simboli</div>
+                <div style="padding: 14px 18px; font-size: 13px; color: #4a5568;">Log</div>
+                <div style="padding: 14px 18px; font-size: 13px; color: #4a5568;">Guida</div>
+                <div style="padding: 14px 18px; font-size: 13px; color: #4a5568;">Telegram</div>
+            </div>
+
+            <!-- Bot Content -->
+            <div style="background: #06080d; padding: 24px; min-height: 300px;">
+                <!-- Stats Row -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px;">
+                    <div style="background: rgba(12,16,24,0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: 700; color: #34d399;">+12.4%</div>
+                        <div style="font-size: 11px; color: #4a5568; margin-top: 4px;">Profitto</div>
+                    </div>
+                    <div style="background: rgba(12,16,24,0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: 700; color: #f4f7ff;">47</div>
+                        <div style="font-size: 11px; color: #4a5568; margin-top: 4px;">Trade Totali</div>
+                    </div>
+                    <div style="background: rgba(12,16,24,0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: 700; color: #638bff;">78%</div>
+                        <div style="font-size: 11px; color: #4a5568; margin-top: 4px;">Win Rate</div>
+                    </div>
+                    <div style="background: rgba(12,16,24,0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 16px; text-align: center;">
+                        <div style="font-size: 24px; font-weight: 700; color: #a78bfa;">2.1</div>
+                        <div style="font-size: 11px; color: #4a5568; margin-top: 4px;">Risk/Reward</div>
+                    </div>
+                </div>
+
+                <!-- Chart Placeholder -->
+                <div style="background: rgba(12,16,24,0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px;">
+                    <div style="font-size: 14px; font-weight: 600; color: #f4f7ff; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                        <span style="color: #638bff;">&#x1F4C8;</span> Equity Curve
+                    </div>
+                    <div style="height: 120px; display: flex; align-items: flex-end; gap: 8px; padding: 10px 0;">
+                        <div style="flex: 1; background: linear-gradient(180deg, rgba(99,139,255,0.3), rgba(99,139,255,0.05)); height: 40%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="flex: 1; background: linear-gradient(180deg, rgba(99,139,255,0.3), rgba(99,139,255,0.05)); height: 55%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="flex: 1; background: linear-gradient(180deg, rgba(99,139,255,0.3), rgba(99,139,255,0.05)); height: 45%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="flex: 1; background: linear-gradient(180deg, rgba(99,139,255,0.3), rgba(99,139,255,0.05)); height: 70%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="flex: 1; background: linear-gradient(180deg, rgba(99,139,255,0.3), rgba(99,139,255,0.05)); height: 60%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="flex: 1; background: linear-gradient(180deg, rgba(99,139,255,0.3), rgba(99,139,255,0.05)); height: 75%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="flex: 1; background: linear-gradient(180deg, rgba(99,139,255,0.3), rgba(99,139,255,0.05)); height: 65%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="flex: 1; background: linear-gradient(180deg, rgba(52,211,153,0.4), rgba(52,211,153,0.1)); height: 85%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="flex: 1; background: linear-gradient(180deg, rgba(52,211,153,0.4), rgba(52,211,153,0.1)); height: 80%; border-radius: 4px 4px 0 0;"></div>
+                        <div style="flex: 1; background: linear-gradient(180deg, rgba(52,211,153,0.4), rgba(52,211,153,0.1)); height: 95%; border-radius: 4px 4px 0 0;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- FAQ -->
     <section class="section" id="faq">
         <div class="section-header reveal">

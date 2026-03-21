@@ -1691,7 +1691,7 @@
 
     </style>
 </head>
-<body>
+<body id="top">
     <!-- Loading Screen -->
     <div class="loader" id="loader">
         <img src="logo.png" alt="VaultSystemFx" class="loader-logo">
@@ -1724,7 +1724,7 @@
 
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
-        <a href="#" class="nav-logo">
+        <a href="#top" class="nav-logo">
             <img src="logo.png" alt="VaultSystemFx" class="nav-logo-icon">
             <span class="nav-logo-text">VaultSystemFx</span>
         </a>
@@ -2406,11 +2406,12 @@
             translatePage(savedLang);
         });
 
-        // Smooth scroll for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        // Smooth scroll for anchor links (exclude href="#" alone)
+        document.querySelectorAll('a[href^="#"]:not([href="#"])').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const href = this.getAttribute('href');
+                const target = document.querySelector(href);
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
@@ -2421,6 +2422,7 @@
         const translations = {
             it: {
                 // Navbar
+                'nav-requirements': 'Requisiti',
                 'nav-features': 'Funzionalit\u00e0',
                 'nav-how': 'Come Funziona',
                 'nav-reviews': 'Recensioni',
@@ -2520,6 +2522,7 @@
             },
             en: {
                 // Navbar
+                'nav-requirements': 'Requirements',
                 'nav-features': 'Features',
                 'nav-how': 'How It Works',
                 'nav-reviews': 'Reviews',
@@ -2633,10 +2636,11 @@
 
             // Navbar
             const navLinks = document.querySelectorAll('.nav-link:not(.nav-cta)');
-            if (navLinks[0]) navLinks[0].textContent = t['nav-features'];
-            if (navLinks[1]) navLinks[1].textContent = t['nav-how'];
-            if (navLinks[2]) navLinks[2].textContent = t['nav-reviews'];
-            if (navLinks[3]) navLinks[3].textContent = t['nav-faq'];
+            if (navLinks[0]) navLinks[0].textContent = t['nav-requirements'];
+            if (navLinks[1]) navLinks[1].textContent = t['nav-features'];
+            if (navLinks[2]) navLinks[2].textContent = t['nav-how'];
+            if (navLinks[3]) navLinks[3].textContent = t['nav-reviews'];
+            if (navLinks[4]) navLinks[4].textContent = t['nav-faq'];
             const navCta = document.querySelector('.nav-cta');
             if (navCta) navCta.innerHTML = t['nav-buy'] + ' &rarr;';
 
@@ -2812,10 +2816,11 @@
 
             // Mobile menu items
             const mobileLinks = document.querySelectorAll('.mobile-menu a:not([href="acquista.html"])');
-            if (mobileLinks[0]) mobileLinks[0].textContent = t['nav-features'];
-            if (mobileLinks[1]) mobileLinks[1].textContent = t['nav-how'];
-            if (mobileLinks[2]) mobileLinks[2].textContent = t['nav-reviews'];
-            if (mobileLinks[3]) mobileLinks[3].textContent = t['nav-faq'];
+            if (mobileLinks[0]) mobileLinks[0].textContent = t['nav-requirements'];
+            if (mobileLinks[1]) mobileLinks[1].textContent = t['nav-features'];
+            if (mobileLinks[2]) mobileLinks[2].textContent = t['nav-how'];
+            if (mobileLinks[3]) mobileLinks[3].textContent = t['nav-reviews'];
+            if (mobileLinks[4]) mobileLinks[4].textContent = t['nav-faq'];
             const mobileCta = document.querySelector('.mobile-menu a[href="acquista.html"]');
             if (mobileCta) mobileCta.textContent = t['nav-buy'];
 

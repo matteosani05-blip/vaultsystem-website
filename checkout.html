@@ -1247,9 +1247,10 @@ const DISCOUNT_CODES = {
                 updateSummary();
                 updateStripeButton();
 
-                // Se il prezzo è 0, nascondi pagamenti e mostra pulsante download
+                // Se il prezzo è 0, nascondi metodi pagamento e mostra pulsante download
                 if (currentPrice === 0) {
-                    document.querySelector('.payment-section').style.display = 'none';
+                    document.querySelector('.payment-methods').style.display = 'none';
+                    document.querySelector('.payment-title').style.display = 'none';
                     showFreeDownload();
                 }
             } else if (code === '') {
@@ -1278,7 +1279,10 @@ const DISCOUNT_CODES = {
             btn.onclick = applyDiscountCode;
 
             // Ripristina pagamenti se erano nascosti
-            document.querySelector('.payment-section').style.display = '';
+            document.querySelector('.payment-methods').style.display = '';
+            document.querySelector('.payment-title').style.display = '';
+            document.querySelector('.payment-container').innerHTML = document.querySelector('.payment-container').dataset.original || '';
+            location.reload(); // Ricarica per ripristinare i pannelli pagamento
 
             updateSummary();
             updateStripeButton();

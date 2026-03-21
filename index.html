@@ -1726,6 +1726,7 @@
         <a href="#features" onclick="closeMobileMenu()">Funzionalit&agrave;</a>
         <a href="#how-it-works" onclick="closeMobileMenu()">Come Funziona</a>
         <a href="#testimonials" onclick="closeMobileMenu()">Recensioni</a>
+        <a href="#preview" onclick="closeMobileMenu()">Anteprima</a>
         <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
         <a href="acquista.html" style="background: var(--gradient-main); padding: 14px 32px; border-radius: 12px;">Acquista Ora</a>
         <div class="lang-selector" style="margin-top: 20px; margin-left: 0;">
@@ -1746,6 +1747,7 @@
             <a href="#features" class="nav-link">Funzionalit&agrave;</a>
             <a href="#how-it-works" class="nav-link">Come Funziona</a>
             <a href="#testimonials" class="nav-link">Recensioni</a>
+            <a href="#preview" class="nav-link">Anteprima</a>
             <a href="#faq" class="nav-link">FAQ</a>
             <a href="acquista.html" class="nav-link nav-cta">Acquista Ora &rarr;</a>
             <div class="lang-selector">
@@ -2589,6 +2591,7 @@
                 'nav-features': 'Funzionalit\u00e0',
                 'nav-how': 'Come Funziona',
                 'nav-reviews': 'Recensioni',
+                'nav-preview': 'Anteprima',
                 'nav-faq': 'FAQ',
                 'nav-buy': 'Acquista Ora',
                 // Hero
@@ -2693,6 +2696,7 @@
                 'nav-features': 'Features',
                 'nav-how': 'How It Works',
                 'nav-reviews': 'Reviews',
+                'nav-preview': 'Preview',
                 'nav-faq': 'FAQ',
                 'nav-buy': 'Buy Now',
                 // Hero
@@ -2811,7 +2815,8 @@
             if (navLinks[1]) navLinks[1].textContent = t['nav-features'];
             if (navLinks[2]) navLinks[2].textContent = t['nav-how'];
             if (navLinks[3]) navLinks[3].textContent = t['nav-reviews'];
-            if (navLinks[4]) navLinks[4].textContent = t['nav-faq'];
+            if (navLinks[4]) navLinks[4].textContent = t['nav-preview'];
+            if (navLinks[5]) navLinks[5].textContent = t['nav-faq'];
             const navCta = document.querySelector('.nav-cta');
             if (navCta) navCta.innerHTML = t['nav-buy'] + ' &rarr;';
 
@@ -2991,7 +2996,8 @@
             if (mobileLinks[1]) mobileLinks[1].textContent = t['nav-features'];
             if (mobileLinks[2]) mobileLinks[2].textContent = t['nav-how'];
             if (mobileLinks[3]) mobileLinks[3].textContent = t['nav-reviews'];
-            if (mobileLinks[4]) mobileLinks[4].textContent = t['nav-faq'];
+            if (mobileLinks[4]) mobileLinks[4].textContent = t['nav-preview'];
+            if (mobileLinks[5]) mobileLinks[5].textContent = t['nav-faq'];
             const mobileCta = document.querySelector('.mobile-menu a[href="acquista.html"]');
             if (mobileCta) mobileCta.textContent = t['nav-buy'];
 

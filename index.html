@@ -267,6 +267,11 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
+        .nav-link.active {
+            color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
         .nav-cta {
             background: var(--gradient-main);
             color: white !important;
@@ -2299,6 +2304,28 @@
             } else {
                 navbar.classList.remove('scrolled');
             }
+        });
+
+        // Active section highlight in navbar
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link:not(.nav-cta)');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
         });
 
         // Create particles

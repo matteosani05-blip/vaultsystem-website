@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - VaultSystemFx</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #030508;
+            --bg-secondary: #080c14;
+            --bg-card: rgba(10, 14, 22, 0.8);
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-glow: rgba(99, 102, 241, 0.4);
+            --text-primary: #f8faff;
+            --text-secondary: #94a3b8;
+            --text-muted: #475569;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-success: #10b981;
+            --accent-gold: #f59e0b;
+            --accent-crypto: #f7931a;
+            --gradient-main: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --glow-primary: rgba(99, 102, 241, 0.5);
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .bg-effects {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .bg-orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, var(--accent-primary), transparent 70%); top: -200px; right: -100px; animation-delay: 0s; }
+        .bg-orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, var(--accent-secondary), transparent 70%); bottom: -150px; left: -100px; animation-delay: -7s; }
+        .bg-orb-3 { width: 350px; height: 350px; background: radial-gradient(circle, #06b6d4, transparent 70%); top: 50%; left: 50%; animation-delay: -14s; }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -30px) scale(1.1); }
+            50% { transform: translate(-30px, 50px) scale(0.95); }
+            75% { transform: translate(40px, 20px) scale(1.05); }
+        }
+
+        /* Particles */
+        .particles { position: absolute; inset: 0; overflow: hidden; }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleRise 8s ease-in-out infinite;
+        }
+        @keyframes particleRise {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateY(-100px) scale(1); }
+        }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(3, 5, 8, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(99, 102, 241, 0.4);
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover { color: var(--text-primary); }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .lang-selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lang-btn {
+            padding: 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover { color: var(--text-primary); }
+        .lang-btn.active { color: var(--text-primary); }
+        .lang-divider { color: var(--text-muted); font-size: 13px; }
+
+        .main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 48px 24px;
+            padding-top: 100px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 48px;
+        }
+
+        .form-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 36px;
+        }
+
+        .form-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .form-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 15px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .form-input::placeholder { color: var(--text-muted); }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .plan-section {
+            margin-top: 32px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .plan-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .plan-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .plan-option {
+            position: relative;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-subtle);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .plan-option:hover { border-color: rgba(99, 102, 241, 0.3); }
+
+        .plan-option.selected {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.08);
+        }
+
+        .plan-option input { position: absolute; opacity: 0; }
+
+        .plan-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .plan-name { font-size: 16px; font-weight: 700; }
+
+        .plan-price {
+            font-size: 24px;
+            font-weight: 900;
+            font-family: var(--font-mono);
+            color: var(--accent-primary);
+        }
+
+        .plan-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .plan-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 100px;
+            margin-left: 10px;
+            text-transform: uppercase;
+        }
+
+        .plan-radio {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border-subtle);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .plan-option.selected .plan-radio {
+            border-color: var(--accent-primary);
+            background: var(--accent-primary);
+        }
+
+        .plan-radio::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .plan-option.selected .plan-radio::after { opacity: 1; }
+
+        /* Discount Code */
+        .discount-box {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .discount-input-wrapper {
+            display: flex;
+            gap: 12px;
+        }
+
+        .discount-input {
+            flex: 1;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .discount-apply-btn {
+            padding: 14px 24px;
+            background: var(--gradient-main);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .discount-apply-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--glow-primary);
+        }
+
+        .discount-message {
+            margin-top: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .discount-message.success {
+            display: block;
+            color: var(--accent-success);
+        }
+
+        .discount-message.error {
+            display: block;
+            color: #ef4444;
+        }
+
+        .price-original {
+            text-decoration: line-through;
+            color: var(--text-muted);
+            font-size: 18px;
+            margin-right: 12px;
+        }
+
+        .discount-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 100px;
+            margin-left: 10px;
+        }
+
+        /* Summary Section */
+        .summary-section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 32px;
+            height: fit-content;
+            position: sticky;
+            top: 24px;
+        }
+
+        .summary-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .summary-item-label { font-size: 14px; color: var(--text-secondary); }
+        .summary-item-value { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .summary-total-label { font-size: 16px; font-weight: 700; }
+
+        .summary-total-value {
+            font-size: 28px;
+            font-weight: 900;
+            font-family: var(--font-mono);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Payment Methods */
+        .payment-section {
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .payment-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .payment-method {
+            flex: 1;
+            padding: 14px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-subtle);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .payment-method:hover { border-color: rgba(99, 102, 241, 0.3); }
+
+        .payment-method.active {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.08);
+        }
+
+        .payment-method-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .payment-method-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .payment-method.active .payment-method-label {
+            color: var(--accent-primary);
+        }
+
+        .payment-container {
+            min-height: 150px;
+        }
+
+        .payment-panel {
+            display: none;
+        }
+
+        .payment-panel.active {
+            display: block;
+        }
+
+        /* Card Icons */
+        .card-icons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            padding: 8px 16px;
+            background: white;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .card-icon.visa { color: #1a1f71; }
+        .card-icon.mastercard { color: #eb001b; }
+        .card-icon.amex { color: #006fcf; }
+
+        /* Crypto Section */
+        .crypto-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .crypto-option {
+            padding: 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .crypto-option:hover {
+            border-color: var(--accent-crypto);
+        }
+
+        .crypto-option.selected {
+            border-color: var(--accent-crypto);
+            background: rgba(247, 147, 26, 0.1);
+        }
+
+        .crypto-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .crypto-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .crypto-address-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+
+        .crypto-address-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .crypto-address {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--accent-crypto);
+            word-break: break-all;
+            background: rgba(247, 147, 26, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .crypto-copy-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #f7931a, #ffab40);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .crypto-copy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(247, 147, 26, 0.3);
+        }
+
+        .crypto-note {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 16px;
+            line-height: 1.6;
+        }
+
+        .payment-secure {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 16px 24px;
+            min-width: 300px;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: toastIn 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .toast.error {
+            border-color: rgba(239, 68, 68, 0.5);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), var(--bg-card));
+        }
+
+        .toast.success {
+            border-color: rgba(16, 185, 129, 0.5);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), var(--bg-card));
+        }
+
+        .toast.info {
+            border-color: rgba(99, 102, 241, 0.5);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), var(--bg-card));
+        }
+
+        .toast-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .toast-message {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .toast-close:hover {
+            color: var(--text-primary);
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes toastOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100px); }
+        }
+
+        /* Success Overlay */
+        .success-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 5, 8, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-overlay.show { display: flex; }
+
+        .success-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 32px;
+            padding: 48px;
+            text-align: center;
+            max-width: 480px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gradient-success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 24px;
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .success-title { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+
+        .success-desc {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .success-email {
+            display: inline-block;
+            padding: 12px 24px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            font-family: var(--font-mono);
+            font-size: 15px;
+            color: var(--accent-primary);
+            margin-bottom: 24px;
+        }
+
+        .success-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background: var(--gradient-main);
+            color: white;
+            font-weight: 700;
+            font-size: 15px;
+            border: none;
+            border-radius: 14px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .success-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--glow-primary);
+        }
+
+        .footer {
+            padding: 24px;
+            text-align: center;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-text {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .footer-social a {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(10, 14, 22, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .footer-social a::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .footer-social a:hover {
+            border-color: transparent;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(131, 58, 180, 0.25);
+        }
+
+        .footer-social a:hover::before {
+            opacity: 1;
+        }
+
+        .footer-social a svg {
+            transition: transform 0.3s ease;
+        }
+
+        .footer-social a:hover svg {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 900px) {
+            .main {
+                grid-template-columns: 1fr;
+                padding: 24px 16px;
+            }
+            .summary-section { position: relative; top: 0; order: -1; }
+            .form-row { grid-template-columns: 1fr; }
+            .crypto-options { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            body { font-size: 15px; }
+            .header {
+                padding: 12px 16px;
+                gap: 10px;
+            }
+            .logo-icon { width: 32px; height: 32px; }
+            .logo-text { font-size: 16px; }
+            .logo { gap: 8px; }
+            .header-right { gap: 10px; }
+            .back-link {
+                padding: 6px 10px;
+                font-size: 13px;
+                background: rgba(255,255,255,0.05);
+                border-radius: 8px;
+            }
+            .back-text { display: none; }
+            .back-arrow { font-size: 16px; }
+            .lang-selector { gap: 4px; }
+            .lang-btn { font-size: 11px; }
+            .lang-divider { font-size: 11px; }
+            .main { padding: 16px; padding-top: 80px; gap: 20px; }
+            .form-section, .summary-section { padding: 20px 16px; }
+            .form-title { font-size: 18px; }
+            .form-input { padding: 14px; font-size: 14px; }
+            .payment-method { padding: 14px 8px; }
+            .payment-method-label { font-size: 11px; }
+            .crypto-options { grid-template-columns: repeat(2, 1fr); }
+            .crypto-option { padding: 12px 8px; }
+            .crypto-option-name { font-size: 11px; }
+            .summary-total-value { font-size: 28px; }
+            .submit-btn { padding: 16px; font-size: 15px; }
+            .footer { padding: 24px 16px; }
+            .footer-disclaimer { font-size: 11px; }
+            .discount-input-wrap { flex-direction: column; }
+            .discount-input-wrap input { width: 100%; }
+            .discount-input-wrap button { width: 100%; }
+        }
+
+        @media (max-width: 400px) {
+            .logo-text { display: none; }
+            .payment-methods { grid-template-columns: repeat(2, 1fr); }
+            .crypto-options { grid-template-columns: 1fr 1fr; }
+            .summary-total-value { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="bg-effects">
+        <div class="bg-grid"></div>
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+        <div class="particles">
+            <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+            <div class="particle" style="left: 20%; animation-delay: 1s;"></div>
+            <div class="particle" style="left: 35%; animation-delay: 2s;"></div>
+            <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+            <div class="particle" style="left: 65%; animation-delay: 4s;"></div>
+            <div class="particle" style="left: 80%; animation-delay: 5s;"></div>
+            <div class="particle" style="left: 90%; animation-delay: 6s;"></div>
+        </div>
+    </div>
+
+    <header class="header">
+        <a href="index.html" class="logo">
+            <img src="logo.png" alt="VaultSystemFx" class="logo-icon">
+            <span class="logo-text">VaultSystemFx</span>
+        </a>
+        <div class="header-right">
+            <div class="lang-selector">
+                <button class="lang-btn active" onclick="setLanguage('it')">ITA</button>
+                <span class="lang-divider">|</span>
+                <button class="lang-btn" onclick="setLanguage('en')">ENG</button>
+            </div>
+            <a href="acquista.html" class="back-link" data-i18n="back-link">
+                <span class="back-arrow">&larr;</span>
+                <span class="back-text">Torna indietro</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="form-section">
+            <h1 class="form-title">Completa l'acquisto</h1>
+            <p class="form-subtitle">Inserisci i tuoi dati per ricevere VaultSystemFx via email</p>
+
+            <form id="checkout-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Nome *</label>
+                        <input type="text" class="form-input" id="firstName" placeholder="Mario" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cognome *</label>
+                        <input type="text" class="form-input" id="lastName" placeholder="Rossi" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email *</label>
+                    <input type="email" class="form-input" id="email" placeholder="mario.rossi@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Conferma Email *</label>
+                    <input type="email" class="form-input" id="emailConfirm" placeholder="Conferma la tua email" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Telegram Username (per supporto)</label>
+                    <input type="text" class="form-input" id="telegram" placeholder="@tuousername">
+                </div>
+
+                <div class="plan-section">
+                    <h3 class="plan-title">Codice Sconto</h3>
+                    <div class="discount-box">
+                        <div class="discount-input-wrapper">
+                            <input type="text" class="form-input discount-input" id="discountCode" placeholder="Inserisci codice sconto">
+                            <button type="button" class="discount-apply-btn" id="applyDiscount">Applica</button>
+                        </div>
+                        <div class="discount-message" id="discountMessage"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="summary-section">
+            <h2 class="summary-title">Riepilogo Ordine</h2>
+
+            <div class="summary-item">
+                <span class="summary-item-label">Prodotto</span>
+                <span class="summary-item-value">VaultSystemFx</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-item-label">Piano</span>
+                <span class="summary-item-value" id="summary-plan">Licenza VaultSystemFx</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-item-label">Tipo</span>
+                <span class="summary-item-value">Pagamento unico</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-item-label">Prezzo originale</span>
+                <span class="summary-item-value" style="text-decoration: line-through; color: var(--text-muted);">&euro;799</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-item-label">Sconto</span>
+                <span class="summary-item-value" style="color: #10b981; font-weight: 700;">-&euro;300 (38%)</span>
+            </div>
+
+            <div class="summary-total">
+                <span class="summary-total-label">Totale</span>
+                <span class="summary-total-value" id="summary-total">&euro;499</span>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="payment-section">
+                <div class="payment-title">Metodo di pagamento</div>
+
+                <div class="payment-methods">
+                    <div class="payment-method active" data-method="card">
+                        <div class="payment-method-icon">&#x1F4B3;</div>
+                        <div class="payment-method-label">Carta</div>
+                    </div>
+                    <div class="payment-method" data-method="paypal">
+                        <div class="payment-method-icon">&#x1F4B0;</div>
+                        <div class="payment-method-label">PayPal</div>
+                    </div>
+                    <div class="payment-method" data-method="crypto">
+                        <div class="payment-method-icon">&#x20BF;</div>
+                        <div class="payment-method-label">Crypto</div>
+                    </div>
+                </div>
+
+                <div class="payment-container">
+                    <!-- Card Payment (Stripe) -->
+                    <div class="payment-panel active" id="panel-card">
+                        <div class="card-icons">
+                            <span class="card-icon visa">VISA</span>
+                            <span class="card-icon mastercard">MC</span>
+                            <span class="card-icon amex">AMEX</span>
+                        </div>
+                        <div id="stripe-card-element" style="padding: 14px 18px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 12px; margin-bottom: 16px;"></div>
+                        <div id="stripe-card-errors" style="color: #ef4444; font-size: 14px; margin-bottom: 12px;"></div>
+                        <button type="button" id="stripe-pay-btn" class="stripe-pay-btn" style="width: 100%; padding: 16px; background: var(--gradient-main); border: none; border-radius: 12px; color: white; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+                            Paga €499 con Carta
+                        </button>
+                    </div>
+
+                    <!-- PayPal -->
+                    <div class="payment-panel" id="panel-paypal">
+                        <div id="paypal-button-container"></div>
+                    </div>
+
+                    <!-- Crypto -->
+                    <div class="payment-panel" id="panel-crypto">
+                        <div class="crypto-options">
+                            <div class="crypto-option selected" data-crypto="btc">
+                                <div class="crypto-icon">&#x20BF;</div>
+                                <div class="crypto-name">Bitcoin</div>
+                            </div>
+                            <div class="crypto-option" data-crypto="eth">
+                                <div class="crypto-icon">&#x039E;</div>
+                                <div class="crypto-name">Ethereum</div>
+                            </div>
+                            <div class="crypto-option" data-crypto="usdt">
+                                <div class="crypto-icon">&#x24;</div>
+                                <div class="crypto-name">USDT</div>
+                            </div>
+                        </div>
+
+                        <div class="crypto-address-box">
+                            <div class="crypto-address-label">Invia <span id="crypto-amount">499 EUR</span> in <span id="crypto-currency">BTC</span> a:</div>
+                            <div class="crypto-address" id="crypto-address">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
+                            <button type="button" class="crypto-copy-btn" onclick="copyAddress()">&#x1F4CB; Copia Indirizzo</button>
+                        </div>
+
+                        <p class="crypto-note">
+                            Dopo il pagamento, invia la conferma (screenshot/TxID) a<br>
+                            <a href="https://t.me/Tamberax" target="_blank" style="color: var(--accent-primary);">@Tamberax su Telegram</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="payment-secure">
+                    <span>&#x1F512;</span>
+                    <span>Pagamento sicuro e crittografato</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="success-overlay">
+        <div class="success-box">
+            <div class="success-icon">&#x2713;</div>
+            <h2 class="success-title">Acquisto Completato!</h2>
+            <p class="success-desc">
+                Grazie per aver acquistato VaultSystemFx!<br>
+                Riceverai il link per il download a:
+            </p>
+            <div class="success-email" id="success-email">email@esempio.com</div>
+            <p class="success-desc">
+                Controlla anche la cartella spam.<br>Per assistenza contattaci via email.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+                <a href="mailto:vaultsystemltd@gmail.com" class="success-btn" style="background: var(--gradient-main);">
+                    ✉️ Contattaci via Email
+                </a>
+                <a href="index.html" class="success-btn" style="background: var(--bg-secondary); border: 1px solid var(--border-subtle);">
+                    ← Torna alla Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-social">
+            <a href="https://instagram.com/vaultsystem" target="_blank" rel="noopener noreferrer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+                <span>@vaultsystem</span>
+            </a>
+        </div>
+        <p class="footer-text">
+            <strong>Disclaimer:</strong> Il trading comporta dei rischi. Utilizza capitali che sei disposto a rischiare.
+        </p>
+    </footer>
+
+    <!-- Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=ASGHFj5yb9qw-VvWcwrD59zI3VK1hm_VPFcV7rXnC35949kBmmhAU1DSQpenXfKGjMcOUZQbuiVtWYkC&currency=EUR"></script>
+
+    <script>
+        // ══════════════════════════════════════════════════════════════
+        // CONFIGURAZIONE - MODIFICA QUESTI VALORI
+        // ══════════════════════════════════════════════════════════════
+
+        // URL del tuo backend (dopo il deploy su Vercel/Railway)
+        const BACKEND_URL = 'https://vaultsystemfx-backend.vercel.app';
+
+        // Indirizzi crypto - SOSTITUISCI CON I TUOI
+        const cryptoAddresses = {
+            btc: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
+            eth: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
+            usdt: 'TN9RRaXkCFtTXRso2GdTZxSxxwufNfPRag'
+        };
+
+        // Stripe Publishable Key
+        const STRIPE_PK = 'pk_live_51TCTc6GzOgTLXR0ez5U2sHWbZDqbRO1ZSNqDGvD5yVdv71OYYrFh3HMGE4AvYJrqsHiDsqKAOCLqwgOIiY3oTKsj00kYS8lsCt';
+
+        // ══════════════════════════════════════════════════════════════
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            const icons = {
+                error: '⚠️',
+                success: '✅',
+                info: 'ℹ️'
+            };
+
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type]}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'toastOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        let currentPrice = 499;
+        let originalPrice = 799;
+        let currentPlan = 'standard';
+        let currentCrypto = 'btc';
+        let currentPaymentMethod = 'card';
+        let discountApplied = false;
+
+const DISCOUNT_CODES = {
+            'MATTH50': { price: 150, message: '🎉 Codice applicato! Sconto del 70%' },
+            'FREE100': { price: 1, message: '🎉 Codice applicato! Prodotto gratuito' }
+        };
+
+        // Discount code
+        document.getElementById('applyDiscount').addEventListener('click', applyDiscountCode);
+        document.getElementById('discountCode').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                applyDiscountCode();
+            }
+        });
+
+        function applyDiscountCode() {
+            const codeInput = document.getElementById('discountCode');
+            const message = document.getElementById('discountMessage');
+            const code = codeInput.value.trim().toUpperCase();
+
+            if (DISCOUNT_CODES[code]) {
+                currentPrice = DISCOUNT_CODES[code].price;
+                discountApplied = true;
+                message.textContent = DISCOUNT_CODES[code].message;
+                message.className = 'discount-message success';
+                showToast(DISCOUNT_CODES[code].message, 'success');
+
+                const btn = document.getElementById('applyDiscount');
+                btn.textContent = 'Rimuovi';
+                btn.onclick = removeDiscount;
+
+                updateSummary();
+                updateStripeButton();
+
+                // Se il prezzo è 0, nascondi pagamenti e mostra pulsante download
+                if (currentPrice === 0) {
+                    document.querySelector('.payment-section').style.display = 'none';
+                    showFreeDownload();
+                }
+            } else if (code === '') {
+                message.textContent = 'Inserisci un codice sconto';
+                message.className = 'discount-message error';
+                showToast('Inserisci un codice sconto', 'error');
+            } else {
+                message.textContent = 'Codice non valido';
+                message.className = 'discount-message error';
+                showToast('Codice sconto non valido', 'error');
+            }
+        }
+
+        function removeDiscount() {
+            currentPrice = 499;
+            discountApplied = false;
+
+            const codeInput = document.getElementById('discountCode');
+            const message = document.getElementById('discountMessage');
+            const btn = document.getElementById('applyDiscount');
+
+            codeInput.value = '';
+            message.textContent = '';
+            message.className = 'discount-message';
+            btn.textContent = 'Applica';
+            btn.onclick = applyDiscountCode;
+
+            // Ripristina pagamenti se erano nascosti
+            document.querySelector('.payment-section').style.display = '';
+
+            updateSummary();
+            updateStripeButton();
+            showToast('Codice sconto rimosso', 'info');
+        }
+
+        function showFreeDownload() {
+            const container = document.querySelector('.payment-container');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <p style="color: var(--accent-success); font-weight: 700; margin-bottom: 16px;">Prodotto gratuito! Clicca per completare.</p>
+                    <button onclick="completeFreeOrder()" style="width: 100%; padding: 16px; background: var(--gradient-success); border: none; border-radius: 12px; color: white; font-size: 16px; font-weight: 700; cursor: pointer;">
+                        Ottieni Gratis
+                    </button>
+                </div>
+            `;
+        }
+
+        function completeFreeOrder() {
+            if (!validateForm()) return;
+            completeOrder('FREE-' + Date.now());
+        }
+
+        function updateSummary() {
+            const planText = discountApplied ? 'Licenza VaultSystemFx (Scontato)' : 'Licenza VaultSystemFx';
+            document.getElementById('summary-plan').textContent = planText;
+
+            const totalEl = document.getElementById('summary-total');
+            if (discountApplied) {
+                totalEl.innerHTML = '<span class="price-original">€' + originalPrice + '</span>€' + currentPrice;
+            } else {
+                totalEl.textContent = '€' + currentPrice;
+            }
+            document.getElementById('crypto-amount').textContent = currentPrice + ' EUR';
+        }
+
+        // Payment method selection
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        const paymentPanels = document.querySelectorAll('.payment-panel');
+
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', () => {
+                paymentMethods.forEach(m => m.classList.remove('active'));
+                method.classList.add('active');
+                currentPaymentMethod = method.dataset.method;
+
+                paymentPanels.forEach(panel => panel.classList.remove('active'));
+                document.getElementById('panel-' + currentPaymentMethod).classList.add('active');
+            });
+        });
+
+        // Crypto selection
+        const cryptoOptions = document.querySelectorAll('.crypto-option');
+        cryptoOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                cryptoOptions.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                currentCrypto = option.dataset.crypto;
+                document.getElementById('crypto-currency').textContent = currentCrypto.toUpperCase();
+                document.getElementById('crypto-address').textContent = cryptoAddresses[currentCrypto];
+            });
+        });
+
+        function copyAddress() {
+            const address = document.getElementById('crypto-address').textContent;
+            navigator.clipboard.writeText(address).then(() => {
+                const btn = document.querySelector('.crypto-copy-btn');
+                btn.textContent = '✓ Copiato!';
+                setTimeout(() => {
+                    btn.innerHTML = '&#x1F4CB; Copia Indirizzo';
+                }, 2000);
+            });
+        }
+
+        // Form validation
+        function validateForm() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const emailConfirm = document.getElementById('emailConfirm').value.trim();
+
+            if (!firstName || !lastName || !email || !emailConfirm) {
+                showToast('Per favore compila tutti i campi obbligatori.', 'error');
+                return false;
+            }
+
+            if (email !== emailConfirm) {
+                showToast('Le email non corrispondono.', 'error');
+                return false;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showToast('Inserisci un indirizzo email valido.', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Invia ordine al backend
+        async function completeOrder(transactionId) {
+            const orderData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                telegram: document.getElementById('telegram').value.trim(),
+                plan: currentPlan,
+                amount: currentPrice,
+                transactionId: transactionId
+            };
+
+            try {
+                const response = await fetch(BACKEND_URL + '/api/complete-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+
+                const result = await response.json();
+                console.log('Backend response:', result);
+
+                if (result.success) {
+                    showSuccess();
+                } else {
+                    showSuccess(); // Mostra comunque successo, email potrebbe arrivare dopo
+                    console.error('Backend error:', result.error);
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                showSuccess(); // Mostra successo, il pagamento è andato comunque
+            }
+        }
+
+        // Invia ordine crypto al backend
+        async function submitCryptoOrder() {
+            if (!validateForm()) return;
+
+            const orderData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                telegram: document.getElementById('telegram').value.trim(),
+                plan: currentPlan,
+                amount: currentPrice,
+                crypto: currentCrypto,
+                txId: prompt('Inserisci il Transaction ID (TxID) del pagamento crypto:')
+            };
+
+            try {
+                const response = await fetch(BACKEND_URL + '/api/crypto-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Ordine ricevuto! Verificheremo il pagamento e ti invieremo il bot via email.', 'success');
+                    showSuccess();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Ordine registrato. Ti contatteremo via email per conferma.', 'success');
+            }
+        }
+
+        function showSuccess() {
+            const email = document.getElementById('email').value;
+            document.getElementById('success-email').textContent = email;
+            document.getElementById('success-overlay').classList.add('show');
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        // STRIPE - Pagamento con Carta
+        // ══════════════════════════════════════════════════════════════
+        const stripe = Stripe(STRIPE_PK);
+        const elements = stripe.elements();
+        const cardElement = elements.create('card', {
+            style: {
+                base: {
+                    color: '#f8faff',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
+                    fontSize: '16px',
+                    '::placeholder': { color: '#475569' }
+                },
+                invalid: { color: '#ef4444' }
+            }
+        });
+        cardElement.mount('#stripe-card-element');
+
+        // Mostra errori carta
+        cardElement.on('change', function(event) {
+            const displayError = document.getElementById('stripe-card-errors');
+            displayError.textContent = event.error ? event.error.message : '';
+        });
+
+        // Aggiorna prezzo nel pulsante
+        function updateStripeButton() {
+            document.getElementById('stripe-pay-btn').textContent = 'Paga €' + currentPrice + ' con Carta';
+        }
+
+        // Pagamento Stripe
+        document.getElementById('stripe-pay-btn').addEventListener('click', async function() {
+            if (!validateForm()) return;
+
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Elaborazione...';
+
+            try {
+                // Crea PaymentIntent sul backend
+                const response = await fetch(BACKEND_URL + '/api/create-payment-intent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: currentPrice,
+                        email: document.getElementById('email').value.trim(),
+                        firstName: document.getElementById('firstName').value.trim(),
+                        lastName: document.getElementById('lastName').value.trim()
+                    })
+                });
+
+                const { clientSecret, error } = await response.json();
+                if (error) throw new Error(error);
+
+                // Conferma pagamento
+                const result = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value,
+                            email: document.getElementById('email').value
+                        }
+                    }
+                });
+
+                if (result.error) {
+                    document.getElementById('stripe-card-errors').textContent = result.error.message;
+                    btn.disabled = false;
+                    updateStripeButton();
+                } else if (result.paymentIntent.status === 'succeeded') {
+                    console.log('Stripe payment succeeded:', result.paymentIntent.id);
+                    completeOrder(result.paymentIntent.id);
+                }
+
+            } catch (err) {
+                console.error('Stripe error:', err);
+                document.getElementById('stripe-card-errors').textContent = 'Errore nel pagamento. Riprova.';
+                btn.disabled = false;
+                updateStripeButton();
+            }
+        });
+
+        // ══════════════════════════════════════════════════════════════
+        // PayPal Buttons
+        // ══════════════════════════════════════════════════════════════
+        if (typeof paypal !== 'undefined') {
+            paypal.Buttons({
+                style: { shape: 'pill', color: 'blue', layout: 'vertical', label: 'paypal' },
+                createOrder: function(data, actions) {
+                    if (!validateForm()) return Promise.reject();
+                    return actions.order.create({
+                        purchase_units: [{
+                            description: 'VaultSystemFx - Licenza' + (discountApplied ? ' (Codice Sconto)' : ''),
+                            amount: { currency_code: 'EUR', value: currentPrice.toString() }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        console.log('Payment completed:', details);
+                        completeOrder(details.id);
+                    });
+                },
+                onError: function(err) {
+                    console.error('Payment error:', err);
+                    showToast('Errore nel pagamento. Riprova.', 'error');
+                }
+            }).render('#paypal-button-container');
+        }
+
+        // Translation System
+        const translations = {
+            it: {
+                'back-link': '← Torna indietro',
+                'form-title': "Completa l'acquisto",
+                'form-subtitle': 'Inserisci i tuoi dati per ricevere VaultSystemFx via email',
+                'label-name': 'Nome *',
+                'label-surname': 'Cognome *',
+                'label-email': 'Email *',
+                'label-email-confirm': 'Conferma Email *',
+                'label-telegram': 'Telegram Username (per supporto)',
+                'placeholder-name': 'Mario',
+                'placeholder-surname': 'Rossi',
+                'placeholder-email': 'mario.rossi@email.com',
+                'placeholder-email-confirm': 'Conferma la tua email',
+                'discount-title': 'Codice Sconto',
+                'discount-placeholder': 'Inserisci codice sconto',
+                'discount-apply': 'Applica',
+                'summary-title': 'Riepilogo Ordine',
+                'summary-product': 'Prodotto',
+                'summary-plan': 'Piano',
+                'summary-type': 'Tipo',
+                'summary-type-value': 'Pagamento unico',
+                'summary-original': 'Prezzo originale',
+                'summary-discount': 'Sconto',
+                'summary-total': 'Totale',
+                'payment-title': 'Metodo di pagamento',
+                'payment-card': 'Carta',
+                'payment-paypal': 'PayPal',
+                'payment-crypto': 'Crypto',
+                'pay-btn': 'Paga €{price} con Carta',
+                'crypto-send': 'Invia',
+                'crypto-to': 'a:',
+                'crypto-copy': '📋 Copia Indirizzo',
+                'crypto-note': 'Dopo il pagamento, invia la conferma (screenshot/TxID) a',
+                'crypto-note-tg': '@Tamberax su Telegram',
+                'payment-secure': 'Pagamento sicuro e crittografato',
+                'success-title': 'Acquisto Completato!',
+                'success-desc1': 'Grazie per aver acquistato VaultSystemFx!<br>Riceverai il link per il download a:',
+                'success-desc2': 'Controlla anche la cartella spam.<br>Per assistenza contattaci via email.',
+                'success-btn-email': '✉️ Contattaci via Email',
+                'success-btn-home': '← Torna alla Home',
+                'footer-disclaimer': '<strong>Disclaimer:</strong> Il trading comporta dei rischi. Utilizza capitali che sei disposto a rischiare.'
+            },
+            en: {
+                'back-link': '← Go Back',
+                'form-title': 'Complete your purchase',
+                'form-subtitle': 'Enter your details to receive VaultSystemFx via email',
+                'label-name': 'First Name *',
+                'label-surname': 'Last Name *',
+                'label-email': 'Email *',
+                'label-email-confirm': 'Confirm Email *',
+                'label-telegram': 'Telegram Username (for support)',
+                'placeholder-name': 'John',
+                'placeholder-surname': 'Doe',
+                'placeholder-email': 'john.doe@email.com',
+                'placeholder-email-confirm': 'Confirm your email',
+                'discount-title': 'Discount Code',
+                'discount-placeholder': 'Enter discount code',
+                'discount-apply': 'Apply',
+                'summary-title': 'Order Summary',
+                'summary-product': 'Product',
+                'summary-plan': 'Plan',
+                'summary-type': 'Type',
+                'summary-type-value': 'One-time payment',
+                'summary-original': 'Original price',
+                'summary-discount': 'Discount',
+                'summary-total': 'Total',
+                'payment-title': 'Payment method',
+                'payment-card': 'Card',
+                'payment-paypal': 'PayPal',
+                'payment-crypto': 'Crypto',
+                'pay-btn': 'Pay €{price} with Card',
+                'crypto-send': 'Send',
+                'crypto-to': 'to:',
+                'crypto-copy': '📋 Copy Address',
+                'crypto-note': 'After payment, send confirmation (screenshot/TxID) to',
+                'crypto-note-tg': '@Tamberax on Telegram',
+                'payment-secure': 'Secure and encrypted payment',
+                'success-title': 'Purchase Completed!',
+                'success-desc1': 'Thank you for purchasing VaultSystemFx!<br>You will receive the download link at:',
+                'success-desc2': 'Check your spam folder too.<br>Contact us via email for support.',
+                'success-btn-email': '✉️ Contact us via Email',
+                'success-btn-home': '← Back to Home',
+                'footer-disclaimer': '<strong>Disclaimer:</strong> Trading involves risks. Only invest capital you are willing to risk.'
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'it';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === (lang === 'it' ? 'ITA' : 'ENG'));
+            });
+
+            applyTranslations();
+        }
+
+        function applyTranslations() {
+            const t = translations[currentLang];
+
+            // Back link
+            const backLink = document.querySelector('[data-i18n="back-link"]');
+            if (backLink) backLink.innerHTML = t['back-link'];
+
+            // Form
+            document.querySelector('.form-title').textContent = t['form-title'];
+            document.querySelector('.form-subtitle').textContent = t['form-subtitle'];
+
+            // Labels
+            const labels = document.querySelectorAll('.form-label');
+            labels[0].textContent = t['label-name'];
+            labels[1].textContent = t['label-surname'];
+            labels[2].textContent = t['label-email'];
+            labels[3].textContent = t['label-email-confirm'];
+            labels[4].textContent = t['label-telegram'];
+
+            // Placeholders
+            document.getElementById('firstName').placeholder = t['placeholder-name'];
+            document.getElementById('lastName').placeholder = t['placeholder-surname'];
+            document.getElementById('email').placeholder = t['placeholder-email'];
+            document.getElementById('emailConfirm').placeholder = t['placeholder-email-confirm'];
+
+            // Discount
+            document.querySelector('.plan-title').textContent = t['discount-title'];
+            document.getElementById('discountCode').placeholder = t['discount-placeholder'];
+            document.getElementById('applyDiscount').textContent = t['discount-apply'];
+
+            // Summary
+            document.querySelector('.summary-title').textContent = t['summary-title'];
+            const summaryLabels = document.querySelectorAll('.summary-item-label');
+            summaryLabels[0].textContent = t['summary-product'];
+            summaryLabels[1].textContent = t['summary-plan'];
+            summaryLabels[2].textContent = t['summary-type'];
+            summaryLabels[3].textContent = t['summary-original'];
+            summaryLabels[4].textContent = t['summary-discount'];
+
+            const summaryValues = document.querySelectorAll('.summary-item-value');
+            summaryValues[2].textContent = t['summary-type-value'];
+
+            document.querySelector('.summary-total-label').textContent = t['summary-total'];
+
+            // Payment
+            document.querySelector('.payment-title').textContent = t['payment-title'];
+            const methodLabels = document.querySelectorAll('.payment-method-label');
+            methodLabels[0].textContent = t['payment-card'];
+            methodLabels[1].textContent = t['payment-paypal'];
+            methodLabels[2].textContent = t['payment-crypto'];
+
+            // Stripe button
+            const stripeBtn = document.getElementById('stripe-pay-btn');
+            if (stripeBtn) {
+                stripeBtn.textContent = t['pay-btn'].replace('{price}', currentPrice);
+            }
+
+            // Crypto
+            const cryptoLabel = document.querySelector('.crypto-address-label');
+            if (cryptoLabel) {
+                const amount = document.getElementById('crypto-amount').textContent;
+                const currency = document.getElementById('crypto-currency').textContent;
+                cryptoLabel.innerHTML = t['crypto-send'] + ' <span id="crypto-amount">' + amount + '</span> in <span id="crypto-currency">' + currency + '</span> ' + t['crypto-to'];
+            }
+
+            const copyBtn = document.querySelector('.crypto-copy-btn');
+            if (copyBtn) copyBtn.innerHTML = t['crypto-copy'];
+
+            const cryptoNote = document.querySelector('.crypto-note');
+            if (cryptoNote) {
+                cryptoNote.innerHTML = t['crypto-note'] + '<br><a href="https://t.me/Tamberax" target="_blank" style="color: var(--accent-primary);">' + t['crypto-note-tg'] + '</a>';
+            }
+
+            // Secure text
+            document.querySelector('.payment-secure').innerHTML = '<span>🔒</span><span>' + t['payment-secure'] + '</span>';
+
+            // Success overlay
+            document.querySelector('.success-title').textContent = t['success-title'];
+            const successDescs = document.querySelectorAll('.success-desc');
+            successDescs[0].innerHTML = t['success-desc1'];
+            successDescs[1].innerHTML = t['success-desc2'];
+
+            const successBtns = document.querySelectorAll('.success-btn');
+            successBtns[0].innerHTML = t['success-btn-email'];
+            successBtns[1].innerHTML = t['success-btn-home'];
+
+            // Footer
+            document.querySelector('.footer-text').innerHTML = t['footer-disclaimer'];
+        }
+
+        // Init on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLang);
+        });
+    </script>
+</body>
+</html>

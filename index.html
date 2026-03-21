@@ -1,0 +1,2842 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VaultSystemFx - Il Futuro del Trading Automatico</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #030508;
+            --bg-secondary: #080c14;
+            --bg-card: rgba(10, 14, 22, 0.6);
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --border-glow: rgba(99, 139, 255, 0.4);
+            --text-primary: #f8faff;
+            --text-secondary: #94a3b8;
+            --text-muted: #475569;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-tertiary: #06b6d4;
+            --accent-success: #10b981;
+            --accent-gold: #f59e0b;
+            --gradient-main: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+            --gradient-gold: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #f59e0b 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --glow-primary: rgba(99, 102, 241, 0.5);
+            --glow-secondary: rgba(139, 92, 246, 0.5);
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 17px;
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection { background: var(--accent-primary); color: white; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--gradient-main); border-radius: 8px; }
+
+        /* ═══════════════════════════════════════════════════════════
+           ANIMATED BACKGROUND
+        ═══════════════════════════════════════════════════════════ */
+        .bg-animation {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .bg-orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-primary), transparent 70%);
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .bg-orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--accent-secondary), transparent 70%);
+            top: 50%;
+            right: -150px;
+            animation-delay: -7s;
+        }
+
+        .bg-orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, var(--accent-tertiary), transparent 70%);
+            bottom: -100px;
+            left: 30%;
+            animation-delay: -14s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -30px) scale(1.1); }
+            50% { transform: translate(-30px, 50px) scale(0.95); }
+            75% { transform: translate(40px, 20px) scale(1.05); }
+        }
+
+        /* Particles */
+        .particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleRise 8s ease-in-out infinite;
+        }
+
+        @keyframes particleRise {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateY(-100px) scale(1); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           LOADER
+        ═══════════════════════════════════════════════════════════ */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 24px;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .loader.hidden { opacity: 0; visibility: hidden; }
+
+        .loader-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            animation: logoPulse 1.5s ease-in-out infinite;
+            box-shadow: 0 0 60px var(--glow-primary);
+            border: 3px solid rgba(99, 102, 241, 0.5);
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 60px var(--glow-primary); }
+            50% { transform: scale(1.05); box-shadow: 0 0 80px var(--glow-primary); }
+        }
+
+        .loader-bar {
+            width: 200px;
+            height: 3px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .loader-bar-fill {
+            height: 100%;
+            background: var(--gradient-main);
+            width: 0%;
+            animation: loaderFill 1.5s ease-out forwards;
+        }
+
+        @keyframes loaderFill {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           NAVBAR
+        ═══════════════════════════════════════════════════════════ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.4s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(3, 5, 8, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 12px 40px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 4px 20px var(--glow-primary);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid rgba(99, 102, 241, 0.4);
+        }
+
+        .nav-logo:hover .nav-logo-icon {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px var(--glow-primary);
+            border-color: var(--accent-primary);
+        }
+
+        .nav-logo-text {
+            font-size: 22px;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 10px 18px;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-cta {
+            background: var(--gradient-main);
+            color: white !important;
+            font-weight: 600;
+            padding: 12px 24px;
+            margin-left: 12px;
+            box-shadow: 0 4px 20px var(--glow-primary);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--glow-primary);
+        }
+
+        .lang-selector {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 20px;
+        }
+
+        .lang-btn {
+            padding: 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .lang-btn.active {
+            color: var(--text-primary);
+        }
+
+        .lang-divider {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           HERO SECTION
+        ═══════════════════════════════════════════════════════════ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 140px 40px 100px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px 8px 10px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 32px;
+            animation: badgeGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes badgeGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.4); }
+        }
+
+        .hero-badge-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-success);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+
+        .hero-title {
+            font-size: clamp(48px, 8vw, 80px);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 28px;
+        }
+
+        .hero-title-line {
+            display: block;
+        }
+
+        .hero-title .gradient-text {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 48px;
+            line-height: 1.7;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 18px 36px;
+            font-size: 16px;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 14px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--gradient-main);
+            color: white;
+            box-shadow: 0 8px 32px var(--glow-primary), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 16px 48px var(--glow-primary), inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        .btn-primary:hover::before { opacity: 1; }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn-icon {
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover .btn-icon { transform: translateX(4px); }
+
+        /* Hero Stats */
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 80px;
+            padding-top: 48px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           FLOATING CARDS AROUND HERO
+        ═══════════════════════════════════════════════════════════ */
+        .floating-elements {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .float-card {
+            position: absolute;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: floatCard 6s ease-in-out infinite;
+        }
+
+        .float-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .float-card-1 {
+            top: 20%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .float-card-1 .float-card-icon {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+
+        .float-card-2 {
+            top: 35%;
+            right: 5%;
+            animation-delay: -2s;
+        }
+
+        .float-card-2 .float-card-icon {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        .float-card-3 {
+            bottom: 25%;
+            left: 8%;
+            animation-delay: -4s;
+        }
+
+        .float-card-3 .float-card-icon {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+
+        .float-card-4 {
+            bottom: 30%;
+            right: 8%;
+            animation-delay: -1s;
+        }
+
+        .float-card-4 .float-card-icon {
+            background: linear-gradient(135deg, #06b6d4, #22d3ee);
+        }
+
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(2deg); }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           SECTION STYLING
+        ═══════════════════════════════════════════════════════════ */
+        .section {
+            padding: 120px 40px;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 72px;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-primary);
+            margin-bottom: 20px;
+        }
+
+        .section-label::before,
+        .section-label::after {
+            content: '';
+            width: 24px;
+            height: 1px;
+            background: var(--accent-primary);
+        }
+
+        .section-title {
+            font-size: clamp(36px, 5vw, 52px);
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           FEATURES SECTION
+        ═══════════════════════════════════════════════════════════ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-main);
+            transform: scaleX(0);
+            transition: transform 0.5s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--border-glow);
+            box-shadow: 0 24px 64px rgba(99, 102, 241, 0.15);
+        }
+
+        .feature-card:hover::before { transform: scaleX(1); }
+
+        .feature-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            position: relative;
+            color: white;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(-3deg);
+        }
+
+        .feature-icon::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 22px;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .feature-icon::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border-radius: 28px;
+            background: inherit;
+            filter: blur(20px);
+            opacity: 0.4;
+            z-index: -1;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon::after {
+            opacity: 0.6;
+            filter: blur(28px);
+            inset: -12px;
+        }
+
+        .feature-icon svg {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon svg {
+            transform: scale(1.05);
+        }
+
+        .feature-card:nth-child(1) .feature-icon { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+        .feature-card:nth-child(2) .feature-icon { background: linear-gradient(135deg, #10b981, #34d399); }
+        .feature-card:nth-child(3) .feature-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .feature-card:nth-child(4) .feature-icon { background: linear-gradient(135deg, #06b6d4, #22d3ee); }
+        .feature-card:nth-child(5) .feature-icon { background: linear-gradient(135deg, #ec4899, #f472b6); }
+        .feature-card:nth-child(6) .feature-icon { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .feature-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           STATS SECTION
+        ═══════════════════════════════════════════════════════════ */
+        .stats-section {
+            background: linear-gradient(180deg, transparent, rgba(99, 102, 241, 0.03), transparent);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 40px 24px;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-glow);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-main);
+            filter: blur(60px);
+            opacity: 0.3;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 900;
+            font-family: var(--font-mono);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           HOW IT WORKS
+        ═══════════════════════════════════════════════════════════ */
+        .steps-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .steps-line {
+            position: absolute;
+            left: 39px;
+            top: 90px;
+            bottom: 90px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+            border-radius: 2px;
+            z-index: 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            margin-bottom: 48px;
+            position: relative;
+        }
+
+        .step:last-child { margin-bottom: 0; }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 3px solid var(--accent-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 900;
+            font-family: var(--font-mono);
+            color: var(--accent-primary);
+            flex-shrink: 0;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 30px var(--glow-primary), inset 0 0 20px rgba(99, 102, 241, 0.1);
+        }
+
+        .step-content {
+            flex: 1;
+            padding-top: 16px;
+        }
+
+        .step-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .step-desc {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           REQUIREMENTS
+        ═══════════════════════════════════════════════════════════ */
+        .requirements-section {
+            background: linear-gradient(180deg, transparent 0%, rgba(248, 113, 113, 0.03) 50%, transparent 100%);
+        }
+
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            max-width: 900px;
+            margin: 0 auto 40px;
+        }
+
+        @media (max-width: 768px) {
+            .requirements-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .requirement-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(248, 113, 113, 0.2);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .requirement-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(248, 113, 113, 0.5);
+            box-shadow: 0 20px 60px rgba(248, 113, 113, 0.15);
+        }
+
+        .requirement-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 24px;
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.15), rgba(251, 191, 36, 0.1));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .requirement-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: #f87171;
+        }
+
+        .requirement-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .requirement-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .requirement-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .requirement-desc strong {
+            color: var(--text-primary);
+        }
+
+        .requirement-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #f87171, #fb923c);
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 14px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .requirement-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(248, 113, 113, 0.4);
+        }
+
+        .requirement-warning {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            max-width: 700px;
+            margin: 0 auto;
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            border-radius: 16px;
+            padding: 20px 28px;
+            font-size: 15px;
+            color: #fbbf24;
+        }
+
+        .requirement-warning svg {
+            width: 24px;
+            height: 24px;
+            stroke: #fbbf24;
+            flex-shrink: 0;
+        }
+
+        .requirement-warning strong {
+            color: #fcd34d;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           TESTIMONIALS
+        ═══════════════════════════════════════════════════════════ */
+        .testimonials-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .testimonials-track {
+            display: flex;
+            gap: 24px;
+            animation: scrollTestimonials 30s linear infinite;
+        }
+
+        @keyframes scrollTestimonials {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .testimonial-card {
+            min-width: 400px;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 32px;
+        }
+
+        .testimonial-stars {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            color: var(--accent-gold);
+            font-size: 18px;
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 24px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: var(--gradient-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            color: white;
+        }
+
+        .testimonial-name {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .testimonial-role {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           PRICING CTA
+        ═══════════════════════════════════════════════════════════ */
+        .cta-section {
+            padding: 100px 40px;
+        }
+
+        .cta-box {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.08));
+            backdrop-filter: blur(30px);
+            border: 2px solid transparent;
+            border-radius: 32px;
+            padding: 64px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: cardPulse 3s ease-in-out infinite;
+            box-shadow: 0 0 60px rgba(99, 102, 241, 0.3), 0 0 120px rgba(139, 92, 246, 0.15);
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4, #8b5cf6, #6366f1);
+            background-size: 300% 100%;
+            border-radius: 34px;
+            z-index: -1;
+            animation: borderGlow 4s linear infinite;
+        }
+
+        .cta-box::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: var(--bg-primary);
+            border-radius: 30px;
+            z-index: -1;
+        }
+
+        @keyframes cardPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 60px rgba(99, 102, 241, 0.3), 0 0 120px rgba(139, 92, 246, 0.15); }
+            50% { transform: scale(1.02); box-shadow: 0 0 80px rgba(99, 102, 241, 0.5), 0 0 160px rgba(139, 92, 246, 0.25); }
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .discount-badge {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+            border: 1px solid rgba(248, 113, 113, 0.5);
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 14px 28px;
+            border-radius: 50px;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            overflow: hidden;
+        }
+
+        .discount-badge::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(248, 113, 113, 0.2), transparent);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        .discount-badge::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, #f87171, #fb923c, #f87171);
+            border-radius: 50px;
+            z-index: -1;
+            opacity: 0.6;
+            filter: blur(12px);
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.4; filter: blur(12px); }
+            50% { opacity: 0.8; filter: blur(18px); }
+        }
+
+        .discount-pulse {
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #f87171, #fb923c);
+            border-radius: 50%;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .discount-pulse::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            background: linear-gradient(135deg, #f87171, #fb923c);
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+
+        @keyframes ping {
+            0% { transform: scale(1); opacity: 0.6; }
+            75%, 100% { transform: scale(2); opacity: 0; }
+        }
+
+        .discount-text {
+            background: linear-gradient(135deg, #f87171, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .discount-save {
+            background: linear-gradient(135deg, #f87171, #fb923c);
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-left: 4px;
+        }
+
+        .cta-price {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .cta-price-currency {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .cta-price-value {
+            font-size: 72px;
+            font-weight: 900;
+            font-family: var(--font-mono);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .cta-price-period {
+            font-size: 18px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .cta-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .cta-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        .cta-features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .cta-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .cta-feature-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--gradient-success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+        }
+
+        .cta-btn {
+            padding: 22px 56px;
+            font-size: 18px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           FAQ
+        ═══════════════════════════════════════════════════════════ */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover { border-color: var(--border-glow); }
+
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 28px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .faq-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: rgba(99, 102, 241, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-primary);
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            background: var(--gradient-main);
+            color: white;
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer-text {
+            padding: 0 28px 24px;
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           FOOTER
+        ═══════════════════════════════════════════════════════════ */
+        .footer {
+            padding: 60px 40px 40px;
+            border-top: 1px solid var(--border-subtle);
+            background: rgba(3, 5, 8, 0.8);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .footer-logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .footer-logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-secondary);
+        }
+
+        .footer-social {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .footer-social a {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: rgba(10, 14, 22, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .footer-social a::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+
+        .footer-social a:hover {
+            border-color: transparent;
+            color: white;
+            transform: translateY(-4px) scale(1.02);
+            box-shadow:
+                0 10px 30px rgba(131, 58, 180, 0.3),
+                0 0 20px rgba(253, 29, 29, 0.2);
+        }
+
+        .footer-social a:hover::before {
+            opacity: 1;
+        }
+
+        .footer-social a svg {
+            transition: transform 0.3s ease;
+        }
+
+        .footer-social a:hover svg {
+            transform: scale(1.1);
+        }
+
+        .footer-social .social-text {
+            letter-spacing: 0.02em;
+        }
+
+        .footer-disclaimer {
+            max-width: 600px;
+            margin: 0 auto 24px;
+            padding: 16px 24px;
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 12px;
+        }
+
+        .footer-disclaimer p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .footer-disclaimer strong {
+            color: var(--text-secondary);
+        }
+
+        .footer-copy {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* ═══════════════════════════════════════════════════════════
+           ANIMATIONS & REVEALS
+        ═══════════════════════════════════════════════════════════ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+        .reveal-delay-6 { transition-delay: 0.6s; }
+
+        /* ═══════════════════════════════════════════════════════════
+           RESPONSIVE
+        ═══════════════════════════════════════════════════════════ */
+        @media (max-width: 1024px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .float-card { display: none; }
+            .requirements-grid { grid-template-columns: 1fr; max-width: 500px; }
+        }
+
+        @media (max-width: 768px) {
+            /* General */
+            body { font-size: 15px; }
+            .section { padding: 60px 20px; }
+            .section-title { font-size: 28px; }
+            .section-subtitle { font-size: 15px; }
+            .section-label { font-size: 11px; padding: 6px 14px; }
+
+            /* Navbar */
+            .navbar {
+                padding: 12px 16px;
+                background: rgba(3, 5, 8, 0.95);
+                backdrop-filter: blur(20px);
+                border-bottom: 1px solid var(--border-subtle);
+            }
+            .nav-links { display: none; }
+            .nav-logo-text { font-size: 16px; }
+            .nav-logo-icon { width: 28px; height: 28px; }
+
+            /* Hero */
+            .hero { padding: 100px 20px 60px; min-height: auto; }
+            .hero-title { font-size: 32px; }
+            .hero-title-line { font-size: 32px; }
+            .hero-subtitle { font-size: 16px; margin-bottom: 30px; }
+            .hero-cta-group { flex-direction: column; gap: 12px; }
+            .hero-cta-group .btn { width: 100%; justify-content: center; padding: 16px 24px; }
+            .hero-stats { flex-direction: column; gap: 20px; padding: 24px; }
+            .hero-stat-value { font-size: 28px; }
+
+            /* Requirements */
+            .requirements-grid { grid-template-columns: 1fr; gap: 20px; }
+            .requirement-card { padding: 28px 20px; }
+            .requirement-title { font-size: 20px; }
+            .requirement-desc { font-size: 14px; }
+            .requirement-warning { flex-direction: column; text-align: center; padding: 16px; font-size: 13px; }
+
+            /* Features */
+            .features-grid { grid-template-columns: 1fr; gap: 20px; }
+            .feature-card { padding: 28px 20px; }
+            .feature-title { font-size: 18px; }
+            .feature-desc { font-size: 14px; }
+
+            /* Stats */
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+            .stat-card { padding: 24px 16px; }
+            .stat-number { font-size: 32px; }
+            .stat-label { font-size: 12px; }
+
+            /* Steps */
+            .step { flex-direction: column; gap: 16px; text-align: center; }
+            .steps-line { display: none; }
+            .step-number { margin: 0 auto; }
+            .step-title { font-size: 18px; }
+            .step-desc { font-size: 14px; }
+
+            /* Testimonials */
+            .testimonial-card { min-width: 280px; padding: 24px; }
+            .testimonial-text { font-size: 14px; }
+
+            /* CTA/Pricing */
+            .cta-box { padding: 32px 20px; border-radius: 24px; }
+            .cta-price-value { font-size: 56px; }
+            .cta-price-currency { font-size: 22px; }
+            .cta-title { font-size: 24px; }
+            .cta-subtitle { font-size: 14px; }
+            .cta-features { grid-template-columns: 1fr; gap: 12px; }
+            .cta-btn { width: 100%; justify-content: center; }
+            .discount-badge { padding: 10px 18px; font-size: 11px; }
+            .discount-save { font-size: 10px; padding: 3px 8px; }
+
+            /* FAQ */
+            .faq-container { max-width: 100%; }
+            .faq-question { font-size: 15px; padding: 18px; }
+            .faq-answer-text { font-size: 14px; }
+
+            /* Footer */
+            .footer { padding: 40px 20px; }
+            .footer-links { flex-direction: column; gap: 16px; }
+
+            /* FPG Banner */
+            .fpg-banner { padding: 20px; margin: 40px 20px; }
+            .fpg-banner p { font-size: 14px; }
+
+            /* Buttons */
+            .btn { padding: 14px 24px; font-size: 14px; }
+            .btn-primary { padding: 16px 28px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 26px; }
+            .hero-title-line { font-size: 26px; }
+            .section-title { font-size: 24px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .stat-card { padding: 20px; }
+            .cta-price-value { font-size: 48px; }
+            .requirement-icon { width: 60px; height: 60px; }
+            .requirement-icon svg { width: 30px; height: 30px; }
+            .hero-stats { padding: 20px 16px; }
+            .hero-stat { padding: 0; }
+        }
+
+        /* Mobile menu button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .mobile-menu-btn span {
+            display: block;
+            width: 24px;
+            height: 2.5px;
+            background: var(--text-primary);
+            margin: 5px 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 2px;
+            transform-origin: center;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: block; z-index: 1001; }
+        }
+
+        /* Mobile menu overlay */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 5, 8, 0.98);
+            z-index: 999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .mobile-menu a {
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 12px 24px;
+            transition: color 0.3s;
+        }
+
+        .mobile-menu a:hover {
+            color: var(--accent-primary);
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <img src="logo.png" alt="VaultSystemFx" class="loader-logo">
+        <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="bg-grid"></div>
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+        <div class="particles" id="particles"></div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#requirements" onclick="closeMobileMenu()">Requisiti</a>
+        <a href="#features" onclick="closeMobileMenu()">Funzionalit&agrave;</a>
+        <a href="#how-it-works" onclick="closeMobileMenu()">Come Funziona</a>
+        <a href="#testimonials" onclick="closeMobileMenu()">Recensioni</a>
+        <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
+        <a href="acquista.html" style="background: var(--gradient-main); padding: 14px 32px; border-radius: 12px;">Acquista Ora</a>
+        <div class="lang-selector" style="margin-top: 20px; margin-left: 0;">
+            <button class="lang-btn active" onclick="setLang('it')">ITA</button>
+            <span class="lang-divider">|</span>
+            <button class="lang-btn" onclick="setLang('en')">ENG</button>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <a href="#" class="nav-logo">
+            <img src="logo.png" alt="VaultSystemFx" class="nav-logo-icon">
+            <span class="nav-logo-text">VaultSystemFx</span>
+        </a>
+        <div class="nav-links">
+            <a href="#requirements" class="nav-link">Requisiti</a>
+            <a href="#features" class="nav-link">Funzionalit&agrave;</a>
+            <a href="#how-it-works" class="nav-link">Come Funziona</a>
+            <a href="#testimonials" class="nav-link">Recensioni</a>
+            <a href="#faq" class="nav-link">FAQ</a>
+            <a href="acquista.html" class="nav-link nav-cta">Acquista Ora &rarr;</a>
+            <div class="lang-selector">
+                <button class="lang-btn active" onclick="setLang('it')">ITA</button>
+                <span class="lang-divider">|</span>
+                <button class="lang-btn" onclick="setLang('en')">ENG</button>
+            </div>
+        </div>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="floating-elements">
+            <div class="float-card float-card-1">
+                <div class="float-card-icon">&#x2713;</div>
+                <span>Trade eseguito +2.4%</span>
+            </div>
+            <div class="float-card float-card-2">
+                <div class="float-card-icon">&#x1F4C8;</div>
+                <span>Analisi completata</span>
+            </div>
+            <div class="float-card float-card-3">
+                <div class="float-card-icon">&#x1F4B0;</div>
+                <span>Profitto: +847.50</span>
+            </div>
+            <div class="float-card float-card-4">
+                <div class="float-card-icon">&#x26A1;</div>
+                <span>Bot attivo 24/7</span>
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="hero-title-line">Il Futuro del</span>
+                <span class="hero-title-line"><span class="gradient-text">Trading Automatico</span></span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Algoritmi avanzati che analizzano i mercati 24/7.
+                Esecuzione istantanea e gestione del rischio intelligente.
+            
+            </p>
+
+            <div class="hero-cta-group">
+                <a href="acquista.html" class="btn btn-primary">
+                    Acquista Ora <span class="btn-icon">&rarr;</span>
+                </a>
+                <a href="#how-it-works" class="btn btn-secondary">
+                    Scopri Come Funziona
+                </a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-value" data-count="97.8">0</div>
+                    <div class="hero-stat-label">% Uptime</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value" data-count="24">0</div>
+                    <div class="hero-stat-label">Ore al Giorno</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value" data-count="20">0+</div>
+                    <div class="hero-stat-label">Valute e Commodities</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-value" data-count="2">0</div>
+                    <div class="hero-stat-label">Min Installazione</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Requirements -->
+    <section class="section requirements-section" id="requirements">
+        <div class="section-header reveal">
+            <div class="section-label" style="background: linear-gradient(135deg, #f87171, #fbbf24); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Obbligatorio</div>
+            <h2 class="section-title">Requisiti per Iniziare</h2>
+            <p class="section-subtitle">
+                Prima di utilizzare VaultSystemFx, assicurati di avere questi due requisiti fondamentali.
+            </p>
+        </div>
+
+        <div class="requirements-grid">
+            <div class="requirement-card reveal">
+                <div class="requirement-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <div class="requirement-badge">GRATUITO</div>
+                <h3 class="requirement-title">Account FPG</h3>
+                <p class="requirement-desc">
+                    Crea un account sul broker <strong>FPG (Funding Pips Global)</strong>. La registrazione e completamente gratuita e richiede solo pochi minuti.
+                </p>
+                <a href="https://portal.fortuneprime.com/getview?view=register&token=0pSM1g" target="_blank" class="requirement-btn">
+                    Registrati Gratis <span>&rarr;</span>
+                </a>
+            </div>
+
+            <div class="requirement-card reveal">
+                <div class="requirement-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                        <line x1="8" y1="21" x2="16" y2="21"/>
+                        <line x1="12" y1="17" x2="12" y2="21"/>
+                    </svg>
+                </div>
+                <div class="requirement-badge" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">CONSIGLIATO</div>
+                <h3 class="requirement-title">VPS Windows 11</h3>
+                <p class="requirement-desc">
+                    Acquista una VPS con <strong>Windows 11</strong> per far girare il bot 24 ore su 24, 7 giorni su 7. <strong>Contabo</strong> offre le VPS piu economiche.
+                </p>
+                <a href="https://contabo.com/en/vps/cloud-vps-10/?image=windows-server.308&qty=1&contract=12&storage-type=cloud-vps-10-150-gb-ssd" target="_blank" class="requirement-btn">
+                    Vai su Contabo <span>&rarr;</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="requirement-warning reveal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span>Il bot funziona <strong>esclusivamente su Windows</strong>. La VPS deve rimanere sempre accesa per operare automaticamente 24/7.</span>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="section-header reveal">
+            <div class="section-label">Funzionalit&agrave;</div>
+            <h2 class="section-title">Tecnologia di Trading<br>di Nuova Generazione</h2>
+            <p class="section-subtitle">
+                Strumenti professionali progettati per massimizzare le tue opportunit&agrave; sui mercati finanziari.
+            </p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card reveal reveal-delay-1">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a4 4 0 0 1 4 4v1a1 1 0 0 0 1 1h1a4 4 0 0 1 0 8h-1a1 1 0 0 0-1 1v1a4 4 0 0 1-8 0v-1a1 1 0 0 0-1-1H6a4 4 0 0 1 0-8h1a1 1 0 0 0 1-1V6a4 4 0 0 1 4-4z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Algoritmo Intelligente</h3>
+                <p class="feature-desc">
+                    Il bot opera per te 24 ore su 24, anche mentre dormi. Tu ti dedichi alle tue priorit&agrave;, lui fa crescere il tuo capitale.
+                </p>
+            </div>
+
+            <div class="feature-card reveal reveal-delay-2">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Esecuzione Istantanea</h3>
+                <p class="feature-desc">
+                    Latenza minima grazie all'integrazione diretta con MetaTrader 5. I trade vengono eseguiti in millisecondi.
+                </p>
+            </div>
+
+            <div class="feature-card reveal reveal-delay-3">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Risk Management</h3>
+                <p class="feature-desc">
+                    Stop Loss e Take Profit automatici basati sull'ATR. Calcolo dinamico del lotto in base al rischio percentuale.
+                </p>
+            </div>
+
+            <div class="feature-card reveal reveal-delay-4">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        <path d="M14.5 2a7.5 7.5 0 0 1 7.5 7.5"/>
+                        <path d="M14.5 6A3.5 3.5 0 0 1 18 9.5"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Notifiche Telegram</h3>
+                <p class="feature-desc">
+                    Ricevi alert istantanei su ogni trade, con dettagli su entry, SL, TP e risultato. Sempre connesso, ovunque.
+                </p>
+            </div>
+
+            <div class="feature-card reveal reveal-delay-5">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 3v18h18"/>
+                        <path d="M18 9l-5 5-4-4-3 3"/>
+                        <circle cx="18" cy="9" r="2"/>
+                        <circle cx="13" cy="14" r="2"/>
+                        <circle cx="9" cy="10" r="2"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Dashboard Avanzata</h3>
+                <p class="feature-desc">
+                    Monitora equity, profitti, win rate e drawdown in tempo reale. Grafici interattivi e storico completo.
+                </p>
+            </div>
+
+            <div class="feature-card reveal reveal-delay-6">
+                <div class="feature-icon">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                        <path d="M2 12h2"/>
+                        <path d="M20 12h2"/>
+                        <path d="M12 2v2"/>
+                        <path d="M12 20v2"/>
+                    </svg>
+                </div>
+                <h3 class="feature-title">Filtro Sessione</h3>
+                <p class="feature-desc">
+                    Opera solo nelle ore pi&ugrave; profittevoli. Configura orari personalizzati per evitare mercati laterali.
+                </p>
+            </div>
+        </div>
+
+        <!-- Broker FPG Banner -->
+        <div class="broker-banner reveal" style="max-width: 900px; margin: 60px auto 0; background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,182,212,0.1)); border: 1px solid rgba(16,185,129,0.3); border-radius: 24px; padding: 40px; display: flex; align-items: center; gap: 32px; flex-wrap: wrap; justify-content: center;">
+            <div style="text-align: center; flex: 1; min-width: 280px;">
+                <div style="font-size: 14px; color: var(--accent-success); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">&#x1F381; Broker Partner</div>
+                <h3 style="font-size: 28px; font-weight: 800; margin-bottom: 12px;">Usa <span style="color: var(--accent-success);">Fortune Prime Global</span> Gratis</h3>
+                <p style="color: var(--text-secondary); font-size: 16px; margin-bottom: 20px;">Apri un account gratuito con il nostro broker partner. Spread competitivi, MT5 integrato e supporto dedicato.</p>
+                <a href="https://portal.fortuneprime.com/getview?view=register&token=0pSM1g" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gradient-success); color: white; font-weight: 700; font-size: 15px; border-radius: 12px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(16,185,129,0.3);">
+                    Apri Account FPG Gratuito &rarr;
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section stats-section">
+        <div class="stats-grid">
+            <div class="stat-card reveal reveal-delay-1">
+                <div class="stat-number">1:2</div>
+                <div class="stat-label">Risk:Reward Ratio</div>
+            </div>
+            <div class="stat-card reveal reveal-delay-2">
+                <div class="stat-number" data-count="20">0+</div>
+                <div class="stat-label">Valute e Commodities</div>
+            </div>
+            <div class="stat-card reveal reveal-delay-3">
+                <div class="stat-number" data-count="2">0</div>
+                <div class="stat-label">Minuti per Installazione</div>
+            </div>
+            <div class="stat-card reveal reveal-delay-4">
+                <div class="stat-number" data-count="1">0</div>
+                <div class="stat-label">Licenza a Vita</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" id="how-it-works">
+        <div class="section-header reveal">
+            <div class="section-label">Come Funziona</div>
+            <h2 class="section-title">Operativo in 3 Semplici Passi</h2>
+            <p class="section-subtitle">
+                Dalla configurazione al primo trade automatico in meno di 5 minuti.
+            </p>
+        </div>
+
+        <div class="steps-container">
+            <div class="steps-line"></div>
+
+            <div class="step reveal">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3 class="step-title">Connetti MetaTrader 5</h3>
+                    <p class="step-desc">
+                        Inserisci le credenziali del tuo account MT5. Il bot si collega automaticamente al tuo broker e inizia a monitorare i simboli configurati.
+                    </p>
+                </div>
+            </div>
+
+            <div class="step reveal">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3 class="step-title">Configura i Simboli</h3>
+                    <p class="step-desc">
+                        Scegli le coppie forex che vuoi tradare e imposta il lotto fisso o il rischio percentuale per ogni simbolo. Tutto personalizzabile.
+                    </p>
+                </div>
+            </div>
+
+            <div class="step reveal">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3 class="step-title">Avvia e Monitora</h3>
+                    <p class="step-desc">
+                        Clicca "Avvia Bot" e lascia che l'algoritmo lavori per te. Monitora i risultati dalla dashboard o ricevi notifiche su Telegram.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section" id="testimonials">
+        <div class="section-header reveal">
+            <div class="section-label">Recensioni</div>
+            <h2 class="section-title">Cosa Dicono i Trader</h2>
+        </div>
+
+        <div class="testimonials-wrapper">
+            <div class="testimonials-track">
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="testimonial-text">"Finalmente un bot che funziona davvero. L'interfaccia &egrave; intuitiva e le notifiche Telegram sono comodissime. Lo uso da 3 mesi con ottimi risultati."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">M</div>
+                        <div>
+                            <div class="testimonial-name">Marco R.</div>
+                            <div class="testimonial-role">Trader Indipendente</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="testimonial-text">"La gestione del rischio automatica &egrave; fantastica. Imposto il mio 1% e il bot calcola tutto. Niente pi&ugrave; calcoli manuali."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">L</div>
+                        <div>
+                            <div class="testimonial-name">Luca T.</div>
+                            <div class="testimonial-role">Investitore Privato</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="testimonial-text">"Supporto eccellente e aggiornamenti costanti. Il team risponde sempre velocemente. Prodotto serio e professionale."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">A</div>
+                        <div>
+                            <div class="testimonial-name">Andrea G.</div>
+                            <div class="testimonial-role">Day Trader</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="testimonial-text">"Ho provato altri bot prima, ma VaultSystemFx &egrave; su un altro livello. L'algoritmo &egrave; solido e la dashboard &egrave; bellissima."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">S</div>
+                        <div>
+                            <div class="testimonial-name">Stefano B.</div>
+                            <div class="testimonial-role">Forex Trader</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Duplicate for infinite scroll -->
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="testimonial-text">"Finalmente un bot che funziona davvero. L'interfaccia &egrave; intuitiva e le notifiche Telegram sono comodissime."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">M</div>
+                        <div>
+                            <div class="testimonial-name">Marco R.</div>
+                            <div class="testimonial-role">Trader Indipendente</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                    <p class="testimonial-text">"La gestione del rischio automatica &egrave; fantastica. Imposto il mio 1% e il bot calcola tutto."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">L</div>
+                        <div>
+                            <div class="testimonial-name">Luca T.</div>
+                            <div class="testimonial-role">Investitore Privato</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing CTA -->
+    <section class="cta-section" id="pricing">
+        <div class="cta-box reveal">
+            <div class="cta-content">
+                <div class="discount-badge">
+                    <span class="discount-pulse"></span>
+                    <span class="discount-text">Offerta Limitata</span>
+                    <span class="discount-save">-38%</span>
+                </div>
+                <div class="cta-price">
+                    <span style="text-decoration: line-through; color: #94a3b8; font-size: 20px; margin-right: 8px;">&euro;799</span>
+                    <span class="cta-price-currency">&euro;</span>
+                    <span class="cta-price-value">499</span>
+                    <span class="cta-price-period">una tantum</span>
+                </div>
+                <h2 class="cta-title">Licenza Lifetime</h2>
+                <p class="cta-subtitle">Paghi una volta, usi per sempre. Aggiornamenti inclusi.</p>
+
+                <div class="cta-features">
+                    <div class="cta-feature">
+                        <span class="cta-feature-icon">&#x2713;</span>
+                        <span class="cta-feature-text">+20 valute e materie prime</span>
+                    </div>
+                    <div class="cta-feature">
+                        <span class="cta-feature-icon">&#x2713;</span>
+                        <span class="cta-feature-text">Broker FPG gratuito</span>
+                    </div>
+                    <div class="cta-feature">
+                        <span class="cta-feature-icon">&#x2713;</span>
+                        <span class="cta-feature-text">Aggiornamenti gratuiti</span>
+                    </div>
+                    <div class="cta-feature">
+                        <span class="cta-feature-icon">&#x2713;</span>
+                        <span class="cta-feature-text">Setup guidato</span>
+                    </div>
+                </div>
+
+                <a href="acquista.html" class="btn btn-primary cta-btn">
+                    Acquista Ora <span class="btn-icon">&rarr;</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+        <div class="section-header reveal">
+            <div class="section-label">FAQ</div>
+            <h2 class="section-title">Domande Frequenti</h2>
+        </div>
+
+        <div class="faq-container">
+            <div class="faq-item reveal">
+                <div class="faq-question">
+                    <span>Serve esperienza di trading?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">No, il bot &egrave; progettato per essere semplice da usare. La guida integrata ti accompagna passo passo nella configurazione. Tuttavia, una conoscenza base dei mercati ti aiuter&agrave; a comprendere meglio i risultati.</p>
+                </div>
+            </div>
+
+            <div class="faq-item reveal">
+                <div class="faq-question">
+                    <span>Quale broker posso usare?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">VaultSystemFx funziona con qualsiasi broker che supporta MetaTrader 5. Puoi usare il tuo broker preferito, sia con account demo che reale.</p>
+                </div>
+            </div>
+
+            <div class="faq-item reveal">
+                <div class="faq-question">
+                    <span>Il bot funziona 24 ore su 24?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">S&igrave;, il bot pu&ograve; operare 24/5 (il forex chiude nel weekend). Puoi anche configurare il filtro sessione per operare solo in determinate fasce orarie.</p>
+                </div>
+            </div>
+
+            <div class="faq-item reveal">
+                <div class="faq-question">
+                    <span>Come ricevo il software?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">Dopo l'acquisto ricever&agrave; un'email con il pulsante per scaricare il file. L'installazione richiede solo 2 minuti.</p>
+                </div>
+            </div>
+
+            <div class="faq-item reveal">
+                <div class="faq-question">
+                    <span>C'&egrave; un rimborso?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text">Essendo un prodotto digitale, non &egrave; previsto rimborso. Ti consigliamo di testare prima su un account demo per valutare se il bot soddisfa le tue aspettative.</p>
+                </div>
+            </div>
+
+            <div class="faq-item reveal">
+                <div class="faq-question">
+                    <span>Ho bisogno di una VPS?</span>
+                    <span class="faq-icon">+</span>
+                </div>
+                <div class="faq-answer">
+                    <p class="faq-answer-text"><strong>S&igrave;, &egrave; obbligatorio.</strong> Per far girare il bot 24/7 senza interruzioni &egrave; necessario utilizzare una VPS (Virtual Private Server) con sistema operativo Windows. Costa pochi euro al mese e ti permette di avere il bot sempre attivo, anche quando il tuo PC &egrave; spento. Il bot deve restare in esecuzione per operare sui mercati.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="logo.png" alt="VaultSystemFx" class="footer-logo-icon">
+                <span class="footer-logo-text">VaultSystemFx</span>
+            </div>
+
+            <div class="footer-social">
+                <a href="https://instagram.com/vaultsystem" target="_blank" rel="noopener noreferrer">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                    <span class="social-text">@vaultsystem</span>
+                </a>
+                <a href="https://t.me/AssistenzaVaultSystem" target="_blank" rel="noopener noreferrer">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                    </svg>
+                    <span class="social-text">@vaultsystemassistenza</span>
+                </a>
+            </div>
+
+            <div class="footer-disclaimer">
+                <p><strong>Disclaimer:</strong> Il trading sui mercati finanziari comporta dei rischi. I risultati passati non sono indicativi di risultati futuri. Questo software &egrave; uno strumento di automazione e non costituisce consulenza finanziaria. Utilizza sempre capitali che sei disposto a rischiare.</p>
+            </div>
+
+            <p class="footer-copy">&copy; 2026 VaultSystemFx. Tutti i diritti riservati.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+            }, 1800);
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Create particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 8 + 's';
+            particle.style.animationDuration = (6 + Math.random() * 4) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Reveal on scroll
+        const reveals = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            reveals.forEach(el => {
+                const top = el.getBoundingClientRect().top;
+                if (top < window.innerHeight - 100) {
+                    el.classList.add('visible');
+                }
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        // Counter animation
+        const counters = document.querySelectorAll('[data-count]');
+        const animateCounter = (el) => {
+            const target = parseFloat(el.dataset.count);
+            const isDecimal = target % 1 !== 0;
+            const duration = 2000;
+            const start = performance.now();
+
+            const update = (now) => {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = target * eased;
+
+                el.textContent = isDecimal ? current.toFixed(1) : Math.floor(current);
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    el.textContent = isDecimal ? target.toFixed(1) : target;
+                }
+            };
+
+            requestAnimationFrame(update);
+        };
+
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        counters.forEach(counter => counterObserver.observe(counter));
+
+        // FAQ accordion
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', () => {
+                const item = q.parentElement;
+                const isActive = item.classList.contains('active');
+
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Mobile Menu Functions
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const btn = document.querySelector('.mobile-menu-btn');
+            const isOpen = menu.classList.contains('active');
+
+            if (isOpen) {
+                menu.classList.remove('active');
+                btn.classList.remove('active');
+                document.body.style.overflow = '';
+            } else {
+                menu.classList.add('active');
+                btn.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeMobileMenu() {
+            document.getElementById('mobileMenu').classList.remove('active');
+            document.querySelector('.mobile-menu-btn').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Language Switcher
+        function setLang(lang) {
+            translatePage(lang);
+            localStorage.setItem('lang', lang);
+            closeMobileMenu();
+        }
+
+        // Apply saved language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('lang') || 'it';
+            translatePage(savedLang);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Language Translation System
+        const translations = {
+            it: {
+                // Navbar
+                'nav-features': 'Funzionalit\u00e0',
+                'nav-how': 'Come Funziona',
+                'nav-reviews': 'Recensioni',
+                'nav-faq': 'FAQ',
+                'nav-buy': 'Acquista Ora',
+                // Hero
+                'hero-badge': 'Sistema di Trading Automatico',
+                'hero-title-1': 'Il Futuro del',
+                'hero-title-2': 'Trading Automatico',
+                'hero-subtitle': 'VaultSystemFx analizza i mercati, identifica opportunit\u00e0 ed esegue trade in automatico. <strong>24 ore su 24, 7 giorni su 7.</strong>',
+                'hero-btn-buy': 'Acquista Ora',
+                'hero-btn-how': 'Scopri Come Funziona',
+                'hero-stat-1': 'Automatizzato',
+                'hero-stat-2': 'Mercati',
+                'hero-stat-3': 'Min Installazione',
+                // Requirements
+                'req-title': 'Requisiti Obbligatori',
+                'req-subtitle': 'Per utilizzare VaultSystemFx hai bisogno di:',
+                'req-1-title': 'Account FortunePrime (FPG)',
+                'req-1-desc': 'Broker partner gratuito con MT5 integrato',
+                'req-1-btn': 'Apri Account Gratuito',
+                'req-2-title': 'VPS Windows',
+                'req-2-desc': 'Per eseguire il bot 24/7 senza interruzioni',
+                'req-2-btn': 'Vedi VPS Consigliata',
+                // Features
+                'features-label': 'Funzionalit\u00e0',
+                'features-title': 'Tecnologia di Trading<br>di Nuova Generazione',
+                'features-subtitle': 'Strumenti professionali progettati per massimizzare le tue opportunit\u00e0 nei mercati finanziari.',
+                'feature-1-title': 'Algoritmo Intelligente',
+                'feature-1-desc': 'Il bot lavora per te 24 ore su 24, anche mentre dormi. Tu ti concentri sulle tue priorit\u00e0, lui fa crescere il tuo capitale.',
+                'feature-2-title': 'Gestione del Rischio',
+                'feature-2-desc': 'Sistema integrato di stop-loss e take-profit. Ogni operazione \u00e8 protetta con limiti calcolati per preservare il capitale.',
+                'feature-3-title': 'Notifiche in Tempo Reale',
+                'feature-3-desc': 'Ricevi alert istantanei per ogni operazione. Monitora l\'attivit\u00e0 del bot ovunque tu sia.',
+                'feature-4-title': 'Multi-Asset',
+                'feature-4-desc': 'Opera su oltre 20 coppie valutarie e materie prime. Diversificazione automatica per un portafoglio bilanciato.',
+                'feature-5-title': 'Facile da Usare',
+                'feature-5-desc': 'Interfaccia pulita e progettata per tutti. Nessuna esperienza tecnica richiesta per iniziare.',
+                'feature-6-title': 'Aggiornamenti a Vita',
+                'feature-6-desc': 'Miglioramenti continui e nuove funzionalit\u00e0 incluse. Il tuo bot rimane sempre aggiornato.',
+                // Stats
+                'stat-1-label': 'Rapporto Rischio:Rendimento',
+                'stat-2-label': 'Valute e Materie Prime',
+                'stat-3-label': 'Minuti per Installare',
+                'stat-4-label': 'Licenza Lifetime',
+                // Broker
+                'broker-label': 'Broker Partner',
+                'broker-title': 'Usa <span style="color: var(--accent-success);">Fortune Prime Global</span> Gratis',
+                'broker-desc': 'Apri un account gratuito con il nostro broker partner. Spread competitivi, MT5 integrato e supporto dedicato.',
+                'broker-btn': 'Apri Account FPG Gratuito',
+                // How it works
+                'how-label': 'Come Funziona',
+                'how-title': 'Operativo in<br>3 Semplici Passi',
+                'how-subtitle': 'Dall\'acquisto al primo trade in meno di 5 minuti. Nessuna esperienza tecnica richiesta.',
+                'step-1-title': 'Scarica',
+                'step-1-desc': 'Dopo l\'acquisto ricevi il link di download via email. Estrai lo ZIP e avvia il setup.',
+                'step-2-title': 'Configura',
+                'step-2-desc': 'Inserisci le credenziali del tuo account MT5. Seleziona le coppie e i parametri di rischio.',
+                'step-3-title': 'Attiva',
+                'step-3-desc': 'Clicca "Avvia" e lascia che VaultSystemFx lavori per te. Monitora i risultati in tempo reale.',
+                // Reviews
+                'reviews-label': 'Recensioni',
+                'reviews-title': 'Cosa Dicono i Trader',
+                'testimonial-1-text': '"Finalmente un bot che funziona davvero. L\'interfaccia \u00e8 intuitiva e le notifiche Telegram sono comodissime. Lo uso da 3 mesi con ottimi risultati."',
+                'testimonial-1-role': 'Trader Indipendente',
+                'testimonial-2-text': '"La gestione del rischio automatica \u00e8 fantastica. Imposto il mio 1% e il bot calcola tutto. Niente pi\u00f9 calcoli manuali."',
+                'testimonial-2-role': 'Investitore Privato',
+                'testimonial-3-text': '"Supporto eccellente e aggiornamenti costanti. Il team risponde sempre velocemente. Prodotto serio e professionale."',
+                'testimonial-3-role': 'Day Trader',
+                'testimonial-4-text': '"Ho provato altri bot prima, ma VaultSystemFx \u00e8 su un altro livello. L\'algoritmo \u00e8 solido e la dashboard \u00e8 bellissima."',
+                'testimonial-4-role': 'Forex Trader',
+                // CTA
+                'cta-period': 'una tantum',
+                'cta-title': 'Licenza Lifetime',
+                'cta-subtitle': 'Paghi una volta, usi per sempre. Aggiornamenti inclusi.',
+                'cta-feature-1': '+20 valute e materie prime',
+                'cta-feature-2': 'Broker FPG gratuito',
+                'cta-feature-3': 'Aggiornamenti gratuiti',
+                'cta-feature-4': 'Setup guidato',
+                'cta-discount': 'Offerta Limitata',
+                'cta-btn': 'Acquista Ora',
+                // FAQ
+                'faq-label': 'FAQ',
+                'faq-title': 'Domande<br>Frequenti',
+                'faq-1-q': 'Serve esperienza nel trading?',
+                'faq-1-a': 'No, VaultSystemFx \u00e8 progettato per essere usato da chiunque. L\'interfaccia \u00e8 intuitiva e la configurazione \u00e8 guidata passo passo.',
+                'faq-2-q': 'Quale broker devo usare?',
+                'faq-2-a': 'Consigliamo Fortune Prime Global, il nostro broker partner. Puoi anche usare qualsiasi broker che supporti MetaTrader 5.',
+                'faq-3-q': 'Come ricevo il prodotto?',
+                'faq-3-a': 'Dopo l\'acquisto riceverai un\'email con il pulsante di download. L\'installazione richiede solo 2 minuti.',
+                'faq-4-q': 'C\'\u00e8 un rimborso?',
+                'faq-4-a': 'Essendo un prodotto digitale, non \u00e8 previsto rimborso. Ti consigliamo di testare prima su un account demo.',
+                'faq-5-q': 'Serve una VPS?',
+                'faq-5-a': '<strong>S\u00ec, \u00e8 obbligatorio.</strong> Una VPS Windows \u00e8 necessaria per far girare il bot 24/7. Costa pochi euro al mese.',
+                // Footer
+                'footer-disclaimer': '<strong>Disclaimer:</strong> Il trading sui mercati finanziari comporta dei rischi. I risultati passati non sono indicativi di risultati futuri. Questo software \u00e8 uno strumento di automazione e non costituisce consulenza finanziaria. Utilizza sempre capitale che sei disposto a rischiare.'
+            },
+            en: {
+                // Navbar
+                'nav-features': 'Features',
+                'nav-how': 'How It Works',
+                'nav-reviews': 'Reviews',
+                'nav-faq': 'FAQ',
+                'nav-buy': 'Buy Now',
+                // Hero
+                'hero-badge': 'Automated Trading System',
+                'hero-title-1': 'The Future of',
+                'hero-title-2': 'Automated Trading',
+                'hero-subtitle': 'VaultSystemFx analyzes markets, identifies opportunities and executes trades automatically. <strong>24 hours a day, 7 days a week.</strong>',
+                'hero-btn-buy': 'Buy Now',
+                'hero-btn-how': 'See How It Works',
+                'hero-stat-1': 'Automated',
+                'hero-stat-2': 'Markets',
+                'hero-stat-3': 'Min Install',
+                // Requirements
+                'req-title': 'Mandatory Requirements',
+                'req-subtitle': 'To use VaultSystemFx you need:',
+                'req-1-title': 'FortunePrime (FPG) Account',
+                'req-1-desc': 'Free partner broker with integrated MT5',
+                'req-1-btn': 'Open Free Account',
+                'req-2-title': 'Windows VPS',
+                'req-2-desc': 'To run the bot 24/7 without interruptions',
+                'req-2-btn': 'See Recommended VPS',
+                // Features
+                'features-label': 'Features',
+                'features-title': 'Next Generation<br>Trading Technology',
+                'features-subtitle': 'Professional tools designed to maximize your opportunities in financial markets.',
+                'feature-1-title': 'Intelligent Algorithm',
+                'feature-1-desc': 'The bot works for you 24 hours a day, even while you sleep. You focus on your priorities, it grows your capital.',
+                'feature-2-title': 'Risk Management',
+                'feature-2-desc': 'Integrated stop-loss and take-profit system. Each trade is protected with calculated limits to preserve capital.',
+                'feature-3-title': 'Real-time Notifications',
+                'feature-3-desc': 'Receive instant alerts for every operation. Track your bot activity from anywhere.',
+                'feature-4-title': 'Multi-Asset',
+                'feature-4-desc': 'Operates on 20+ currency pairs and commodities. Automatic diversification for a balanced portfolio.',
+                'feature-5-title': 'User Friendly',
+                'feature-5-desc': 'Clean interface designed for everyone. No technical experience needed to start.',
+                'feature-6-title': 'Lifetime Updates',
+                'feature-6-desc': 'Continuous improvements and new features included. Your bot always stays up to date.',
+                // Stats
+                'stat-1-label': 'Risk:Reward Ratio',
+                'stat-2-label': 'Currencies and Commodities',
+                'stat-3-label': 'Minutes to Install',
+                'stat-4-label': 'Lifetime License',
+                // Broker
+                'broker-label': 'Partner Broker',
+                'broker-title': 'Use <span style="color: var(--accent-success);">Fortune Prime Global</span> Free',
+                'broker-desc': 'Open a free account with our partner broker. Competitive spreads, integrated MT5 and dedicated support.',
+                'broker-btn': 'Open Free FPG Account',
+                // How it works
+                'how-label': 'How It Works',
+                'how-title': 'Operational in<br>3 Simple Steps',
+                'how-subtitle': 'From purchase to first trade in less than 5 minutes. No technical experience required.',
+                'step-1-title': 'Download',
+                'step-1-desc': 'After purchase, receive download link via email. Extract ZIP and run setup.',
+                'step-2-title': 'Configure',
+                'step-2-desc': 'Enter your MT5 account credentials. Select pairs and risk parameters.',
+                'step-3-title': 'Activate',
+                'step-3-desc': 'Click "Start" and let VaultSystemFx work for you. Monitor results in real-time.',
+                // Reviews
+                'reviews-label': 'Reviews',
+                'reviews-title': 'What Traders Say',
+                'testimonial-1-text': '"Finally a bot that actually works. The interface is intuitive and Telegram notifications are super convenient. I\'ve been using it for 3 months with great results."',
+                'testimonial-1-role': 'Independent Trader',
+                'testimonial-2-text': '"The automatic risk management is fantastic. I set my 1% and the bot calculates everything. No more manual calculations."',
+                'testimonial-2-role': 'Private Investor',
+                'testimonial-3-text': '"Excellent support and constant updates. The team always responds quickly. Serious and professional product."',
+                'testimonial-3-role': 'Day Trader',
+                'testimonial-4-text': '"I tried other bots before, but VaultSystemFx is on another level. The algorithm is solid and the dashboard is beautiful."',
+                'testimonial-4-role': 'Forex Trader',
+                // CTA
+                'cta-period': 'one-time',
+                'cta-title': 'Lifetime License',
+                'cta-subtitle': 'Pay once, use forever. Updates included.',
+                'cta-feature-1': '+20 currencies and commodities',
+                'cta-feature-2': 'Free FPG broker',
+                'cta-feature-3': 'Free updates',
+                'cta-feature-4': 'Guided setup',
+                'cta-discount': 'Limited Offer',
+                'cta-btn': 'Buy Now',
+                // FAQ
+                'faq-label': 'FAQ',
+                'faq-title': 'Frequently<br>Asked Questions',
+                'faq-1-q': 'Do I need trading experience?',
+                'faq-1-a': 'No, VaultSystemFx is designed to be used by anyone. The interface is intuitive and setup is guided step by step.',
+                'faq-2-q': 'Which broker should I use?',
+                'faq-2-a': 'We recommend Fortune Prime Global, our partner broker. You can also use any broker that supports MetaTrader 5.',
+                'faq-3-q': 'How do I receive the product?',
+                'faq-3-a': 'After purchase you will receive an email with the download button. Installation takes only 2 minutes.',
+                'faq-4-q': 'Is there a refund?',
+                'faq-4-a': 'Being a digital product, no refund is provided. We recommend testing first on a demo account.',
+                'faq-5-q': 'Do I need a VPS?',
+                'faq-5-a': '<strong>Yes, it is mandatory.</strong> A Windows VPS is required to run the bot 24/7. It costs a few euros per month.',
+                // Footer
+                'footer-disclaimer': '<strong>Disclaimer:</strong> Trading in financial markets involves risks. Past results are not indicative of future results. This software is an automation tool and does not constitute financial advice. Always use capital you are willing to risk.'
+            }
+        };
+
+        let currentLang = 'it';
+
+        function translatePage(lang) {
+            const t = translations[lang];
+            if (!t) return;
+            currentLang = lang;
+
+            // Update lang buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === (lang === 'it' ? 'ITA' : 'ENG'));
+            });
+
+            // Navbar
+            const navLinks = document.querySelectorAll('.nav-link:not(.nav-cta)');
+            if (navLinks[0]) navLinks[0].textContent = t['nav-features'];
+            if (navLinks[1]) navLinks[1].textContent = t['nav-how'];
+            if (navLinks[2]) navLinks[2].textContent = t['nav-reviews'];
+            if (navLinks[3]) navLinks[3].textContent = t['nav-faq'];
+            const navCta = document.querySelector('.nav-cta');
+            if (navCta) navCta.innerHTML = t['nav-buy'] + ' &rarr;';
+
+            // Hero
+            const heroBadge = document.querySelector('.hero-badge');
+            if (heroBadge) heroBadge.textContent = t['hero-badge'];
+
+            const heroTitle = document.querySelector('.hero-title');
+            if (heroTitle) {
+                heroTitle.innerHTML = '<span class="hero-title-line">' + t['hero-title-1'] + '</span><span class="hero-title-line"><span class="gradient-text">' + t['hero-title-2'] + '</span></span>';
+            }
+
+            const heroSubtitle = document.querySelector('.hero-subtitle');
+            if (heroSubtitle) heroSubtitle.innerHTML = t['hero-subtitle'];
+
+            // Hero stats
+            document.querySelectorAll('.hero-stat-label').forEach((el, i) => {
+                if (i === 0) el.textContent = t['hero-stat-1'];
+                if (i === 1) el.textContent = t['hero-stat-2'];
+                if (i === 2) el.textContent = t['hero-stat-3'];
+            });
+
+            // Hero buttons
+            const btnPrimary = document.querySelector('.hero-buttons .btn-primary');
+            if (btnPrimary) btnPrimary.innerHTML = t['hero-btn-buy'] + ' <span class="btn-icon">&rarr;</span>';
+            const btnSecondary = document.querySelector('.hero-buttons .btn-secondary');
+            if (btnSecondary) btnSecondary.textContent = t['hero-btn-how'];
+
+            // Requirements section
+            const reqSection = document.querySelector('#requirements');
+            if (reqSection) {
+                const reqTitle = reqSection.querySelector('.section-title');
+                if (reqTitle) reqTitle.textContent = t['req-title'];
+                const reqSubtitle = reqSection.querySelector('.section-subtitle');
+                if (reqSubtitle) reqSubtitle.textContent = t['req-subtitle'];
+                const reqCards = reqSection.querySelectorAll('.requirement-card');
+                if (reqCards[0]) {
+                    reqCards[0].querySelector('.requirement-title').textContent = t['req-1-title'];
+                    reqCards[0].querySelector('.requirement-desc').innerHTML = lang === 'it'
+                        ? 'Crea un account sul broker <strong>FPG (Funding Pips Global)</strong>. La registrazione \u00e8 completamente gratuita e richiede solo pochi minuti.'
+                        : 'Create an account on the <strong>FPG (Funding Pips Global)</strong> broker. Registration is completely free and takes only a few minutes.';
+                    reqCards[0].querySelector('.requirement-btn').innerHTML = t['req-1-btn'] + ' <span>&rarr;</span>';
+                }
+                if (reqCards[1]) {
+                    reqCards[1].querySelector('.requirement-title').textContent = t['req-2-title'];
+                    reqCards[1].querySelector('.requirement-desc').innerHTML = lang === 'it'
+                        ? 'Acquista una VPS con <strong>Windows 11</strong> per far girare il bot 24 ore su 24, 7 giorni su 7. <strong>Contabo</strong> offre le VPS pi\u00f9 economiche.'
+                        : 'Purchase a VPS with <strong>Windows 11</strong> to run the bot 24/7. <strong>Contabo</strong> offers the cheapest VPS.';
+                    reqCards[1].querySelector('.requirement-btn').innerHTML = t['req-2-btn'] + ' <span>&rarr;</span>';
+                }
+                // Requirement warning
+                const reqWarning = reqSection.querySelector('.requirement-warning span');
+                if (reqWarning) {
+                    reqWarning.innerHTML = lang === 'it'
+                        ? 'Il bot funziona <strong>esclusivamente su Windows</strong>. La VPS deve rimanere sempre accesa per operare automaticamente 24/7.'
+                        : 'The bot works <strong>exclusively on Windows</strong>. The VPS must remain always on to operate automatically 24/7.';
+                }
+                // Section label "Obbligatorio"
+                const reqLabel = reqSection.querySelector('.section-label');
+                if (reqLabel) reqLabel.textContent = lang === 'it' ? 'Obbligatorio' : 'Required';
+            }
+
+            // Features section
+            const featuresSection = document.querySelector('#features');
+            if (featuresSection) {
+                const label = featuresSection.querySelector('.section-label');
+                if (label) label.textContent = t['features-label'];
+                const title = featuresSection.querySelector('.section-title');
+                if (title) title.innerHTML = t['features-title'];
+                const subtitle = featuresSection.querySelector('.section-subtitle');
+                if (subtitle) subtitle.textContent = t['features-subtitle'];
+            }
+
+            // How it works section
+            const howSection = document.querySelector('#how-it-works');
+            if (howSection) {
+                const label = howSection.querySelector('.section-label');
+                if (label) label.textContent = t['how-label'];
+                const title = howSection.querySelector('.section-title');
+                if (title) title.innerHTML = t['how-title'];
+                const subtitle = howSection.querySelector('.section-subtitle');
+                if (subtitle) subtitle.textContent = t['how-subtitle'];
+            }
+
+            // Testimonials section
+            const testimonialsSection = document.querySelector('#testimonials');
+            if (testimonialsSection) {
+                const label = testimonialsSection.querySelector('.section-label');
+                if (label) label.textContent = t['reviews-label'];
+                const title = testimonialsSection.querySelector('.section-title');
+                if (title) title.innerHTML = t['reviews-title'];
+                // Testimonial cards
+                const testimonialCards = testimonialsSection.querySelectorAll('.testimonial-card');
+                testimonialCards.forEach((card, i) => {
+                    const idx = (i % 4) + 1; // 4 unique testimonials, repeated
+                    const text = card.querySelector('.testimonial-text');
+                    const role = card.querySelector('.testimonial-role');
+                    if (text && t['testimonial-' + idx + '-text']) text.textContent = t['testimonial-' + idx + '-text'];
+                    if (role && t['testimonial-' + idx + '-role']) role.textContent = t['testimonial-' + idx + '-role'];
+                });
+            }
+
+            // FAQ section
+            const faqSection = document.querySelector('#faq');
+            if (faqSection) {
+                const label = faqSection.querySelector('.section-label');
+                if (label) label.textContent = t['faq-label'];
+                const title = faqSection.querySelector('.section-title');
+                if (title) title.innerHTML = t['faq-title'];
+            }
+
+            // Feature cards
+            document.querySelectorAll('.feature-title').forEach((el, i) => {
+                const key = 'feature-' + (i + 1) + '-title';
+                if (t[key]) el.textContent = t[key];
+            });
+            document.querySelectorAll('.feature-desc').forEach((el, i) => {
+                const key = 'feature-' + (i + 1) + '-desc';
+                if (t[key]) el.textContent = t[key];
+            });
+
+            // Stat labels
+            document.querySelectorAll('.stat-label').forEach((el, i) => {
+                if (i === 0) el.textContent = t['stat-1-label'];
+                if (i === 1) el.textContent = t['stat-2-label'];
+                if (i === 2) el.textContent = t['stat-3-label'];
+                if (i === 3) el.textContent = t['stat-4-label'];
+            });
+
+            // Steps
+            document.querySelectorAll('.step-title').forEach((el, i) => {
+                if (i === 0) el.textContent = t['step-1-title'];
+                if (i === 1) el.textContent = t['step-2-title'];
+                if (i === 2) el.textContent = t['step-3-title'];
+            });
+            document.querySelectorAll('.step-desc').forEach((el, i) => {
+                if (i === 0) el.textContent = t['step-1-desc'];
+                if (i === 1) el.textContent = t['step-2-desc'];
+                if (i === 2) el.textContent = t['step-3-desc'];
+            });
+
+            // CTA
+            const ctaTitle = document.querySelector('.cta-title');
+            if (ctaTitle) ctaTitle.textContent = t['cta-title'];
+            const ctaSubtitle = document.querySelector('.cta-subtitle');
+            if (ctaSubtitle) ctaSubtitle.textContent = t['cta-subtitle'];
+            const ctaPeriod = document.querySelector('.cta-price-period');
+            if (ctaPeriod) ctaPeriod.textContent = t['cta-period'];
+            const ctaBtn = document.querySelector('.cta-btn');
+            if (ctaBtn) ctaBtn.innerHTML = t['cta-btn'] + ' <span class="btn-icon">&rarr;</span>';
+            const ctaFeatures = document.querySelectorAll('.cta-feature-text');
+            if (ctaFeatures[0]) ctaFeatures[0].textContent = t['cta-feature-1'];
+            if (ctaFeatures[1]) ctaFeatures[1].textContent = t['cta-feature-2'];
+            if (ctaFeatures[2]) ctaFeatures[2].textContent = t['cta-feature-3'];
+            if (ctaFeatures[3]) ctaFeatures[3].textContent = t['cta-feature-4'];
+            // Discount badge
+            const discountText = document.querySelector('.discount-text');
+            if (discountText) discountText.textContent = t['cta-discount'];
+
+            // FAQ
+            document.querySelectorAll('.faq-question span:first-child').forEach((el, i) => {
+                const key = 'faq-' + (i + 1) + '-q';
+                if (t[key]) el.textContent = t[key];
+            });
+            document.querySelectorAll('.faq-answer-text').forEach((el, i) => {
+                const key = 'faq-' + (i + 1) + '-a';
+                if (t[key]) el.innerHTML = t[key];
+            });
+
+            // Footer disclaimer
+            const disclaimer = document.querySelector('.footer-disclaimer p');
+            if (disclaimer) disclaimer.innerHTML = t['footer-disclaimer'];
+
+            // Mobile menu items
+            const mobileLinks = document.querySelectorAll('.mobile-menu a:not([href="acquista.html"])');
+            if (mobileLinks[0]) mobileLinks[0].textContent = t['nav-features'];
+            if (mobileLinks[1]) mobileLinks[1].textContent = t['nav-how'];
+            if (mobileLinks[2]) mobileLinks[2].textContent = t['nav-reviews'];
+            if (mobileLinks[3]) mobileLinks[3].textContent = t['nav-faq'];
+            const mobileCta = document.querySelector('.mobile-menu a[href="acquista.html"]');
+            if (mobileCta) mobileCta.textContent = t['nav-buy'];
+
+            // Broker banner
+            const brokerBanner = document.querySelector('.broker-banner');
+            if (brokerBanner) {
+                const brokerLabel = brokerBanner.querySelector('div[style*="text-transform"]');
+                if (brokerLabel) brokerLabel.innerHTML = lang === 'it' ? '&#x1F381; Broker Partner' : '&#x1F381; Partner Broker';
+                const brokerTitle = brokerBanner.querySelector('h3');
+                if (brokerTitle) brokerTitle.innerHTML = t['broker-title'];
+                const brokerDesc = brokerBanner.querySelector('p');
+                if (brokerDesc) brokerDesc.textContent = t['broker-desc'];
+                const brokerBtn = brokerBanner.querySelector('a');
+                if (brokerBtn) brokerBtn.innerHTML = t['broker-btn'] + ' &rarr;';
+            }
+
+            // Requirement badges
+            const reqBadges = document.querySelectorAll('.requirement-badge');
+            if (reqBadges[0]) reqBadges[0].textContent = lang === 'it' ? 'GRATUITO' : 'FREE';
+            if (reqBadges[1]) reqBadges[1].textContent = lang === 'it' ? 'CONSIGLIATO' : 'RECOMMENDED';
+        }
+    </script>
+</body>
+</html>

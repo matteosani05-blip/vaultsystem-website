@@ -1056,10 +1056,6 @@
                         <div class="payment-method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></div>
                         <div class="payment-method-label">Carta</div>
                     </div>
-                    <div class="payment-method" data-method="usdt">
-                        <div class="payment-method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 8v1m0 6v1M9 10h6M9 14h6"/><path d="M12 11v2"/></svg></div>
-                        <div class="payment-method-label">USDT</div>
-                    </div>
                     <div class="payment-method" data-method="crypto">
                         <div class="payment-method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 6v2m0 8v2M9 9.5c0-.8.7-1.5 1.5-1.5h3c.8 0 1.5.7 1.5 1.5S14.3 11 13.5 11h-3c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5h3c.8 0 1.5-.7 1.5-1.5"/></svg></div>
                         <div class="payment-method-label">Crypto</div>
@@ -1083,37 +1079,29 @@
 
 
                     <!-- USDT -->
-                    <div class="payment-panel" id="panel-usdt">
-                        <div class="crypto-address-box">
-                            <div class="crypto-address-label">Invia <span id="usdt-amount">499 EUR</span> in <span style="color:var(--accent-crypto)">USDT</span> a:</div>
-                            <div class="crypto-address" id="usdt-address">TN9RRaXkCFtTXRso2GdTZxSxxwufNfPRag</div>
-                            <button type="button" class="crypto-copy-btn" onclick="copyUsdtAddress()">&#x1F4CB; Copia Indirizzo</button>
-                        </div>
-                        <p class="crypto-note">
-                            Dopo il pagamento, invia la conferma (screenshot/TxID) a<br>
-                            <a href="https://t.me/AssistenzaVaultSystem" target="_blank" style="color: var(--accent-primary);">@AssistenzaVaultSystem su Telegram</a>
-                        </p>
-                    </div>
-
                     <!-- Crypto -->
                     <div class="payment-panel" id="panel-crypto">
-                        <div class="crypto-options">
-                            <div class="crypto-option selected" data-crypto="usdt">
-                                <div class="crypto-icon">&#x24;</div>
-                                <div class="crypto-name">USDT</div>
+                        <div style="display: flex; justify-content: flex-end;">
+                            <div>
+                                <div class="crypto-options">
+                                    <div class="crypto-option selected" data-crypto="usdt">
+                                        <div class="crypto-icon">&#x24;</div>
+                                        <div class="crypto-name">USDT</div>
+                                    </div>
+                                </div>
+
+                                <div class="crypto-address-box">
+                                    <div class="crypto-address-label">Invia <span id="crypto-amount">499 EUR</span> in <span id="crypto-currency">USDT</span> a:</div>
+                                    <div class="crypto-address" id="crypto-address">TN9RRaXkCFtTXRso2GdTZxSxxwufNfPRag</div>
+                                    <button type="button" class="crypto-copy-btn" onclick="copyAddress()">&#x1F4CB; Copia Indirizzo</button>
+                                </div>
+
+                                <p class="crypto-note">
+                                    Dopo il pagamento, invia la conferma (screenshot/TxID) a<br>
+                                    <a href="https://t.me/AssistenzaVaultSystem" target="_blank" style="color: var(--accent-primary);">@AssistenzaVaultSystem su Telegram</a>
+                                </p>
                             </div>
                         </div>
-
-                        <div class="crypto-address-box">
-                            <div class="crypto-address-label">Invia <span id="crypto-amount">499 EUR</span> in <span id="crypto-currency">USDT</span> a:</div>
-                            <div class="crypto-address" id="crypto-address">TN9RRaXkCFtTXRso2GdTZxSxxwufNfPRag</div>
-                            <button type="button" class="crypto-copy-btn" onclick="copyAddress()">&#x1F4CB; Copia Indirizzo</button>
-                        </div>
-
-                        <p class="crypto-note">
-                            Dopo il pagamento, invia la conferma (screenshot/TxID) a<br>
-                            <a href="https://t.me/AssistenzaVaultSystem" target="_blank" style="color: var(--accent-primary);">@AssistenzaVaultSystem su Telegram</a>
-                        </p>
                     </div>
                 </div>
 

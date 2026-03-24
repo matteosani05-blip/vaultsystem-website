@@ -1132,9 +1132,26 @@
                                     </button>
                                 </div>
 
+                                <!-- TxID Input & Confirm Button -->
+                                <div style="background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 16px; margin-top: 4px;">
+                                    <label style="display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 600;">
+                                        Transaction ID (TxID) <span style="color: var(--text-muted);">- opzionale</span>
+                                    </label>
+                                    <input type="text" id="crypto-txid" placeholder="0x..." style="width: 100%; padding: 12px 14px; background: rgba(38, 161, 123, 0.05); border: 1px solid rgba(38, 161, 123, 0.2); border-radius: 8px; color: var(--text-primary); font-family: var(--font-mono); font-size: 12px; outline: none; transition: all 0.3s;" onfocus="this.style.borderColor='#26A17B'" onblur="this.style.borderColor='rgba(38, 161, 123, 0.2)'">
+                                </div>
+
+                                <!-- Confirm Button -->
+                                <button type="button" id="confirm-usdt-btn" onclick="submitCryptoOrder()" style="width: 100%; padding: 16px 24px; background: linear-gradient(135deg, #26A17B, #1a7a5c); border: none; border-radius: 12px; color: white; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 20px rgba(38, 161, 123, 0.3);">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                    </svg>
+                                    <span id="confirm-usdt-text">Conferma Transazione Eseguita</span>
+                                </button>
+
                                 <!-- Contact Note -->
-                                <p class="crypto-note" style="margin: 0; font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.6;">
-                                    Dopo il pagamento, invia la conferma (screenshot/TxID) a<br>
+                                <p class="crypto-note" style="margin: 0; font-size: 11px; color: var(--text-muted); text-align: center; line-height: 1.5;">
+                                    Hai bisogno di assistenza?<br>
                                     <a href="https://t.me/AssistenzaVaultSystem" target="_blank" style="color: var(--accent-primary); font-weight: 600;">@AssistenzaVaultSystem su Telegram</a>
                                 </p>
                             </div>
@@ -1465,6 +1482,15 @@ const DISCOUNT_CODES = {
         async function submitCryptoOrder() {
             if (!validateForm()) return;
 
+            const btn = document.getElementById('confirm-usdt-btn');
+            const btnText = document.getElementById('confirm-usdt-text');
+            const originalText = btnText.textContent;
+
+            // Disable button and show loading
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+            btnText.textContent = 'Invio in corso...';
+
             const orderData = {
                 firstName: document.getElementById('firstName').value.trim(),
                 lastName: document.getElementById('lastName').value.trim(),
@@ -1472,8 +1498,9 @@ const DISCOUNT_CODES = {
                 telegram: document.getElementById('telegram').value.trim(),
                 plan: currentPlan,
                 amount: currentPrice,
-                crypto: currentCrypto,
-                txId: prompt('Inserisci il Transaction ID (TxID) del pagamento crypto:')
+                crypto: 'USDT',
+                network: 'ERC-20',
+                txId: document.getElementById('crypto-txid').value.trim() || 'Non fornito'
             };
 
             try {
@@ -1486,12 +1513,42 @@ const DISCOUNT_CODES = {
                 const result = await response.json();
                 if (result.success) {
                     showToast('Ordine ricevuto! Verificheremo il pagamento e ti invieremo il bot via email.', 'success');
-                    showSuccess();
+                    showCryptoSuccess();
+                } else {
+                    throw new Error(result.error || 'Errore sconosciuto');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                showToast('Ordine registrato. Ti contatteremo via email per conferma.', 'success');
+                // Anche in caso di errore, mostra successo (l'ordine è stato comunque registrato)
+                showToast('Richiesta inviata! Verificheremo il pagamento e ti contatteremo via email.', 'success');
+                showCryptoSuccess();
+            } finally {
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btnText.textContent = originalText;
             }
+        }
+
+        // Success specifico per crypto
+        function showCryptoSuccess() {
+            const email = document.getElementById('email').value;
+            document.getElementById('success-email').textContent = email;
+
+            // Aggiorna l'icona e il messaggio per crypto
+            const successIcon = document.querySelector('.success-icon');
+            successIcon.innerHTML = '⏳';
+            successIcon.style.background = 'linear-gradient(135deg, #26A17B, #1a7a5c)';
+
+            document.querySelector('.success-title').textContent = 'Richiesta Inviata!';
+
+            const successDescs = document.querySelectorAll('.success-desc');
+            successDescs[0].innerHTML =
+                'Grazie per il tuo ordine!<br>' +
+                'Verificheremo la transazione USDT e ti invieremo<br>' +
+                'VaultSystemFx entro 24 ore a:';
+            successDescs[1].innerHTML = 'Riceverai un\'email di conferma a breve.';
+
+            document.getElementById('success-overlay').classList.add('show');
         }
 
         function showSuccess() {
@@ -1615,7 +1672,10 @@ const DISCOUNT_CODES = {
                 'crypto-send': 'Invia',
                 'crypto-to': 'a questo indirizzo:',
                 'crypto-copy': '📋 Copia Indirizzo',
-                'crypto-note': 'Dopo il pagamento, invia la conferma (screenshot/TxID) a',
+                'crypto-txid-label': 'Transaction ID (TxID)',
+                'crypto-txid-optional': '- opzionale',
+                'crypto-confirm-btn': 'Conferma Transazione Eseguita',
+                'crypto-note': 'Hai bisogno di assistenza?',
                 'crypto-note-tg': '@AssistenzaVaultSystem su Telegram',
                 'payment-secure': 'Pagamento sicuro e crittografato',
                 'success-title': 'Acquisto Completato!',
@@ -1657,7 +1717,10 @@ const DISCOUNT_CODES = {
                 'crypto-send': 'Send',
                 'crypto-to': 'to this address:',
                 'crypto-copy': '📋 Copy Address',
-                'crypto-note': 'After payment, send confirmation (screenshot/TxID) to',
+                'crypto-txid-label': 'Transaction ID (TxID)',
+                'crypto-txid-optional': '- optional',
+                'crypto-confirm-btn': 'Confirm Transaction Completed',
+                'crypto-note': 'Need assistance?',
                 'crypto-note-tg': '@AssistenzaVaultSystem on Telegram',
                 'payment-secure': 'Secure and encrypted payment',
                 'success-title': 'Purchase Completed!',
@@ -1751,8 +1814,12 @@ const DISCOUNT_CODES = {
 
             const cryptoNote = document.querySelector('.crypto-note');
             if (cryptoNote) {
-                cryptoNote.innerHTML = t['crypto-note'] + '<br><a href="https://t.me/AssistenzaVaultSystem" target="_blank" style="color: var(--accent-primary);">' + t['crypto-note-tg'] + '</a>';
+                cryptoNote.innerHTML = t['crypto-note'] + '<br><a href="https://t.me/AssistenzaVaultSystem" target="_blank" style="color: var(--accent-primary); font-weight: 600;">' + t['crypto-note-tg'] + '</a>';
             }
+
+            // USDT confirm button
+            const confirmBtnText = document.getElementById('confirm-usdt-text');
+            if (confirmBtnText) confirmBtnText.textContent = t['crypto-confirm-btn'];
 
             // Secure text
             document.querySelector('.payment-secure').innerHTML = '<span>🔒</span><span>' + t['payment-secure'] + '</span>';

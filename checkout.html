@@ -1081,22 +1081,23 @@
                     <!-- USDT -->
                     <!-- Crypto -->
                     <div class="payment-panel" id="panel-crypto">
-                        <div style="display: flex; justify-content: center; margin-left: 40%;">
-                            <div>
-                                <div class="crypto-options">
-                                    <div class="crypto-option selected" data-crypto="usdt">
-                                        <div class="crypto-icon">&#x24;</div>
-                                        <div class="crypto-name">USDT</div>
-                                    </div>
+                        <div style="display: flex; justify-content: center; align-items: flex-start; gap: 32px; flex-wrap: wrap;">
+                            <!-- QR Code -->
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                                <img src="WhatsApp Image 2026-03-24 at 21.45.13.jpeg" alt="QR Code USDT" style="width: 160px; height: 160px; border-radius: 12px; border: 2px solid rgba(247,147,26,0.3);">
+                                <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Scansiona per pagare</span>
+                            </div>
+                            <!-- Address + Info -->
+                            <div style="display: flex; flex-direction: column; gap: 12px; max-width: 320px;">
+                                <div style="background: rgba(247,147,26,0.08); border: 1px solid rgba(247,147,26,0.25); border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
+                                    <span style="font-size: 13px; font-weight: 700; color: #f7931a;">⚠ Rete: ERC-20 (Ethereum)</span>
                                 </div>
-
-                                <div class="crypto-address-box">
+                                <div class="crypto-address-box" style="margin: 0;">
                                     <div class="crypto-address-label">Invia <span id="crypto-amount">499 EUR</span> in <span id="crypto-currency">USDT</span> a:</div>
-                                    <div class="crypto-address" id="crypto-address">TN9RRaXkCFtTXRso2GdTZxSxxwufNfPRag</div>
+                                    <div class="crypto-address" id="crypto-address">0xeaEaC540cfD48f7d30bE830724Fd5d4176D09bD5</div>
                                     <button type="button" class="crypto-copy-btn" onclick="copyAddress()">&#x1F4CB; Copia Indirizzo</button>
                                 </div>
-
-                                <p class="crypto-note">
+                                <p class="crypto-note" style="margin: 0;">
                                     Dopo il pagamento, invia la conferma (screenshot/TxID) a<br>
                                     <a href="https://t.me/AssistenzaVaultSystem" target="_blank" style="color: var(--accent-primary);">@AssistenzaVaultSystem su Telegram</a>
                                 </p>
@@ -1165,7 +1166,7 @@
 
         // Indirizzi crypto - SOSTITUISCI CON I TUOI
         const cryptoAddresses = {
-            usdt: 'TN9RRaXkCFtTXRso2GdTZxSxxwufNfPRag'
+            usdt: '0xeaEaC540cfD48f7d30bE830724Fd5d4176D09bD5'
         };
 
         // Stripe Publishable Key

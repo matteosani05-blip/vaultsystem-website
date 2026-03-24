@@ -1100,7 +1100,7 @@
                             <!-- QR Code -->
                             <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
                                 <div style="background: linear-gradient(135deg, rgba(38, 161, 123, 0.1), transparent); border: 2px solid rgba(38, 161, 123, 0.4); border-radius: 16px; padding: 12px;">
-                                    <img src="WhatsApp Image 2026-03-24 at 21.45.13.jpeg" alt="QR Code USDT" style="width: 150px; height: 150px; border-radius: 10px; display: block;">
+                                    <img src="WhatsApp Image 2026-03-24 at 22.05.23 (1).jpeg" alt="QR Code USDT" style="width: 150px; height: 150px; border-radius: 10px; display: block;">
                                 </div>
                                 <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Scansiona per pagare</span>
                             </div>
@@ -1115,7 +1115,7 @@
                                         </div>
                                         <div>
                                             <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Rete obbligatoria</div>
-                                            <div style="font-size: 15px; font-weight: 800; color: #26A17B;">ERC-20 (Ethereum)</div>
+                                            <div style="font-size: 15px; font-weight: 800; color: #26A17B;">TRC-20 (Tron)</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1125,7 +1125,7 @@
                                     <div class="crypto-address-label" style="color: var(--text-muted); font-size: 12px; margin-bottom: 10px;">
                                         Invia <span id="crypto-amount" style="color: #26A17B; font-weight: 700;">499 USDT</span> a questo indirizzo:
                                     </div>
-                                    <div id="crypto-address" style="font-family: var(--font-mono); font-size: 11px; color: #26A17B; word-break: break-all; background: rgba(38, 161, 123, 0.08); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(38, 161, 123, 0.2);">0xeaEaC540cfD48f7d30bE830724Fd5d4176D09bD5</div>
+                                    <div id="crypto-address" style="font-family: var(--font-mono); font-size: 11px; color: #26A17B; word-break: break-all; background: rgba(38, 161, 123, 0.08); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(38, 161, 123, 0.2);">TUyfj5TrX6Ejwr1gLRJY18GtHV8USwjW21</div>
                                     <button type="button" class="crypto-copy-btn" onclick="copyAddress()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #26A17B, #1a7a5c); border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.3s ease;">
                                         <span id="crypto-currency" style="display: none;">USDT</span>
                                         &#x1F4CB; Copia Indirizzo
@@ -1219,7 +1219,7 @@
 
         // Indirizzi crypto - SOSTITUISCI CON I TUOI
         const cryptoAddresses = {
-            usdt: '0xeaEaC540cfD48f7d30bE830724Fd5d4176D09bD5'
+            usdt: 'TUyfj5TrX6Ejwr1gLRJY18GtHV8USwjW21'
         };
 
         // Stripe Publishable Key
@@ -1499,7 +1499,7 @@ const DISCOUNT_CODES = {
                 plan: currentPlan,
                 amount: currentPrice,
                 crypto: 'USDT',
-                network: 'ERC-20',
+                network: 'TRC-20',
                 txId: document.getElementById('crypto-txid').value.trim() || 'Non fornito'
             };
 

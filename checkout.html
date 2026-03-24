@@ -1081,23 +1081,15 @@
                     <!-- Crypto -->
                     <div class="payment-panel" id="panel-crypto">
                         <div class="crypto-options">
-                            <div class="crypto-option selected" data-crypto="btc">
-                                <div class="crypto-icon">&#x20BF;</div>
-                                <div class="crypto-name">Bitcoin</div>
-                            </div>
-                            <div class="crypto-option" data-crypto="eth">
-                                <div class="crypto-icon">&#x039E;</div>
-                                <div class="crypto-name">Ethereum</div>
-                            </div>
-                            <div class="crypto-option" data-crypto="usdt">
+                            <div class="crypto-option selected" data-crypto="usdt">
                                 <div class="crypto-icon">&#x24;</div>
                                 <div class="crypto-name">USDT</div>
                             </div>
                         </div>
 
                         <div class="crypto-address-box">
-                            <div class="crypto-address-label">Invia <span id="crypto-amount">499 EUR</span> in <span id="crypto-currency">BTC</span> a:</div>
-                            <div class="crypto-address" id="crypto-address">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
+                            <div class="crypto-address-label">Invia <span id="crypto-amount">499 EUR</span> in <span id="crypto-currency">USDT</span> a:</div>
+                            <div class="crypto-address" id="crypto-address">TN9RRaXkCFtTXRso2GdTZxSxxwufNfPRag</div>
                             <button type="button" class="crypto-copy-btn" onclick="copyAddress()">&#x1F4CB; Copia Indirizzo</button>
                         </div>
 
@@ -1168,8 +1160,6 @@
 
         // Indirizzi crypto - SOSTITUISCI CON I TUOI
         const cryptoAddresses = {
-            btc: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
-            eth: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
             usdt: 'TN9RRaXkCFtTXRso2GdTZxSxxwufNfPRag'
         };
 
@@ -1207,7 +1197,7 @@
         let currentPrice = 499;
         let originalPrice = 799;
         let currentPlan = 'standard';
-        let currentCrypto = 'btc';
+        let currentCrypto = 'usdt';
         let currentPaymentMethod = 'card';
         let discountApplied = false;
 

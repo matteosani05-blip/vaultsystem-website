@@ -29,7 +29,7 @@
             --accent-secondary: #8b5cf6;
             --accent-success: #10b981;
             --accent-gold: #f59e0b;
-            --accent-crypto: #f7931a;
+            --accent-crypto: #26A17B;
             --gradient-main: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
             --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
             --glow-primary: rgba(99, 102, 241, 0.5);
@@ -584,7 +584,7 @@
 
         .crypto-option.selected {
             border-color: var(--accent-crypto);
-            background: rgba(247, 147, 26, 0.1);
+            background: rgba(38, 161, 123, 0.1);
         }
 
         .crypto-icon {
@@ -617,7 +617,7 @@
             font-size: 12px;
             color: var(--accent-crypto);
             word-break: break-all;
-            background: rgba(247, 147, 26, 0.1);
+            background: rgba(38, 161, 123, 0.1);
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 12px;
@@ -626,10 +626,10 @@
         .crypto-copy-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #f7931a, #ffab40);
+            background: linear-gradient(135deg, #26A17B, #1a7a5c);
             border: none;
             border-radius: 10px;
-            color: #000;
+            color: white;
             font-weight: 700;
             font-size: 14px;
             cursor: pointer;
@@ -638,7 +638,7 @@
 
         .crypto-copy-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(247, 147, 26, 0.3);
+            box-shadow: 0 8px 24px rgba(38, 161, 123, 0.4);
         }
 
         .crypto-note {
@@ -1057,8 +1057,13 @@
                         <div class="payment-method-label">Carta</div>
                     </div>
                     <div class="payment-method" data-method="crypto">
-                        <div class="payment-method-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 6v2m0 8v2M9 9.5c0-.8.7-1.5 1.5-1.5h3c.8 0 1.5.7 1.5 1.5S14.3 11 13.5 11h-3c-.8 0-1.5.7-1.5 1.5s.7 1.5 1.5 1.5h3c.8 0 1.5-.7 1.5-1.5"/></svg></div>
-                        <div class="payment-method-label">Crypto</div>
+                        <div class="payment-method-icon">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <circle cx="12" cy="12" r="9" fill="#26A17B"/>
+                                <path d="M13.2 10.5V9H15V7.5H9V9H10.8V10.5C8.4 10.65 6.75 11.25 6.75 12C6.75 12.75 8.4 13.35 10.8 13.5V16.5H13.2V13.5C15.6 13.35 17.25 12.75 17.25 12C17.25 11.25 15.6 10.65 13.2 10.5Z" fill="white"/>
+                            </svg>
+                        </div>
+                        <div class="payment-method-label">USDT</div>
                     </div>
                 </div>
 
@@ -1078,28 +1083,59 @@
                     </div>
 
 
-                    <!-- USDT -->
-                    <!-- Crypto -->
+                    <!-- USDT Only -->
                     <div class="payment-panel" id="panel-crypto">
+                        <!-- Header USDT Only -->
+                        <div style="text-align: center; margin-bottom: 24px;">
+                            <div style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, rgba(38, 161, 123, 0.15), rgba(38, 161, 123, 0.05)); border: 1px solid rgba(38, 161, 123, 0.3); border-radius: 50px; padding: 10px 24px;">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <circle cx="12" cy="12" r="11" fill="#26A17B"/>
+                                    <path d="M13.5 10.5V8.5H16V6.5H8V8.5H10.5V10.5C7.5 10.7 5.5 11.5 5.5 12.5C5.5 13.5 7.5 14.3 10.5 14.5V18.5H13.5V14.5C16.5 14.3 18.5 13.5 18.5 12.5C18.5 11.5 16.5 10.7 13.5 10.5ZM10.5 14C8.2 13.8 7 13.2 7 12.5C7 11.8 8.2 11.2 10.5 11V13.5C10.5 13.5 10.5 14 10.5 14ZM13.5 14C13.5 14 13.5 13.5 13.5 13.5V11C15.8 11.2 17 11.8 17 12.5C17 13.2 15.8 13.8 13.5 14Z" fill="white"/>
+                                </svg>
+                                <span style="font-size: 15px; font-weight: 800; color: #26A17B; letter-spacing: 0.5px;">ACCETTIAMO SOLO USDT</span>
+                            </div>
+                        </div>
+
                         <div style="display: flex; justify-content: center; align-items: flex-start; gap: 32px; flex-wrap: wrap;">
                             <!-- QR Code -->
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                                <img src="WhatsApp Image 2026-03-24 at 21.45.13.jpeg" alt="QR Code USDT" style="width: 160px; height: 160px; border-radius: 12px; border: 2px solid rgba(247,147,26,0.3);">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+                                <div style="background: linear-gradient(135deg, rgba(38, 161, 123, 0.1), transparent); border: 2px solid rgba(38, 161, 123, 0.4); border-radius: 16px; padding: 12px;">
+                                    <img src="WhatsApp Image 2026-03-24 at 21.45.13.jpeg" alt="QR Code USDT" style="width: 150px; height: 150px; border-radius: 10px; display: block;">
+                                </div>
                                 <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Scansiona per pagare</span>
                             </div>
+
                             <!-- Address + Info -->
-                            <div style="display: flex; flex-direction: column; gap: 12px; max-width: 320px;">
-                                <div style="background: rgba(247,147,26,0.08); border: 1px solid rgba(247,147,26,0.25); border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 8px;">
-                                    <span style="font-size: 13px; font-weight: 700; color: #f7931a;">⚠ Rete: ERC-20 (Ethereum)</span>
+                            <div style="display: flex; flex-direction: column; gap: 14px; max-width: 320px;">
+                                <!-- Network Badge -->
+                                <div style="background: linear-gradient(135deg, rgba(38, 161, 123, 0.12), rgba(38, 161, 123, 0.04)); border: 1px solid rgba(38, 161, 123, 0.35); border-radius: 12px; padding: 14px 18px;">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <div style="width: 36px; height: 36px; background: linear-gradient(135deg, #26A17B, #1a7a5c); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                        </div>
+                                        <div>
+                                            <div style="font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Rete obbligatoria</div>
+                                            <div style="font-size: 15px; font-weight: 800; color: #26A17B;">ERC-20 (Ethereum)</div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="crypto-address-box" style="margin: 0;">
-                                    <div class="crypto-address-label">Invia <span id="crypto-amount">499 EUR</span> in <span id="crypto-currency">USDT</span> a:</div>
-                                    <div class="crypto-address" id="crypto-address">0xeaEaC540cfD48f7d30bE830724Fd5d4176D09bD5</div>
-                                    <button type="button" class="crypto-copy-btn" onclick="copyAddress()">&#x1F4CB; Copia Indirizzo</button>
+
+                                <!-- Address Box -->
+                                <div style="background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 16px;">
+                                    <div class="crypto-address-label" style="color: var(--text-muted); font-size: 12px; margin-bottom: 10px;">
+                                        Invia <span id="crypto-amount" style="color: #26A17B; font-weight: 700;">499 USDT</span> a questo indirizzo:
+                                    </div>
+                                    <div id="crypto-address" style="font-family: var(--font-mono); font-size: 11px; color: #26A17B; word-break: break-all; background: rgba(38, 161, 123, 0.08); padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid rgba(38, 161, 123, 0.2);">0xeaEaC540cfD48f7d30bE830724Fd5d4176D09bD5</div>
+                                    <button type="button" class="crypto-copy-btn" onclick="copyAddress()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #26A17B, #1a7a5c); border: none; border-radius: 10px; color: white; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.3s ease;">
+                                        <span id="crypto-currency" style="display: none;">USDT</span>
+                                        &#x1F4CB; Copia Indirizzo
+                                    </button>
                                 </div>
-                                <p class="crypto-note" style="margin: 0;">
+
+                                <!-- Contact Note -->
+                                <p class="crypto-note" style="margin: 0; font-size: 12px; color: var(--text-muted); text-align: center; line-height: 1.6;">
                                     Dopo il pagamento, invia la conferma (screenshot/TxID) a<br>
-                                    <a href="https://t.me/AssistenzaVaultSystem" target="_blank" style="color: var(--accent-primary);">@AssistenzaVaultSystem su Telegram</a>
+                                    <a href="https://t.me/AssistenzaVaultSystem" target="_blank" style="color: var(--accent-primary); font-weight: 600;">@AssistenzaVaultSystem su Telegram</a>
                                 </p>
                             </div>
                         </div>
@@ -1574,10 +1610,10 @@ const DISCOUNT_CODES = {
                 'payment-title': 'Metodo di pagamento',
                 'payment-card': 'Carta',
                 'payment-paypal': 'PayPal',
-                'payment-crypto': 'Crypto',
+                'payment-crypto': 'USDT',
                 'pay-btn': 'Paga €{price} con Carta',
                 'crypto-send': 'Invia',
-                'crypto-to': 'a:',
+                'crypto-to': 'a questo indirizzo:',
                 'crypto-copy': '📋 Copia Indirizzo',
                 'crypto-note': 'Dopo il pagamento, invia la conferma (screenshot/TxID) a',
                 'crypto-note-tg': '@AssistenzaVaultSystem su Telegram',
@@ -1616,10 +1652,10 @@ const DISCOUNT_CODES = {
                 'payment-title': 'Payment method',
                 'payment-card': 'Card',
                 'payment-paypal': 'PayPal',
-                'payment-crypto': 'Crypto',
+                'payment-crypto': 'USDT',
                 'pay-btn': 'Pay €{price} with Card',
                 'crypto-send': 'Send',
-                'crypto-to': 'to:',
+                'crypto-to': 'to this address:',
                 'crypto-copy': '📋 Copy Address',
                 'crypto-note': 'After payment, send confirmation (screenshot/TxID) to',
                 'crypto-note-tg': '@AssistenzaVaultSystem on Telegram',

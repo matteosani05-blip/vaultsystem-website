@@ -14,315 +14,432 @@
     <title>Checkout - VaultSystemFx</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0a0b;
-            --bg-card: #141417;
-            --bg-input: #1a1a1f;
-            --border: rgba(255,255,255,0.08);
-            --border-focus: #6366f1;
-            --text: #ffffff;
-            --text-secondary: #a1a1aa;
-            --text-muted: #52525b;
-            --accent: #6366f1;
-            --accent-hover: #818cf8;
-            --success: #22c55e;
+            --bg-primary: #030508;
+            --bg-secondary: #080c14;
+            --bg-card: rgba(10, 14, 22, 0.6);
+            --border-subtle: rgba(255, 255, 255, 0.05);
+            --border-glow: rgba(99, 139, 255, 0.4);
+            --text-primary: #f8faff;
+            --text-secondary: #94a3b8;
+            --text-muted: #475569;
+            --accent-primary: #6366f1;
+            --accent-secondary: #8b5cf6;
+            --accent-tertiary: #06b6d4;
+            --accent-success: #10b981;
             --usdt: #26A17B;
+            --gradient-main: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --glow-primary: rgba(99, 102, 241, 0.5);
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.6;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection { background: var(--accent-primary); color: white; }
+
+        /* Background Animation */
+        .bg-animation {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+        }
+
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: orbFloat 20s ease-in-out infinite;
+        }
+
+        .bg-orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, var(--accent-primary), transparent 70%); top: -150px; right: -100px; }
+        .bg-orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, var(--accent-secondary), transparent 70%); bottom: -100px; left: -100px; animation-delay: -7s; }
+        .bg-orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, var(--accent-tertiary), transparent 70%); top: 50%; left: 50%; animation-delay: -14s; }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -30px) scale(1.1); }
+            50% { transform: translate(-30px, 50px) scale(0.95); }
+            75% { transform: translate(40px, 20px) scale(1.05); }
+        }
+
+        .particles { position: absolute; inset: 0; overflow: hidden; }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-primary);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleRise 8s ease-in-out infinite;
+        }
+        @keyframes particleRise {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { opacity: 0; transform: translateY(-100px) scale(1); }
         }
 
         /* Header */
         .header {
-            padding: 16px 24px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 16px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-            background: rgba(10,10,11,0.8);
+            background: rgba(3, 5, 8, 0.85);
             backdrop-filter: blur(20px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            border-bottom: 1px solid var(--border-subtle);
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             text-decoration: none;
-            color: var(--text);
-            font-weight: 700;
-            font-size: 16px;
         }
 
-        .logo img {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 20px var(--glow-primary);
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
         }
 
-        .lang-toggle {
-            display: flex;
-            background: var(--bg-input);
-            border-radius: 8px;
-            padding: 4px;
-        }
-
-        .lang-btn {
-            padding: 6px 12px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            background: none;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .lang-btn.active {
-            background: var(--accent);
-            color: white;
-        }
-
-        .back-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 13px;
+        .lang-selector {
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .back-link:hover { color: var(--text); }
-
-        /* Main Container */
-        .main {
-            flex: 1;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-
-        .checkout-container {
-            width: 100%;
-            max-width: 480px;
-        }
-
-        /* Product Card */
-        .product-card {
-            background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .product-info h2 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .product-info p {
+        .lang-btn {
+            padding: 6px 10px;
             font-size: 13px;
-            opacity: 0.85;
-        }
-
-        .product-price {
-            text-align: right;
-        }
-
-        .price-current {
-            font-size: 28px;
-            font-weight: 800;
-        }
-
-        .price-original {
-            font-size: 14px;
-            text-decoration: line-through;
-            opacity: 0.6;
-        }
-
-        /* Form Card */
-        .form-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-        }
-
-        .form-section {
-            padding: 24px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .form-section:last-child {
-            border-bottom: none;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .section-number {
-            width: 28px;
-            height: 28px;
-            background: var(--accent);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .section-title {
-            font-size: 15px;
             font-weight: 600;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 6px;
         }
 
-        /* Form Elements */
+        .lang-btn:hover { color: var(--text-primary); }
+        .lang-btn.active { color: var(--text-primary); background: rgba(99, 102, 241, 0.15); }
+
+        .back-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover { color: var(--text-primary); }
+
+        /* Main */
+        .main {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 24px 40px;
+        }
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 32px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* Left - Form */
+        .checkout-form {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 32px;
+        }
+
+        .form-header {
+            margin-bottom: 28px;
+        }
+
+        .form-title {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .form-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 16px;
         }
 
         .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
+            margin-bottom: 18px;
         }
 
         .form-label {
             display: block;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .form-input {
             width: 100%;
-            padding: 12px 14px;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 14px;
-            transition: all 0.2s;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 15px;
+            transition: all 0.3s ease;
             outline: none;
         }
 
         .form-input:focus {
-            border-color: var(--accent);
+            border-color: var(--accent-primary);
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
 
-        .form-input::placeholder {
-            color: var(--text-muted);
-        }
+        .form-input::placeholder { color: var(--text-muted); }
 
-        /* Discount */
         .discount-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .discount-row .form-input {
             flex: 1;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.08em;
+            font-weight: 600;
         }
 
         .discount-btn {
-            padding: 12px 20px;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text);
-            font-weight: 600;
-            font-size: 13px;
+            padding: 14px 24px;
+            background: var(--gradient-main);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-family: var(--font-sans);
+            font-size: 14px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            white-space: nowrap;
         }
 
         .discount-btn:hover {
-            background: var(--accent);
-            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--glow-primary);
         }
 
         .discount-message {
+            margin-top: 10px;
             font-size: 13px;
-            margin-top: 8px;
+            font-weight: 600;
             display: none;
         }
 
-        .discount-message.success {
-            display: block;
-            color: var(--success);
+        .discount-message.success { display: block; color: var(--accent-success); }
+        .discount-message.error { display: block; color: #ef4444; }
+
+        /* Right - Summary & Payment */
+        .checkout-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
 
-        .discount-message.error {
-            display: block;
-            color: #ef4444;
+        .summary-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 24px;
         }
 
-        /* Payment Tabs */
+        .summary-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 18px;
+        }
+
+        .summary-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-main);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .summary-product h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .summary-product p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+
+        .summary-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .summary-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .summary-value.strike {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .summary-value.green {
+            color: var(--accent-success);
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            margin-top: 12px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .summary-total-label {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .summary-total-value {
+            font-size: 28px;
+            font-weight: 900;
+            font-family: var(--font-mono);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Payment Card */
+        .payment-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        .payment-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+        }
+
         .payment-tabs {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             margin-bottom: 20px;
         }
 
         .payment-tab {
             flex: 1;
             padding: 14px;
-            background: var(--bg-input);
-            border: 2px solid var(--border);
-            border-radius: 12px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-subtle);
+            border-radius: 14px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
-        .payment-tab:hover {
-            border-color: rgba(255,255,255,0.15);
-        }
+        .payment-tab:hover { border-color: rgba(99, 102, 241, 0.3); }
 
         .payment-tab.active {
-            border-color: var(--accent);
+            border-color: var(--accent-primary);
             background: rgba(99, 102, 241, 0.08);
         }
 
@@ -331,9 +448,7 @@
             background: rgba(38, 161, 123, 0.08);
         }
 
-        .payment-tab-icon {
-            font-size: 24px;
-        }
+        .payment-tab-icon { font-size: 22px; }
 
         .payment-tab-label {
             font-size: 12px;
@@ -341,32 +456,25 @@
             color: var(--text-secondary);
         }
 
-        .payment-tab.active .payment-tab-label {
-            color: var(--text);
-        }
+        .payment-tab.active .payment-tab-label { color: var(--text-primary); }
 
-        /* Payment Panels */
-        .payment-panel {
-            display: none;
-        }
+        /* Panels */
+        .payment-panel { display: none; }
+        .payment-panel.active { display: block; }
 
-        .payment-panel.active {
-            display: block;
-        }
-
-        /* Card Payment */
+        /* Card Panel */
         .card-brands {
             display: flex;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .card-brand {
-            padding: 6px 14px;
+            padding: 5px 12px;
             background: white;
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
         }
 
@@ -374,22 +482,23 @@
         .card-brand.mc { color: #eb001b; }
 
         #stripe-card-element {
-            padding: 14px;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            margin-bottom: 16px;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            margin-bottom: 14px;
         }
 
         #stripe-card-errors {
             color: #ef4444;
             font-size: 13px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
-        /* USDT Payment */
-        .usdt-container {
+        /* USDT Panel */
+        .usdt-header {
             text-align: center;
+            margin-bottom: 18px;
         }
 
         .usdt-badge {
@@ -398,15 +507,11 @@
             gap: 8px;
             background: rgba(38, 161, 123, 0.12);
             border: 1px solid rgba(38, 161, 123, 0.25);
-            border-radius: 100px;
-            padding: 8px 16px;
-            margin-bottom: 20px;
+            border-radius: 50px;
+            padding: 8px 18px;
         }
 
-        .usdt-badge svg {
-            width: 20px;
-            height: 20px;
-        }
+        .usdt-badge svg { width: 18px; height: 18px; }
 
         .usdt-badge span {
             font-size: 12px;
@@ -415,68 +520,68 @@
             letter-spacing: 0.3px;
         }
 
-        .usdt-grid {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 20px;
-            text-align: left;
+        .usdt-content {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
         }
 
         .qr-box {
             background: white;
-            padding: 10px;
+            padding: 8px;
             border-radius: 12px;
-            width: fit-content;
+            flex-shrink: 0;
         }
 
         .qr-box img {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             display: block;
             border-radius: 8px;
         }
 
-        .usdt-info {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        .usdt-details {
+            flex: 1;
+            min-width: 0;
         }
 
-        .network-badge {
+        .network-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             background: rgba(38, 161, 123, 0.1);
             border: 1px solid rgba(38, 161, 123, 0.2);
             border-radius: 10px;
-            padding: 10px 14px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
         }
 
         .network-icon {
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             background: var(--usdt);
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .network-text small {
-            font-size: 10px;
+            display: block;
+            font-size: 9px;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .network-text strong {
-            display: block;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--usdt);
         }
 
         .address-box {
-            background: var(--bg-input);
+            background: var(--bg-secondary);
             border-radius: 10px;
             padding: 12px;
         }
@@ -488,100 +593,94 @@
         }
 
         .address-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
+            font-family: var(--font-mono);
+            font-size: 9px;
             color: var(--usdt);
             background: rgba(38, 161, 123, 0.08);
-            padding: 10px;
+            padding: 8px;
             border-radius: 6px;
             word-break: break-all;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .copy-btn {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             background: var(--usdt);
             border: none;
             border-radius: 8px;
             color: white;
+            font-family: var(--font-sans);
             font-weight: 600;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
-        .copy-btn:hover {
-            filter: brightness(1.1);
-        }
-
-        .txid-group {
-            margin-top: 16px;
-        }
+        .copy-btn:hover { filter: brightness(1.1); }
 
         .txid-input {
             width: 100%;
-            padding: 12px;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
+            margin-top: 12px;
+            padding: 10px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
             border-radius: 10px;
-            color: var(--text);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 11px;
             outline: none;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
-        .txid-input:focus {
-            border-color: var(--usdt);
-        }
+        .txid-input::placeholder { color: var(--text-muted); }
+        .txid-input:focus { border-color: var(--usdt); }
 
-        /* Submit Button */
+        /* Submit Buttons */
         .submit-btn {
             width: 100%;
             padding: 16px;
-            background: var(--accent);
+            background: var(--gradient-main);
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             color: white;
-            font-family: inherit;
+            font-family: var(--font-sans);
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 8px;
         }
 
         .submit-btn:hover {
-            background: var(--accent-hover);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--glow-primary);
         }
 
-        .submit-btn.usdt-btn {
-            background: var(--usdt);
+        .submit-btn.usdt {
+            background: linear-gradient(135deg, #26A17B, #1a7a5c);
+            margin-top: 14px;
         }
 
-        .submit-btn.usdt-btn:hover {
-            filter: brightness(1.1);
+        .submit-btn.usdt:hover {
+            box-shadow: 0 8px 30px rgba(38, 161, 123, 0.4);
         }
 
         .submit-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
+            transform: none !important;
         }
 
-        /* Secure Badge */
         .secure-badge {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
-            margin-top: 16px;
+            margin-top: 14px;
             font-size: 12px;
             color: var(--text-muted);
         }
@@ -591,115 +690,110 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.9);
-            z-index: 1000;
+            background: rgba(3, 5, 8, 0.95);
+            z-index: 2000;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
 
-        .success-overlay.show {
-            display: flex;
-        }
+        .success-overlay.show { display: flex; }
 
         .success-box {
             background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            border-radius: 28px;
             padding: 40px;
             text-align: center;
-            max-width: 400px;
-            width: 100%;
+            max-width: 420px;
         }
 
         .success-icon {
             width: 72px;
             height: 72px;
-            background: var(--success);
+            background: var(--gradient-success);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 32px;
             margin: 0 auto 20px;
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.4);
         }
 
         .success-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 12px;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 10px;
         }
 
         .success-desc {
             font-size: 14px;
             color: var(--text-secondary);
-            line-height: 1.6;
+            line-height: 1.7;
             margin-bottom: 16px;
         }
 
         .success-email {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 12px 24px;
             background: rgba(99, 102, 241, 0.1);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 10px;
-            font-family: monospace;
+            border: 1px solid rgba(99, 102, 241, 0.25);
+            border-radius: 12px;
+            font-family: var(--font-mono);
             font-size: 14px;
-            color: var(--accent);
+            color: var(--accent-primary);
             margin-bottom: 20px;
         }
 
         .success-btn {
             display: block;
             padding: 14px;
-            background: var(--accent);
-            border-radius: 10px;
+            background: var(--gradient-main);
+            border-radius: 12px;
             color: white;
             text-decoration: none;
             font-weight: 600;
             font-size: 14px;
             margin-bottom: 10px;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
-        .success-btn:hover {
-            filter: brightness(1.1);
-        }
+        .success-btn:hover { transform: translateY(-2px); }
 
         .success-btn.secondary {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
         }
 
         /* Toast */
         .toast-container {
             position: fixed;
-            top: 80px;
-            right: 20px;
+            top: 90px;
+            right: 24px;
             z-index: 9999;
         }
 
         .toast {
             background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
             padding: 14px 20px;
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
-            animation: slideIn 0.3s ease;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: toastIn 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .toast.success { border-color: var(--success); }
-        .toast.error { border-color: #ef4444; }
+        .toast.success { border-color: rgba(16, 185, 129, 0.5); }
+        .toast.error { border-color: rgba(239, 68, 68, 0.5); }
 
-        .toast-message {
-            font-size: 13px;
-            color: var(--text);
-        }
-
+        .toast-icon { font-size: 18px; }
+        .toast-message { font-size: 14px; flex: 1; }
         .toast-close {
             background: none;
             border: none;
@@ -708,137 +802,140 @@
             font-size: 16px;
         }
 
-        @keyframes slideIn {
+        @keyframes toastIn {
             from { opacity: 0; transform: translateX(50px); }
             to { opacity: 1; transform: translateX(0); }
         }
 
-        /* Footer */
-        .footer {
-            padding: 20px;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer-text {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
         /* Responsive */
-        @media (max-width: 520px) {
-            .product-card {
-                flex-direction: column;
-                text-align: center;
-                gap: 16px;
-            }
-
-            .product-price {
-                text-align: center;
-            }
-
-            .form-row {
+        @media (max-width: 800px) {
+            .checkout-grid {
                 grid-template-columns: 1fr;
+                max-width: 480px;
             }
 
-            .usdt-grid {
-                grid-template-columns: 1fr;
-                justify-items: center;
-            }
+            .main { padding-top: 90px; }
+        }
 
-            .usdt-info {
-                width: 100%;
-            }
+        @media (max-width: 500px) {
+            .form-row { grid-template-columns: 1fr; }
+            .usdt-content { flex-direction: column; align-items: center; }
+            .usdt-details { width: 100%; }
+            .header { padding: 14px 20px; }
         }
     </style>
 </head>
 <body>
+    <!-- Background -->
+    <div class="bg-animation">
+        <div class="bg-grid"></div>
+        <div class="bg-orb bg-orb-1"></div>
+        <div class="bg-orb bg-orb-2"></div>
+        <div class="bg-orb bg-orb-3"></div>
+        <div class="particles">
+            <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+            <div class="particle" style="left: 25%; animation-delay: 1.5s;"></div>
+            <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+            <div class="particle" style="left: 75%; animation-delay: 4.5s;"></div>
+            <div class="particle" style="left: 90%; animation-delay: 6s;"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
     <header class="header">
         <a href="index.html" class="logo">
-            <img src="logo.png" alt="VaultSystemFx">
-            <span>VaultSystemFx</span>
+            <img src="logo.png" alt="VaultSystemFx" class="logo-icon">
+            <span class="logo-text">VaultSystemFx</span>
         </a>
         <div class="header-right">
-            <div class="lang-toggle">
-                <button class="lang-btn active" onclick="setLanguage('it')">IT</button>
-                <button class="lang-btn" onclick="setLanguage('en')">EN</button>
+            <div class="lang-selector">
+                <button class="lang-btn active" onclick="setLanguage('it')">ITA</button>
+                <button class="lang-btn" onclick="setLanguage('en')">ENG</button>
             </div>
-            <a href="acquista.html" class="back-link">
-                <span>← Indietro</span>
-            </a>
+            <a href="acquista.html" class="back-link">← Indietro</a>
         </div>
     </header>
 
+    <!-- Main -->
     <main class="main">
-        <div class="checkout-container">
-            <!-- Product Summary -->
-            <div class="product-card">
-                <div class="product-info">
-                    <h2>VaultSystemFx</h2>
-                    <p>Licenza Lifetime • Pagamento unico</p>
+        <div class="checkout-grid">
+            <!-- Form -->
+            <div class="checkout-form">
+                <div class="form-header">
+                    <h1 class="form-title">Completa l'acquisto</h1>
+                    <p class="form-subtitle">Inserisci i tuoi dati per ricevere VaultSystemFx</p>
                 </div>
-                <div class="product-price">
-                    <div class="price-original">€799</div>
-                    <div class="price-current" id="display-price">€499</div>
-                </div>
+
+                <form id="checkout-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Nome *</label>
+                            <input type="text" class="form-input" id="firstName" placeholder="Mario" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cognome *</label>
+                            <input type="text" class="form-input" id="lastName" placeholder="Rossi" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Email *</label>
+                            <input type="email" class="form-input" id="email" placeholder="email@esempio.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Conferma Email *</label>
+                            <input type="email" class="form-input" id="emailConfirm" placeholder="Conferma email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Telegram (opzionale)</label>
+                        <input type="text" class="form-input" id="telegram" placeholder="@tuousername">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Codice Sconto</label>
+                        <div class="discount-row">
+                            <input type="text" class="form-input" id="discountCode" placeholder="CODICE">
+                            <button type="button" class="discount-btn" id="applyDiscount">Applica</button>
+                        </div>
+                        <div class="discount-message" id="discountMessage"></div>
+                    </div>
+                </form>
             </div>
 
-            <!-- Checkout Form -->
-            <div class="form-card">
-                <!-- Section 1: Info -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <div class="section-number">1</div>
-                        <div class="section-title">I tuoi dati</div>
+            <!-- Sidebar -->
+            <div class="checkout-sidebar">
+                <!-- Summary -->
+                <div class="summary-card">
+                    <div class="summary-header">
+                        <div class="summary-icon">🤖</div>
+                        <div class="summary-product">
+                            <h3>VaultSystemFx</h3>
+                            <p>Licenza Lifetime</p>
+                        </div>
                     </div>
 
-                    <form id="checkout-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Nome *</label>
-                                <input type="text" class="form-input" id="firstName" placeholder="Mario" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Cognome *</label>
-                                <input type="text" class="form-input" id="lastName" placeholder="Rossi" required>
-                            </div>
-                        </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Prezzo originale</span>
+                        <span class="summary-value strike">€799</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">Sconto lancio</span>
+                        <span class="summary-value green">-€300</span>
+                    </div>
 
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Email *</label>
-                                <input type="email" class="form-input" id="email" placeholder="email@esempio.com" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Conferma Email *</label>
-                                <input type="email" class="form-input" id="emailConfirm" placeholder="Conferma email" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Telegram (opzionale)</label>
-                            <input type="text" class="form-input" id="telegram" placeholder="@username">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Codice Sconto</label>
-                            <div class="discount-row">
-                                <input type="text" class="form-input" id="discountCode" placeholder="CODICE">
-                                <button type="button" class="discount-btn" id="applyDiscount">Applica</button>
-                            </div>
-                            <div class="discount-message" id="discountMessage"></div>
-                        </div>
-                    </form>
+                    <div class="summary-total">
+                        <span class="summary-total-label">Totale</span>
+                        <span class="summary-total-value" id="display-price">€499</span>
+                    </div>
                 </div>
 
-                <!-- Section 2: Payment -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <div class="section-number">2</div>
-                        <div class="section-title">Pagamento</div>
-                    </div>
+                <!-- Payment -->
+                <div class="payment-card">
+                    <div class="payment-title">Metodo di pagamento</div>
 
-                    <!-- Payment Tabs -->
                     <div class="payment-tabs">
                         <div class="payment-tab active" data-method="card">
                             <div class="payment-tab-icon">💳</div>
@@ -846,7 +943,7 @@
                         </div>
                         <div class="payment-tab" data-method="usdt">
                             <div class="payment-tab-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
                                     <circle cx="12" cy="12" r="11" fill="#26A17B"/>
                                     <path d="M13.2 10.8V9.5H15V8H9V9.5H10.8V10.8C8.6 10.95 7 11.5 7 12.15C7 12.8 8.6 13.35 10.8 13.5V16H13.2V13.5C15.4 13.35 17 12.8 17 12.15C17 11.5 15.4 10.95 13.2 10.8Z" fill="white"/>
                                 </svg>
@@ -864,13 +961,13 @@
                         <div id="stripe-card-element"></div>
                         <div id="stripe-card-errors"></div>
                         <button type="button" class="submit-btn" id="stripe-pay-btn">
-                            <span>Paga €499</span>
+                            Paga €499 con Carta
                         </button>
                     </div>
 
                     <!-- USDT Panel -->
                     <div class="payment-panel" id="panel-usdt">
-                        <div class="usdt-container">
+                        <div class="usdt-header">
                             <div class="usdt-badge">
                                 <svg viewBox="0 0 24 24" fill="none">
                                     <circle cx="12" cy="12" r="11" fill="#26A17B"/>
@@ -878,39 +975,35 @@
                                 </svg>
                                 <span>SOLO USDT • TRC-20</span>
                             </div>
-
-                            <div class="usdt-grid">
-                                <div class="qr-box">
-                                    <img src="WhatsApp Image 2026-03-24 at 22.05.23 (1).jpeg" alt="QR USDT">
-                                </div>
-                                <div class="usdt-info">
-                                    <div class="network-badge">
-                                        <div class="network-icon">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                                        </div>
-                                        <div class="network-text">
-                                            <small>Rete</small>
-                                            <strong>TRC-20 (Tron)</strong>
-                                        </div>
-                                    </div>
-                                    <div class="address-box">
-                                        <div class="address-label">Invia <strong id="crypto-amount" style="color: var(--usdt);">499 USDT</strong> a:</div>
-                                        <div class="address-value" id="crypto-address">TUyfj5TrX6Ejwr1gLRJY18GtHV8USwjW21</div>
-                                        <button type="button" class="copy-btn" onclick="copyAddress()">📋 Copia Indirizzo</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="txid-group">
-                                <label class="form-label">TxID (opzionale)</label>
-                                <input type="text" class="txid-input" id="crypto-txid" placeholder="Hash della transazione...">
-                            </div>
-
-                            <button type="button" class="submit-btn usdt-btn" id="confirm-usdt-btn" onclick="submitCryptoOrder()">
-                                <span>✓</span>
-                                <span id="confirm-usdt-text">Ho Effettuato il Pagamento</span>
-                            </button>
                         </div>
+
+                        <div class="usdt-content">
+                            <div class="qr-box">
+                                <img src="WhatsApp Image 2026-03-24 at 22.05.23 (1).jpeg" alt="QR USDT">
+                            </div>
+                            <div class="usdt-details">
+                                <div class="network-info">
+                                    <div class="network-icon">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                                    </div>
+                                    <div class="network-text">
+                                        <small>Rete</small>
+                                        <strong>TRC-20 (Tron)</strong>
+                                    </div>
+                                </div>
+                                <div class="address-box">
+                                    <div class="address-label">Invia <strong id="crypto-amount" style="color: var(--usdt);">499 USDT</strong></div>
+                                    <div class="address-value" id="crypto-address">TUyfj5TrX6Ejwr1gLRJY18GtHV8USwjW21</div>
+                                    <button type="button" class="copy-btn" onclick="copyAddress()">📋 Copia</button>
+                                </div>
+                                <input type="text" class="txid-input" id="crypto-txid" placeholder="TxID (opzionale)">
+                            </div>
+                        </div>
+
+                        <button type="button" class="submit-btn usdt" id="confirm-usdt-btn" onclick="submitCryptoOrder()">
+                            <span>✓</span>
+                            <span id="confirm-usdt-text">Ho Pagato</span>
+                        </button>
                     </div>
 
                     <div class="secure-badge">
@@ -922,15 +1015,12 @@
         </div>
     </main>
 
-    <!-- Success Overlay -->
+    <!-- Success -->
     <div class="success-overlay" id="success-overlay">
         <div class="success-box">
             <div class="success-icon">✓</div>
             <h2 class="success-title">Ordine Completato!</h2>
-            <p class="success-desc">
-                Grazie per il tuo acquisto!<br>
-                Riceverai VaultSystemFx a:
-            </p>
+            <p class="success-desc">Riceverai VaultSystemFx a:</p>
             <div class="success-email" id="success-email">email@esempio.com</div>
             <p class="success-desc">Controlla anche la cartella spam.</p>
             <a href="index.html" class="success-btn">← Torna alla Home</a>
@@ -938,12 +1028,8 @@
         </div>
     </div>
 
-    <!-- Toast Container -->
+    <!-- Toast -->
     <div class="toast-container" id="toast-container"></div>
-
-    <footer class="footer">
-        <p class="footer-text">© 2026 VaultSystemFx • Il trading comporta rischi</p>
-    </footer>
 
     <!-- Stripe -->
     <script src="https://js.stripe.com/v3/"></script>
@@ -953,13 +1039,10 @@
         const BACKEND_URL = 'https://vaultsystemfx-backend.vercel.app';
         const STRIPE_PK = 'pk_live_51TCTc6GzOgTLXR0ez5U2sHWbZDqbRO1ZSNqDGvD5yVdv71OYYrFh3HMGE4AvYJrqsHiDsqKAOCLqwgOIiY3oTKsj00kYS8lsCt';
 
-        // State
         let currentPrice = 499;
         let currentPlan = 'standard';
         let discountApplied = false;
-        let currentLang = localStorage.getItem('lang') || 'it';
 
-        // Discount codes
         const discountCodes = {
             'STUDENT50': { discount: 50, plan: 'student' },
             'LAUNCH20': { discount: 20, plan: 'standard' },
@@ -971,7 +1054,9 @@
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
+            const icons = { error: '⚠️', success: '✅', info: 'ℹ️' };
             toast.innerHTML = `
+                <span class="toast-icon">${icons[type]}</span>
                 <span class="toast-message">${message}</span>
                 <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
             `;
@@ -979,7 +1064,7 @@
             setTimeout(() => toast.remove(), 4000);
         }
 
-        // Validate form
+        // Validate
         function validateForm() {
             const firstName = document.getElementById('firstName').value.trim();
             const lastName = document.getElementById('lastName').value.trim();
@@ -996,8 +1081,7 @@
                 return false;
             }
 
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 showToast('Email non valida', 'error');
                 return false;
             }
@@ -1008,7 +1092,7 @@
         // Payment tabs
         document.querySelectorAll('.payment-tab').forEach(tab => {
             tab.addEventListener('click', () => {
-                document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active', 'usdt'));
                 document.querySelectorAll('.payment-panel').forEach(p => p.classList.remove('active'));
 
                 tab.classList.add('active');
@@ -1052,12 +1136,10 @@
             }
         });
 
-        // Copy address
+        // Copy
         function copyAddress() {
-            const address = document.getElementById('crypto-address').textContent;
-            navigator.clipboard.writeText(address).then(() => {
-                showToast('Indirizzo copiato!', 'success');
-            });
+            navigator.clipboard.writeText(document.getElementById('crypto-address').textContent);
+            showToast('Indirizzo copiato!', 'success');
         }
 
         // USDT Submit
@@ -1066,7 +1148,6 @@
 
             const btn = document.getElementById('confirm-usdt-btn');
             const btnText = document.getElementById('confirm-usdt-text');
-
             btn.disabled = true;
             btnText.textContent = 'Invio...';
 
@@ -1083,40 +1164,33 @@
             };
 
             try {
-                const response = await fetch(BACKEND_URL + '/api/crypto-order', {
+                await fetch(BACKEND_URL + '/api/crypto-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(orderData)
                 });
-
-                const result = await response.json();
-                showToast('Ordine ricevuto! Ti contatteremo via email.', 'success');
+                showToast('Ordine ricevuto!', 'success');
                 showCryptoSuccess();
             } catch (error) {
-                console.error('Error:', error);
                 showToast('Richiesta inviata!', 'success');
                 showCryptoSuccess();
             } finally {
                 btn.disabled = false;
-                btnText.textContent = 'Ho Effettuato il Pagamento';
+                btnText.textContent = 'Ho Pagato';
             }
         }
 
         function showCryptoSuccess() {
-            const email = document.getElementById('email').value;
-            document.getElementById('success-email').textContent = email;
-
+            document.getElementById('success-email').textContent = document.getElementById('email').value;
             document.querySelector('.success-icon').innerHTML = '⏳';
-            document.querySelector('.success-icon').style.background = 'var(--usdt)';
+            document.querySelector('.success-icon').style.background = 'linear-gradient(135deg, #26A17B, #1a7a5c)';
             document.querySelector('.success-title').textContent = 'Richiesta Inviata!';
             document.querySelector('.success-desc').innerHTML = 'Verificheremo il pagamento USDT<br>e ti invieremo il bot entro 24h a:';
-
             document.getElementById('success-overlay').classList.add('show');
         }
 
         function showSuccess() {
-            const email = document.getElementById('email').value;
-            document.getElementById('success-email').textContent = email;
+            document.getElementById('success-email').textContent = document.getElementById('email').value;
             document.getElementById('success-overlay').classList.add('show');
         }
 
@@ -1126,22 +1200,22 @@
         const cardElement = elements.create('card', {
             style: {
                 base: {
-                    color: '#ffffff',
-                    fontFamily: 'Inter, sans-serif',
+                    color: '#f8faff',
+                    fontFamily: 'Plus Jakarta Sans, sans-serif',
                     fontSize: '15px',
-                    '::placeholder': { color: '#52525b' }
+                    '::placeholder': { color: '#475569' }
                 },
                 invalid: { color: '#ef4444' }
             }
         });
         cardElement.mount('#stripe-card-element');
 
-        cardElement.on('change', (event) => {
-            document.getElementById('stripe-card-errors').textContent = event.error ? event.error.message : '';
+        cardElement.on('change', (e) => {
+            document.getElementById('stripe-card-errors').textContent = e.error ? e.error.message : '';
         });
 
         function updateStripeButton() {
-            document.getElementById('stripe-pay-btn').innerHTML = `<span>Paga €${currentPrice}</span>`;
+            document.getElementById('stripe-pay-btn').textContent = `Paga €${currentPrice} con Carta`;
         }
 
         document.getElementById('stripe-pay-btn').addEventListener('click', async function() {
@@ -1149,7 +1223,7 @@
 
             const btn = this;
             btn.disabled = true;
-            btn.innerHTML = '<span>Elaborazione...</span>';
+            btn.textContent = 'Elaborazione...';
 
             try {
                 const response = await fetch(BACKEND_URL + '/api/create-payment-intent', {
@@ -1178,7 +1252,6 @@
                     await completeOrder(result.paymentIntent.id);
                 }
             } catch (err) {
-                console.error('Stripe error:', err);
                 document.getElementById('stripe-card-errors').textContent = 'Errore nel pagamento. Riprova.';
                 btn.disabled = false;
                 updateStripeButton();
@@ -1186,40 +1259,33 @@
         });
 
         async function completeOrder(transactionId) {
-            const orderData = {
-                firstName: document.getElementById('firstName').value.trim(),
-                lastName: document.getElementById('lastName').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                telegram: document.getElementById('telegram').value.trim(),
-                plan: currentPlan,
-                amount: currentPrice,
-                transactionId
-            };
-
             try {
                 await fetch(BACKEND_URL + '/api/complete-order', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(orderData)
+                    body: JSON.stringify({
+                        firstName: document.getElementById('firstName').value.trim(),
+                        lastName: document.getElementById('lastName').value.trim(),
+                        email: document.getElementById('email').value.trim(),
+                        telegram: document.getElementById('telegram').value.trim(),
+                        plan: currentPlan,
+                        amount: currentPrice,
+                        transactionId
+                    })
                 });
-            } catch (error) {
-                console.error('Complete order error:', error);
-            }
-
+            } catch (e) {}
             showSuccess();
         }
 
         // Language
         function setLanguage(lang) {
-            currentLang = lang;
             localStorage.setItem('lang', lang);
             document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === (lang === 'it' ? 'IT' : 'EN'));
+                btn.classList.toggle('active', btn.textContent === (lang === 'it' ? 'ITA' : 'ENG'));
             });
         }
 
-        // Init
-        setLanguage(currentLang);
+        setLanguage(localStorage.getItem('lang') || 'it');
     </script>
 </body>
 </html>

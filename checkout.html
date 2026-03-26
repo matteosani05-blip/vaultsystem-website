@@ -1103,8 +1103,10 @@
                 if (method === 'usdt') {
                     tab.classList.add('usdt');
                     document.getElementById('panel-usdt').classList.add('active');
+                    document.getElementById('display-price').textContent = currentPriceUSDT + ' USDT';
                 } else {
                     document.getElementById('panel-card').classList.add('active');
+                    document.getElementById('display-price').textContent = '€' + currentPrice;
                 }
             });
         });

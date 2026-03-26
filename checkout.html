@@ -1258,6 +1258,8 @@
         cardElement.mount('#stripe-card-element');
 
         // Apple Pay / Google Pay - Payment Request Button
+        // Mobile: Apple Pay / Google Pay | PC: Stripe Link
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         const paymentRequest = stripe.paymentRequest({
             country: 'IT',
             currency: 'eur',
@@ -1267,7 +1269,7 @@
             },
             requestPayerName: true,
             requestPayerEmail: true,
-            disableWallets: ['browserCard'],
+            disableWallets: isMobile ? ['link', 'browserCard'] : ['browserCard'],
         });
 
         const prButton = elements.create('paymentRequestButton', {

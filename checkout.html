@@ -1068,23 +1068,24 @@
 
         // Validate
         function validateForm() {
+            const t = translations[currentLangCheckout];
             const firstName = document.getElementById('firstName').value.trim();
             const lastName = document.getElementById('lastName').value.trim();
             const email = document.getElementById('email').value.trim();
             const emailConfirm = document.getElementById('emailConfirm').value.trim();
 
             if (!firstName || !lastName || !email || !emailConfirm) {
-                showToast('Compila tutti i campi obbligatori', 'error');
+                showToast(t['fill-fields'], 'error');
                 return false;
             }
 
             if (email !== emailConfirm) {
-                showToast('Le email non corrispondono', 'error');
+                showToast(t['email-mismatch'], 'error');
                 return false;
             }
 
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showToast('Email non valida', 'error');
+                showToast(t['email-invalid'], 'error');
                 return false;
             }
 
@@ -1113,11 +1114,12 @@
 
         // Discount
         document.getElementById('applyDiscount').addEventListener('click', () => {
+            const t = translations[currentLangCheckout];
             const code = document.getElementById('discountCode').value.trim().toUpperCase();
             const msgEl = document.getElementById('discountMessage');
 
             if (discountApplied) {
-                msgEl.textContent = 'Sconto già applicato';
+                msgEl.textContent = t['discount-already'];
                 msgEl.className = 'discount-message error';
                 return;
             }
@@ -1133,18 +1135,19 @@
                 document.getElementById('crypto-amount').textContent = currentPriceUSDT + ' USDT';
                 updateStripeButton();
 
-                msgEl.textContent = `✓ Sconto di €${discount} applicato!`;
+                msgEl.textContent = t['discount-applied'].replace('{amount}', discount);
                 msgEl.className = 'discount-message success';
             } else {
-                msgEl.textContent = 'Codice non valido';
+                msgEl.textContent = t['discount-invalid'];
                 msgEl.className = 'discount-message error';
             }
         });
 
         // Copy
         function copyAddress() {
+            const t = translations[currentLangCheckout];
             navigator.clipboard.writeText(document.getElementById('crypto-address').textContent);
-            showToast('Indirizzo copiato!', 'success');
+            showToast(t['copied'], 'success');
         }
 
         // USDT Submit
@@ -1220,7 +1223,8 @@
         });
 
         function updateStripeButton() {
-            document.getElementById('stripe-pay-btn').textContent = `Paga €${currentPrice} con Carta`;
+            const t = translations[currentLangCheckout];
+            document.getElementById('stripe-pay-btn').textContent = t['btn-pay-card'].replace('{price}', currentPrice);
         }
 
         document.getElementById('stripe-pay-btn').addEventListener('click', async function() {
@@ -1283,11 +1287,159 @@
         }
 
         // Language
+        const translations = {
+            it: {
+                'back': '← Indietro',
+                'form-title': "Completa l'acquisto",
+                'form-subtitle': 'Inserisci i tuoi dati per ricevere VaultSystemFx',
+                'label-name': 'Nome *',
+                'label-surname': 'Cognome *',
+                'label-email': 'Email *',
+                'label-email-confirm': 'Conferma Email *',
+                'label-telegram': 'Telegram (opzionale)',
+                'label-discount': 'Codice Sconto',
+                'btn-apply': 'Applica',
+                'placeholder-name': 'Mario',
+                'placeholder-surname': 'Rossi',
+                'placeholder-email': 'email@esempio.com',
+                'placeholder-email-confirm': 'Conferma email',
+                'product-license': 'Licenza Lifetime',
+                'original-price': 'Prezzo originale',
+                'launch-discount': 'Sconto lancio',
+                'total': 'Totale',
+                'payment-method': 'Metodo di pagamento',
+                'tab-card': 'Carta',
+                'network': 'Rete',
+                'send': 'Invia',
+                'btn-copy': '📋 Copia',
+                'placeholder-txid': 'TxID (opzionale)',
+                'btn-paid': 'Ho Pagato',
+                'btn-pay-card': 'Paga €{price} con Carta',
+                'discount-already': 'Sconto già applicato',
+                'discount-invalid': 'Codice non valido',
+                'discount-applied': '✓ Sconto di €{amount} applicato!',
+                'fill-fields': 'Compila tutti i campi obbligatori',
+                'email-mismatch': 'Le email non corrispondono',
+                'email-invalid': 'Email non valida',
+                'copied': 'Indirizzo copiato!'
+            },
+            en: {
+                'back': '← Back',
+                'form-title': 'Complete your purchase',
+                'form-subtitle': 'Enter your details to receive VaultSystemFx',
+                'label-name': 'First Name *',
+                'label-surname': 'Last Name *',
+                'label-email': 'Email *',
+                'label-email-confirm': 'Confirm Email *',
+                'label-telegram': 'Telegram (optional)',
+                'label-discount': 'Discount Code',
+                'btn-apply': 'Apply',
+                'placeholder-name': 'John',
+                'placeholder-surname': 'Doe',
+                'placeholder-email': 'email@example.com',
+                'placeholder-email-confirm': 'Confirm email',
+                'product-license': 'Lifetime License',
+                'original-price': 'Original price',
+                'launch-discount': 'Launch discount',
+                'total': 'Total',
+                'payment-method': 'Payment method',
+                'tab-card': 'Card',
+                'network': 'Network',
+                'send': 'Send',
+                'btn-copy': '📋 Copy',
+                'placeholder-txid': 'TxID (optional)',
+                'btn-paid': 'I Have Paid',
+                'btn-pay-card': 'Pay €{price} with Card',
+                'discount-already': 'Discount already applied',
+                'discount-invalid': 'Invalid code',
+                'discount-applied': '✓ €{amount} discount applied!',
+                'fill-fields': 'Please fill all required fields',
+                'email-mismatch': 'Emails do not match',
+                'email-invalid': 'Invalid email',
+                'copied': 'Address copied!'
+            }
+        };
+
+        let currentLangCheckout = 'it';
+
         function setLanguage(lang) {
+            currentLangCheckout = lang;
             localStorage.setItem('lang', lang);
+            const t = translations[lang];
+
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.textContent === (lang === 'it' ? 'ITA' : 'ENG'));
             });
+
+            // Back link
+            const backLink = document.querySelector('.back-link');
+            if (backLink) backLink.textContent = t['back'];
+
+            // Form
+            const formTitle = document.querySelector('.form-title');
+            if (formTitle) formTitle.textContent = t['form-title'];
+            const formSubtitle = document.querySelector('.form-subtitle');
+            if (formSubtitle) formSubtitle.textContent = t['form-subtitle'];
+
+            // Labels
+            const labels = document.querySelectorAll('.form-label');
+            if (labels[0]) labels[0].textContent = t['label-name'];
+            if (labels[1]) labels[1].textContent = t['label-surname'];
+            if (labels[2]) labels[2].textContent = t['label-email'];
+            if (labels[3]) labels[3].textContent = t['label-email-confirm'];
+            if (labels[4]) labels[4].textContent = t['label-telegram'];
+            if (labels[5]) labels[5].textContent = t['label-discount'];
+
+            // Placeholders
+            document.getElementById('firstName').placeholder = t['placeholder-name'];
+            document.getElementById('lastName').placeholder = t['placeholder-surname'];
+            document.getElementById('email').placeholder = t['placeholder-email'];
+            document.getElementById('emailConfirm').placeholder = t['placeholder-email-confirm'];
+
+            // Apply button
+            const applyBtn = document.getElementById('applyDiscount');
+            if (applyBtn) applyBtn.textContent = t['btn-apply'];
+
+            // Summary
+            const summaryProduct = document.querySelector('.summary-product p');
+            if (summaryProduct) summaryProduct.textContent = t['product-license'];
+            const summaryLabels = document.querySelectorAll('.summary-label');
+            if (summaryLabels[0]) summaryLabels[0].textContent = t['original-price'];
+            if (summaryLabels[1]) summaryLabels[1].textContent = t['launch-discount'];
+            const totalLabel = document.querySelector('.summary-total-label');
+            if (totalLabel) totalLabel.textContent = t['total'];
+
+            // Payment
+            const paymentTitle = document.querySelector('.payment-title');
+            if (paymentTitle) paymentTitle.textContent = t['payment-method'];
+            const tabLabels = document.querySelectorAll('.payment-tab-label');
+            if (tabLabels[0]) tabLabels[0].textContent = t['tab-card'];
+
+            // Network
+            const networkSmall = document.querySelector('.network-text small');
+            if (networkSmall) networkSmall.textContent = t['network'];
+
+            // Send label
+            const addressLabels = document.querySelectorAll('.address-label');
+            if (addressLabels[0]) {
+                const cryptoAmount = document.getElementById('crypto-amount').textContent;
+                addressLabels[0].innerHTML = t['send'] + ' <strong id="crypto-amount" style="color: var(--usdt);">' + cryptoAmount + '</strong>';
+            }
+
+            // Copy button
+            const copyBtn = document.querySelector('.copy-btn');
+            if (copyBtn) copyBtn.textContent = t['btn-copy'];
+
+            // TxID placeholder
+            const txidInput = document.getElementById('crypto-txid');
+            if (txidInput) txidInput.placeholder = t['placeholder-txid'];
+
+            // Paid button
+            const paidBtn = document.getElementById('confirm-usdt-text');
+            if (paidBtn) paidBtn.textContent = t['btn-paid'];
+
+            // Stripe button
+            updateStripeButton();
         }
 
         setLanguage(localStorage.getItem('lang') || 'it');

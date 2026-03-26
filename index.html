@@ -2724,6 +2724,9 @@
                 'cta-feature-4': 'Setup guidato',
                 'cta-discount': 'Offerta Limitata',
                 'cta-btn': 'Acquista Ora',
+                // Preview
+                'preview-label': 'Anteprima',
+                'preview-title': 'Interfaccia del Bot',
                 // FAQ
                 'faq-label': 'FAQ',
                 'faq-title': 'Domande<br>Frequenti',
@@ -2829,6 +2832,9 @@
                 'cta-feature-4': 'Guided setup',
                 'cta-discount': 'Limited Offer',
                 'cta-btn': 'Buy Now',
+                // Preview
+                'preview-label': 'Preview',
+                'preview-title': 'Bot Interface',
                 // FAQ
                 'faq-label': 'FAQ',
                 'faq-title': 'Frequently<br>Asked Questions',
@@ -2971,6 +2977,15 @@
                     if (text && t['testimonial-' + idx + '-text']) text.textContent = t['testimonial-' + idx + '-text'];
                     if (role && t['testimonial-' + idx + '-role']) role.textContent = t['testimonial-' + idx + '-role'];
                 });
+            }
+
+            // Preview section
+            const previewSection = document.querySelector('#preview');
+            if (previewSection) {
+                const label = previewSection.querySelector('.section-label');
+                if (label) label.textContent = t['preview-label'];
+                const title = previewSection.querySelector('.section-title');
+                if (title) title.textContent = t['preview-title'];
             }
 
             // FAQ section

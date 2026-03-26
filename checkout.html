@@ -331,12 +331,18 @@
         .summary-icon {
             width: 48px;
             height: 48px;
-            background: var(--gradient-main);
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            overflow: hidden;
+        }
+
+        .summary-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 14px;
         }
 
         .summary-product h3 {
@@ -911,7 +917,7 @@
                 <!-- Summary -->
                 <div class="summary-card">
                     <div class="summary-header">
-                        <div class="summary-icon">🤖</div>
+                        <div class="summary-icon"><img src="logo.png" alt="VaultSystemFx"></div>
                         <div class="summary-product">
                             <h3>VaultSystemFx</h3>
                             <p>Licenza Lifetime</p>

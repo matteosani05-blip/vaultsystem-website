@@ -470,6 +470,30 @@
         .payment-panel.active { display: block; }
 
         /* Card Panel */
+        #payment-request-button {
+            margin-bottom: 16px;
+        }
+
+        .payment-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 16px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .payment-divider::before,
+        .payment-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .payment-divider span {
+            padding: 0 16px;
+        }
+
         .card-brands {
             display: flex;
             justify-content: center;
@@ -961,6 +985,13 @@
 
                     <!-- Card Panel -->
                     <div class="payment-panel active" id="panel-card">
+                        <!-- Apple Pay / Google Pay -->
+                        <div id="payment-request-button-container">
+                            <div id="payment-request-button"></div>
+                            <div class="payment-divider" id="payment-divider" style="display: none;">
+                                <span>oppure paga con carta</span>
+                            </div>
+                        </div>
                         <div class="card-brands">
                             <span class="card-brand visa">VISA</span>
                             <span class="card-brand mc">MC</span>
@@ -1140,6 +1171,7 @@
                 document.getElementById('display-price').textContent = '€' + currentPrice;
                 document.getElementById('crypto-amount').textContent = currentPriceUSDT + ' USDT';
                 updateStripeButton();
+                updatePaymentRequestAmount();
 
                 msgEl.textContent = t['discount-applied'].replace('{amount}', discount);
                 msgEl.className = 'discount-message success';
@@ -1223,6 +1255,95 @@
             }
         });
         cardElement.mount('#stripe-card-element');
+
+        // Apple Pay / Google Pay - Payment Request Button
+        const paymentRequest = stripe.paymentRequest({
+            country: 'IT',
+            currency: 'eur',
+            total: {
+                label: 'VaultSystemFx Bot',
+                amount: currentPrice * 100,
+            },
+            requestPayerName: true,
+            requestPayerEmail: true,
+        });
+
+        const prButton = elements.create('paymentRequestButton', {
+            paymentRequest: paymentRequest,
+        });
+
+        // Check if Apple Pay / Google Pay is available
+        paymentRequest.canMakePayment().then(function(result) {
+            if (result) {
+                prButton.mount('#payment-request-button');
+                document.getElementById('payment-divider').style.display = 'flex';
+            } else {
+                document.getElementById('payment-request-button-container').style.display = 'none';
+            }
+        });
+
+        // Update payment request amount when price changes
+        function updatePaymentRequestAmount() {
+            if (currentPrice > 0) {
+                paymentRequest.update({
+                    total: {
+                        label: 'VaultSystemFx Bot',
+                        amount: currentPrice * 100,
+                    },
+                });
+            }
+        }
+
+        // Handle Apple Pay / Google Pay payment
+        paymentRequest.on('paymentmethod', async function(ev) {
+            if (!validateForm()) {
+                ev.complete('fail');
+                return;
+            }
+
+            try {
+                const response = await fetch(BACKEND_URL + '/api/create-payment-intent', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: currentPrice,
+                        email: ev.payerEmail || document.getElementById('email').value.trim(),
+                        firstName: document.getElementById('firstName').value.trim(),
+                        lastName: document.getElementById('lastName').value.trim()
+                    })
+                });
+
+                const { clientSecret, error } = await response.json();
+                if (error) {
+                    ev.complete('fail');
+                    return;
+                }
+
+                const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(
+                    clientSecret,
+                    { payment_method: ev.paymentMethod.id },
+                    { handleActions: false }
+                );
+
+                if (confirmError) {
+                    ev.complete('fail');
+                } else {
+                    ev.complete('success');
+                    if (paymentIntent.status === 'requires_action') {
+                        const { error } = await stripe.confirmCardPayment(clientSecret);
+                        if (error) {
+                            document.getElementById('stripe-card-errors').textContent = error.message;
+                        } else {
+                            await completeOrder(paymentIntent.id);
+                        }
+                    } else {
+                        await completeOrder(paymentIntent.id);
+                    }
+                }
+            } catch (err) {
+                ev.complete('fail');
+            }
+        });
 
         cardElement.on('change', (e) => {
             document.getElementById('stripe-card-errors').textContent = e.error ? e.error.message : '';
@@ -1334,6 +1455,7 @@
                 'discount-already': 'Sconto già applicato',
                 'discount-invalid': 'Codice non valido',
                 'discount-applied': '✓ Sconto di €{amount} applicato!',
+                'payment-divider': 'oppure paga con carta',
                 'fill-fields': 'Compila tutti i campi obbligatori',
                 'email-mismatch': 'Le email non corrispondono',
                 'email-invalid': 'Email non valida',
@@ -1369,6 +1491,7 @@
                 'discount-already': 'Discount already applied',
                 'discount-invalid': 'Invalid code',
                 'discount-applied': '✓ €{amount} discount applied!',
+                'payment-divider': 'or pay with card',
                 'fill-fields': 'Please fill all required fields',
                 'email-mismatch': 'Emails do not match',
                 'email-invalid': 'Invalid email',
@@ -1430,6 +1553,10 @@
             if (paymentTitle) paymentTitle.textContent = t['payment-method'];
             const tabLabels = document.querySelectorAll('.payment-tab-label');
             if (tabLabels[0]) tabLabels[0].textContent = t['tab-card'];
+
+            // Payment divider (Apple Pay / Google Pay)
+            const paymentDivider = document.querySelector('#payment-divider span');
+            if (paymentDivider) paymentDivider.textContent = t['payment-divider'];
 
             // Network
             const networkSmall = document.querySelector('.network-text small');

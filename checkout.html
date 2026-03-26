@@ -1230,7 +1230,11 @@
 
         function updateStripeButton() {
             const t = translations[currentLangCheckout];
-            document.getElementById('stripe-pay-btn').textContent = t['btn-pay-card'].replace('{price}', currentPrice);
+            if (currentPrice === 0) {
+                document.getElementById('stripe-pay-btn').textContent = currentLangCheckout === 'it' ? 'Ottieni Gratis' : 'Get Free';
+            } else {
+                document.getElementById('stripe-pay-btn').textContent = t['btn-pay-card'].replace('{price}', currentPrice);
+            }
         }
 
         document.getElementById('stripe-pay-btn').addEventListener('click', async function() {
@@ -1239,6 +1243,12 @@
             const btn = this;
             btn.disabled = true;
             btn.textContent = 'Elaborazione...';
+
+            // Se il prezzo è 0 (ordine gratuito), salta Stripe
+            if (currentPrice === 0) {
+                await completeOrder('FREE_' + Date.now());
+                return;
+            }
 
             try {
                 const response = await fetch(BACKEND_URL + '/api/create-payment-intent', {

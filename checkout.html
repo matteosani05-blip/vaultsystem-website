@@ -993,7 +993,8 @@
                                     </div>
                                 </div>
                                 <div class="address-box">
-                                    <div class="address-label">Invia <strong id="crypto-amount" style="color: var(--usdt);">499 USDT</strong></div>
+                                    <div class="address-label">Invia <strong id="crypto-amount" style="color: var(--usdt);">579 USDT</strong></div>
+                                    <div class="address-label" style="margin-top: 10px;">Address:</div>
                                     <div class="address-value" id="crypto-address">TUyfj5TrX6Ejwr1gLRJY18GtHV8USwjW21</div>
                                     <button type="button" class="copy-btn" onclick="copyAddress()">📋 Copia</button>
                                 </div>
@@ -1041,13 +1042,13 @@
         const STRIPE_PK = 'pk_live_51TCTc6GzOgTLXR0ez5U2sHWbZDqbRO1ZSNqDGvD5yVdv71OYYrFh3HMGE4AvYJrqsHiDsqKAOCLqwgOIiY3oTKsj00kYS8lsCt';
 
         let currentPrice = 499;
+        let currentPriceUSDT = 579;
         let currentPlan = 'standard';
         let discountApplied = false;
 
         const discountCodes = {
-            'STUDENT50': { discount: 50, plan: 'student' },
-            'LAUNCH20': { discount: 20, plan: 'standard' },
-            'VIP100': { discount: 100, plan: 'standard' }
+            'MATTH50': { discount: 349, discountUSDT: 405, plan: 'standard' },
+            'FREE100': { discount: 499, discountUSDT: 579, plan: 'standard' }
         };
 
         // Toast
@@ -1120,13 +1121,14 @@
             }
 
             if (discountCodes[code]) {
-                const { discount, plan } = discountCodes[code];
+                const { discount, discountUSDT, plan } = discountCodes[code];
                 currentPrice = 499 - discount;
+                currentPriceUSDT = 579 - discountUSDT;
                 currentPlan = plan;
                 discountApplied = true;
 
                 document.getElementById('display-price').textContent = '€' + currentPrice;
-                document.getElementById('crypto-amount').textContent = currentPrice + ' USDT';
+                document.getElementById('crypto-amount').textContent = currentPriceUSDT + ' USDT';
                 updateStripeButton();
 
                 msgEl.textContent = `✓ Sconto di €${discount} applicato!`;

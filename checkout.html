@@ -1083,12 +1083,6 @@
         let currentPlan = 'standard';
         let discountApplied = false;
 
-        const discountCodes = {
-            'MATTH50': { discount: 349, discountUSDT: 405, plan: 'standard' },
-            'FREE100': { discount: 499, discountUSDT: 579, plan: 'standard' },
-            'SAN1': { discount: 498, discountUSDT: 578, plan: 'standard' }
-        };
-
         // Toast
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
@@ -1150,11 +1144,12 @@
             });
         });
 
-        // Discount
-        document.getElementById('applyDiscount').addEventListener('click', () => {
+        // Discount - validazione lato server
+        document.getElementById('applyDiscount').addEventListener('click', async () => {
             const t = translations[currentLangCheckout];
-            const code = document.getElementById('discountCode').value.trim().toUpperCase();
+            const code = document.getElementById('discountCode').value.trim();
             const msgEl = document.getElementById('discountMessage');
+            const btn = document.getElementById('applyDiscount');
 
             if (discountApplied) {
                 msgEl.textContent = t['discount-already'];
@@ -1162,24 +1157,48 @@
                 return;
             }
 
-            if (discountCodes[code]) {
-                const { discount, discountUSDT, plan } = discountCodes[code];
-                currentPrice = 499 - discount;
-                currentPriceUSDT = 579 - discountUSDT;
-                currentPlan = plan;
-                discountApplied = true;
-
-                document.getElementById('display-price').textContent = '€' + currentPrice;
-                document.getElementById('crypto-amount').textContent = currentPriceUSDT + ' USDT';
-                updateStripeButton();
-                updatePaymentRequestAmount();
-
-                msgEl.textContent = t['discount-applied'].replace('{amount}', discount);
-                msgEl.className = 'discount-message success';
-            } else {
+            if (!code) {
                 msgEl.textContent = t['discount-invalid'];
                 msgEl.className = 'discount-message error';
+                return;
             }
+
+            btn.disabled = true;
+            btn.textContent = '...';
+
+            try {
+                const response = await fetch(BACKEND_URL + '/api/validate-discount', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code })
+                });
+
+                const result = await response.json();
+
+                if (result.valid) {
+                    currentPrice = 499 - result.discount;
+                    currentPriceUSDT = 579 - result.discountUSDT;
+                    discountApplied = true;
+
+                    document.getElementById('display-price').textContent = '€' + currentPrice;
+                    document.getElementById('crypto-amount').textContent = currentPriceUSDT + ' USDT';
+                    updateStripeButton();
+                    updatePaymentRequestAmount();
+
+                    msgEl.textContent = t['discount-applied'].replace('{amount}', result.discount);
+                    msgEl.className = 'discount-message success';
+                } else {
+                    msgEl.textContent = t['discount-invalid'];
+                    msgEl.className = 'discount-message error';
+                }
+            } catch (error) {
+                console.error('Errore validazione:', error);
+                msgEl.textContent = 'Errore di connessione';
+                msgEl.className = 'discount-message error';
+            }
+
+            btn.disabled = false;
+            btn.textContent = t['btn-apply'] || 'Applica';
         });
 
         // Copy

@@ -3519,12 +3519,15 @@
                 // Requirements
                 'req-title': 'Requisiti Obbligatori',
                 'req-subtitle': 'Per utilizzare VaultSystemFx hai bisogno di:',
-                'req-1-title': 'Account FortunePrime (FPG)',
-                'req-1-desc': 'Broker partner gratuito con MT5 integrato',
-                'req-1-btn': 'Apri Account Gratuito',
-                'req-2-title': 'VPS Windows',
-                'req-2-desc': 'Per eseguire il bot 24/7 senza interruzioni',
-                'req-2-btn': 'Vedi VPS Consigliata',
+                'req-1-title': 'Conto PRO',
+                'req-1-desc': 'Solo spread, nessuna commissione',
+                'req-1-btn': 'Apri Conto PRO',
+                'req-2-title': 'Conto ECN',
+                'req-2-desc': 'Spread RAW + commissioni fisse',
+                'req-2-btn': 'Apri Conto ECN',
+                'req-3-title': 'VPS Windows',
+                'req-3-desc': 'Per eseguire il bot 24/7 senza interruzioni',
+                'req-3-btn': 'Vedi VPS Consigliata',
                 // Features
                 'features-label': 'Funzionalit\u00e0',
                 'features-title': 'Tecnologia di Trading<br>di Nuova Generazione',
@@ -3627,12 +3630,15 @@
                 // Requirements
                 'req-title': 'Mandatory Requirements',
                 'req-subtitle': 'To use VaultSystemFx you need:',
-                'req-1-title': 'FortunePrime (FPG) Account',
-                'req-1-desc': 'Free partner broker with integrated MT5',
-                'req-1-btn': 'Open Free Account',
-                'req-2-title': 'Windows VPS',
-                'req-2-desc': 'To run the bot 24/7 without interruptions',
-                'req-2-btn': 'See Recommended VPS',
+                'req-1-title': 'PRO Account',
+                'req-1-desc': 'Spread only, no commission',
+                'req-1-btn': 'Open PRO Account',
+                'req-2-title': 'ECN Account',
+                'req-2-desc': 'RAW spread + fixed commissions',
+                'req-2-btn': 'Open ECN Account',
+                'req-3-title': 'Windows VPS',
+                'req-3-desc': 'To run the bot 24/7 without interruptions',
+                'req-3-btn': 'See Recommended VPS',
                 // Features
                 'features-label': 'Features',
                 'features-title': 'Next Generation<br>Trading Technology',
@@ -3774,16 +3780,23 @@
                 if (reqCards[0]) {
                     reqCards[0].querySelector('.requirement-title').textContent = t['req-1-title'];
                     reqCards[0].querySelector('.requirement-desc').innerHTML = lang === 'it'
-                        ? 'Crea un account sul broker <strong>FPG (Fortune Prime Global)</strong>. La registrazione \u00e8 completamente gratuita e richiede solo pochi minuti.'
-                        : 'Create an account on the <strong>FPG (Fortune Prime Global)</strong> broker. Registration is completely free and takes only a few minutes.';
+                        ? 'Conto standard con <strong>solo spread</strong>, nessuna commissione. Ideale per chi inizia. Usa <strong>VaultBot PRO</strong>.'
+                        : 'Standard account with <strong>spread only</strong>, no commission. Ideal for beginners. Use <strong>VaultBot PRO</strong>.';
                     reqCards[0].querySelector('.requirement-btn').innerHTML = t['req-1-btn'] + ' <span>&rarr;</span>';
                 }
                 if (reqCards[1]) {
                     reqCards[1].querySelector('.requirement-title').textContent = t['req-2-title'];
                     reqCards[1].querySelector('.requirement-desc').innerHTML = lang === 'it'
+                        ? 'Spread RAW ultra-bassi + <strong>commissioni fisse</strong>. Ideale per trader esperti. Usa <strong>VaultBot ECN</strong>.'
+                        : 'Ultra-low RAW spread + <strong>fixed commissions</strong>. Ideal for expert traders. Use <strong>VaultBot ECN</strong>.';
+                    reqCards[1].querySelector('.requirement-btn').innerHTML = t['req-2-btn'] + ' <span>&rarr;</span>';
+                }
+                if (reqCards[2]) {
+                    reqCards[2].querySelector('.requirement-title').textContent = t['req-3-title'];
+                    reqCards[2].querySelector('.requirement-desc').innerHTML = lang === 'it'
                         ? 'Acquista una VPS con <strong>Windows 11</strong> per far girare il bot 24 ore su 24, 7 giorni su 7. <strong>Contabo</strong> offre le VPS pi\u00f9 economiche.'
                         : 'Purchase a VPS with <strong>Windows 11</strong> to run the bot 24/7. <strong>Contabo</strong> offers the cheapest VPS.';
-                    reqCards[1].querySelector('.requirement-btn').innerHTML = t['req-2-btn'] + ' <span>&rarr;</span>';
+                    reqCards[2].querySelector('.requirement-btn').innerHTML = t['req-3-btn'] + ' <span>&rarr;</span>';
                 }
                 // Requirement warning
                 const reqWarning = reqSection.querySelector('.requirement-warning span');

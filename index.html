@@ -1507,6 +1507,651 @@
         }
 
         /* ═══════════════════════════════════════════════════════════
+           BOT PREVIEW - TRADING TERMINAL 3D
+        ═══════════════════════════════════════════════════════════ */
+        .bot-preview-wrapper {
+            perspective: 1500px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .bot-preview {
+            max-width: 1000px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            background: linear-gradient(180deg, #080c14 0%, #040609 100%);
+            box-shadow:
+                0 80px 150px -40px rgba(0, 0, 0, 0.8),
+                0 50px 80px -30px rgba(99, 102, 241, 0.25),
+                -20px 20px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            position: relative;
+            transform: rotateX(8deg) rotateY(-3deg);
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.6s ease;
+        }
+
+        .bot-preview:hover {
+            transform: rotateX(2deg) rotateY(-1deg) translateY(-10px);
+            box-shadow:
+                0 100px 180px -50px rgba(0, 0, 0, 0.85),
+                0 60px 100px -40px rgba(99, 102, 241, 0.35),
+                -30px 30px 80px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        /* Scan lines effect */
+        .bot-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(99, 102, 241, 0.01) 2px,
+                    rgba(99, 102, 241, 0.01) 4px
+                );
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Vignette overlay */
+        .bot-preview::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                ellipse at center,
+                transparent 0%,
+                transparent 40%,
+                rgba(0, 0, 0, 0.3) 100%
+            );
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .bot-header {
+            background: linear-gradient(135deg, #0a0f1a 0%, #0d1424 100%);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+            position: relative;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .bot-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
+        }
+
+        .bot-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .bot-logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: white;
+            font-size: 18px;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            position: relative;
+        }
+
+        .bot-logo::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+            z-index: -1;
+            opacity: 0.5;
+            filter: blur(8px);
+            animation: logoPulseBot 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulseBot {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+
+        .bot-brand-info h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f4f7ff;
+            letter-spacing: -0.01em;
+        }
+
+        .bot-brand-info span {
+            font-size: 10px;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-weight: 500;
+        }
+
+        .bot-header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .bot-balance {
+            background: rgba(6, 9, 15, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 10px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-family: var(--font-mono);
+        }
+
+        .bot-balance-item {
+            font-size: 13px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .bot-balance-profit {
+            color: #34d399 !important;
+            background: rgba(52, 211, 153, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        .bot-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(52, 211, 153, 0.1);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            border-radius: 8px;
+            padding: 8px 14px;
+        }
+
+        .bot-status-dot {
+            width: 8px;
+            height: 8px;
+            background: #34d399;
+            border-radius: 50%;
+            animation: statusPulse 2s ease-in-out infinite;
+            box-shadow: 0 0 10px #34d399;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        .bot-status span {
+            font-size: 11px;
+            font-weight: 700;
+            color: #34d399;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .bot-tabs {
+            background: #070a10;
+            display: flex;
+            padding: 0 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            gap: 4px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .bot-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .bot-tab {
+            padding: 14px 18px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+
+        .bot-tab:hover {
+            color: #94a3b8;
+        }
+
+        .bot-tab.active {
+            color: #6366f1;
+            border-bottom-color: #6366f1;
+            background: linear-gradient(180deg, transparent 0%, rgba(99, 102, 241, 0.05) 100%);
+        }
+
+        .bot-tab-icon {
+            font-size: 14px;
+        }
+
+        .bot-content {
+            background: #050709;
+            padding: 24px;
+            position: relative;
+        }
+
+        .bot-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .bot-stat-card {
+            background: linear-gradient(135deg, rgba(10, 15, 26, 0.9) 0%, rgba(6, 9, 15, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .bot-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
+        }
+
+        .bot-stat-card:hover {
+            border-color: rgba(99, 102, 241, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .bot-stat-label {
+            font-size: 10px;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .bot-stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: #6366f1;
+            letter-spacing: -0.02em;
+        }
+
+        .bot-stat-value.positive { color: #34d399; }
+        .bot-stat-value.purple { color: #a78bfa; }
+
+        .bot-stat-sub {
+            font-size: 11px;
+            color: #4a5568;
+            margin-top: 6px;
+            font-family: var(--font-mono);
+        }
+
+        .bot-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .bot-panel {
+            background: linear-gradient(135deg, rgba(10, 15, 26, 0.9) 0%, rgba(6, 9, 15, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .bot-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent);
+        }
+
+        .bot-panel-header {
+            font-size: 13px;
+            font-weight: 600;
+            color: #f4f7ff;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bot-panel-icon {
+            color: #6366f1;
+            font-size: 16px;
+        }
+
+        .bot-chart-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .bot-chart-yaxis {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #4a5568;
+            font-family: var(--font-mono);
+            text-align: right;
+            padding: 5px 0;
+        }
+
+        .bot-chart-main {
+            flex: 1;
+        }
+
+        .bot-chart-svg {
+            width: 100%;
+            height: 120px;
+        }
+
+        .bot-chart-xaxis {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #4a5568;
+            font-family: var(--font-mono);
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            margin-top: 4px;
+        }
+
+        .trade-header {
+            display: grid;
+            grid-template-columns: 50px 75px 45px 50px 70px;
+            gap: 10px;
+            font-size: 10px;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-weight: 600;
+        }
+
+        .trade-row {
+            display: grid;
+            grid-template-columns: 50px 75px 45px 50px 70px;
+            gap: 10px;
+            font-size: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            color: #e2e8f0;
+            font-family: var(--font-mono);
+            transition: background 0.2s ease;
+        }
+
+        .trade-row:hover {
+            background: rgba(99, 102, 241, 0.03);
+        }
+
+        .trade-row:last-child {
+            border-bottom: none;
+        }
+
+        .trade-time { color: #64748b; }
+        .trade-symbol { color: #6366f1; font-weight: 600; }
+        .trade-type-buy { color: #34d399; font-weight: 600; }
+        .trade-type-sell { color: #f87171; font-weight: 600; }
+        .trade-profit-pos { color: #34d399; font-weight: 600; }
+        .trade-profit-neg { color: #f87171; font-weight: 600; }
+
+        .bot-actions {
+            display: flex;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .bot-btn {
+            border-radius: 12px;
+            padding: 14px 32px;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .bot-btn-start {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            color: white;
+            box-shadow: 0 4px 20px rgba(52, 211, 153, 0.3);
+        }
+
+        .bot-btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(52, 211, 153, 0.4);
+        }
+
+        .bot-btn-stop {
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.4);
+            color: #f87171;
+        }
+
+        .bot-btn-stop:hover {
+            background: rgba(248, 113, 113, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Chart Line Animation */
+        .bot-chart-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawChart 2.5s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        .bot-chart-fill {
+            opacity: 0;
+            animation: fadeInChart 1s ease-out forwards;
+            animation-delay: 2s;
+        }
+
+        @keyframes drawChart {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes fadeInChart {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Animated data points */
+        .bot-chart-point {
+            opacity: 0;
+            transform: scale(0);
+            animation: popIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        .bot-chart-point:nth-child(1) { animation-delay: 1s; }
+        .bot-chart-point:nth-child(2) { animation-delay: 1.5s; }
+        .bot-chart-point:nth-child(3) { animation-delay: 2s; }
+        .bot-chart-point:nth-child(4) { animation-delay: 2.5s; }
+
+        @keyframes popIn {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Number counter animation */
+        .bot-stat-value {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bot-stat-value .counter {
+            display: inline-block;
+            animation: countUp 2s ease-out forwards;
+        }
+
+        @keyframes countUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Staggered animation for stat cards */
+        .bot-stat-card {
+            opacity: 0;
+            transform: translateY(30px) rotateX(10deg);
+            animation: cardReveal 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .bot-stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .bot-stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .bot-stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .bot-stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes cardReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        /* Trade rows animation */
+        .trade-row {
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideInTrade 0.5s ease-out forwards;
+        }
+
+        .trade-row:nth-child(2) { animation-delay: 0.6s; }
+        .trade-row:nth-child(3) { animation-delay: 0.75s; }
+        .trade-row:nth-child(4) { animation-delay: 0.9s; }
+        .trade-row:nth-child(5) { animation-delay: 1.05s; }
+
+        @keyframes slideInTrade {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Glowing border animation */
+        .bot-preview::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 22px;
+            background: linear-gradient(
+                45deg,
+                transparent 40%,
+                rgba(99, 102, 241, 0.4) 50%,
+                transparent 60%
+            );
+            background-size: 300% 300%;
+            animation: borderGlow 4s linear infinite;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Live indicator pulse on chart */
+        .live-pulse {
+            animation: livePulse 1.5s ease-in-out infinite;
+        }
+
+        .live-pulse-ring {
+            animation: livePulseRing 1.5s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { r: 5; }
+            50% { r: 7; }
+        }
+
+        @keyframes livePulseRing {
+            0%, 100% { r: 12; opacity: 0.4; }
+            50% { r: 20; opacity: 0.1; }
+        }
+
+        /* Panel reveal */
+        .bot-panel {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: panelReveal 0.7s ease-out forwards;
+        }
+
+        .bot-panel:nth-child(1) { animation-delay: 0.5s; }
+        .bot-panel:nth-child(2) { animation-delay: 0.7s; }
+
+        @keyframes panelReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ═══════════════════════════════════════════════════════════
            ANIMATIONS & REVEALS
         ═══════════════════════════════════════════════════════════ */
         .reveal {
@@ -1625,11 +2270,15 @@
             .btn-primary { padding: 16px 28px; }
 
             /* Bot Preview Mockup */
-            .bot-preview .bot-header { flex-direction: column; gap: 12px; }
-            .bot-preview .bot-stats { grid-template-columns: 1fr 1fr !important; }
-            .bot-preview .bot-columns { grid-template-columns: 1fr !important; }
+            .bot-preview-wrapper { padding: 20px 10px; perspective: 1000px; }
+            .bot-preview { transform: rotateX(5deg) rotateY(-2deg); }
+            .bot-preview:hover { transform: rotateX(2deg) rotateY(-1deg) translateY(-5px); }
+            .bot-preview .bot-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+            .bot-preview .bot-header-right { width: 100%; justify-content: space-between; }
+            .bot-preview .bot-stats { grid-template-columns: 1fr 1fr; }
+            .bot-preview .bot-columns { grid-template-columns: 1fr; }
             .bot-preview .bot-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-            .bot-preview .trade-grid { grid-template-columns: 40px 60px 35px 40px 60px !important; font-size: 10px !important; }
+            .trade-header, .trade-row { grid-template-columns: 45px 65px 40px 45px 65px; font-size: 11px; gap: 6px; }
         }
 
         @media (max-width: 480px) {
@@ -1645,12 +2294,22 @@
             .hero-stat { padding: 0; }
 
             /* Bot Preview Mockup - Small screens */
-            .bot-preview .bot-stats { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
-            .bot-preview .bot-stats > div { padding: 12px !important; }
-            .bot-preview .bot-stats > div > div:first-child { font-size: 9px !important; }
-            .bot-preview .bot-stats > div > div:nth-child(2) { font-size: 16px !important; }
-            .bot-preview .bot-tabs > div { padding: 10px 12px !important; font-size: 11px !important; }
-            .bot-preview .trade-grid { grid-template-columns: 35px 55px 30px 35px 55px !important; gap: 4px !important; font-size: 9px !important; }
+            .bot-preview-wrapper { padding: 10px 5px; }
+            .bot-preview { transform: rotateX(3deg) rotateY(-1deg); border-radius: 14px; }
+            .bot-preview:hover { transform: rotateX(1deg) rotateY(0deg) translateY(-3px); }
+            .bot-preview .bot-stats { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .bot-preview .bot-stat-card { padding: 14px; }
+            .bot-preview .bot-stat-label { font-size: 9px; }
+            .bot-preview .bot-stat-value { font-size: 16px; }
+            .bot-preview .bot-stat-sub { font-size: 10px; }
+            .bot-preview .bot-tab { padding: 10px 14px; font-size: 11px; }
+            .bot-preview .bot-content { padding: 16px; }
+            .bot-preview .bot-panel { padding: 14px; }
+            .trade-header, .trade-row { grid-template-columns: 38px 58px 35px 38px 58px; gap: 4px; font-size: 10px; }
+            .bot-preview .bot-balance { flex-wrap: wrap; gap: 8px; padding: 8px 12px; }
+            .bot-preview .bot-balance-item { font-size: 11px; }
+            .bot-preview .bot-actions { flex-direction: column; }
+            .bot-preview .bot-btn { width: 100%; justify-content: center; }
         }
 
         /* Mobile menu button */
@@ -1853,7 +2512,28 @@
             </p>
         </div>
 
-        <div class="requirements-grid">
+        <div class="requirements-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <!-- PRO Account -->
+            <div class="requirement-card reveal">
+                <div class="requirement-icon" style="background: linear-gradient(135deg, #a855f7, #8b5cf6);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                </div>
+                <div class="requirement-badge" style="background: linear-gradient(135deg, #a855f7, #8b5cf6);">PRO</div>
+                <h3 class="requirement-title">Conto PRO</h3>
+                <p class="requirement-desc">
+                    Conto standard con <strong>solo spread</strong>, nessuna commissione. Ideale per chi inizia. Usa <strong>VaultBot PRO</strong>.
+                </p>
+                <a href="https://portal.fortuneprime.com/getview?view=register&token=0pSM1g" target="_blank" class="requirement-btn" style="background: linear-gradient(135deg, #a855f7, #8b5cf6);">
+                    Apri Conto PRO <span>&rarr;</span>
+                </a>
+            </div>
+
+            <!-- ECN Account -->
             <div class="requirement-card reveal">
                 <div class="requirement-icon">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -1863,13 +2543,13 @@
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
                 </div>
-                <div class="requirement-badge">GRATUITO</div>
-                <h3 class="requirement-title">Account FPG</h3>
+                <div class="requirement-badge">ECN</div>
+                <h3 class="requirement-title">Conto ECN</h3>
                 <p class="requirement-desc">
-                    Crea un account sul broker <strong>FPG (Fortune Prime Global)</strong>. La registrazione e completamente gratuita e richiede solo pochi minuti.
+                    Spread RAW ultra-bassi + <strong>commissioni fisse</strong>. Ideale per trader esperti. Usa <strong>VaultBot ECN</strong>.
                 </p>
-                <a href="https://portal.fortuneprime.com/getview?view=register&token=0pSM1g" target="_blank" class="requirement-btn">
-                    Registrati Gratis <span>&rarr;</span>
+                <a href="https://portal.fortuneprime.com/getview?view=register&token=0pSM2I" target="_blank" class="requirement-btn">
+                    Apri Conto ECN <span>&rarr;</span>
                 </a>
             </div>
 
@@ -1999,15 +2679,58 @@
             </div>
         </div>
 
-        <!-- Broker FPG Banner -->
-        <div class="broker-banner reveal" style="max-width: 900px; margin: 60px auto 0; background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,182,212,0.1)); border: 1px solid rgba(16,185,129,0.3); border-radius: 24px; padding: 40px; display: flex; align-items: center; gap: 32px; flex-wrap: wrap; justify-content: center;">
-            <div style="text-align: center; flex: 1; min-width: 280px;">
+        <!-- Broker FPG Banner - PRO vs ECN -->
+        <div class="reveal" style="max-width: 1000px; margin: 60px auto 0;">
+            <div style="text-align: center; margin-bottom: 32px;">
                 <div style="font-size: 14px; color: var(--accent-success); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;">&#x1F381; Broker Partner</div>
-                <h3 style="font-size: 28px; font-weight: 800; margin-bottom: 12px;">Usa <span style="color: var(--accent-success);">Fortune Prime Global</span> Gratis</h3>
-                <p style="color: var(--text-secondary); font-size: 16px; margin-bottom: 20px;">Apri un account gratuito con il nostro broker partner. Spread competitivi, MT5 integrato e supporto dedicato.</p>
-                <a href="https://portal.fortuneprime.com/getview?view=register&token=0pSM1g" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gradient-success); color: white; font-weight: 700; font-size: 15px; border-radius: 12px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(16,185,129,0.3);">
-                    Apri Account FPG Gratuito &rarr;
-                </a>
+                <h3 style="font-size: 28px; font-weight: 800; margin-bottom: 12px;">Scegli il Tipo di Conto <span style="color: var(--accent-success);">FPG</span></h3>
+                <p style="color: var(--text-secondary); font-size: 16px;">Due versioni del bot, due tipi di conto. Scegli quello pi&ugrave; adatto al tuo stile di trading.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                <!-- PRO Account -->
+                <div style="background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(139,92,246,0.1)); border: 1px solid rgba(168,85,247,0.3); border-radius: 24px; padding: 32px; text-align: center;">
+                    <div style="display: inline-block; padding: 6px 16px; background: linear-gradient(135deg, #a855f7, #8b5cf6); border-radius: 20px; font-size: 12px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">PRO</div>
+                    <h4 style="font-size: 22px; font-weight: 700; margin-bottom: 12px;">Conto Standard</h4>
+                    <div style="background: rgba(168,85,247,0.15); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 4px;">Costo di trading</div>
+                        <div style="font-size: 20px; font-weight: 700; color: #a855f7;">Solo Spread</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Nessuna commissione aggiuntiva</div>
+                    </div>
+                    <ul style="text-align: left; margin-bottom: 24px; font-size: 14px; color: var(--text-secondary);">
+                        <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">&#x2714; Spread incluso nel prezzo</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">&#x2714; Ideale per principianti</li>
+                        <li style="padding: 8px 0;">&#x2714; Scarica: <strong>VaultBot PRO</strong></li>
+                    </ul>
+                    <a href="https://portal.fortuneprime.com/getview?view=register&token=0pSM1g" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: linear-gradient(135deg, #a855f7, #8b5cf6); color: white; font-weight: 700; font-size: 15px; border-radius: 12px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(168,85,247,0.3); width: 100%; justify-content: center;">
+                        Apri Conto PRO &rarr;
+                    </a>
+                </div>
+
+                <!-- ECN Account -->
+                <div style="background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,182,212,0.1)); border: 1px solid rgba(16,185,129,0.3); border-radius: 24px; padding: 32px; text-align: center; position: relative;">
+                    <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); padding: 6px 16px; background: linear-gradient(135deg, #f59e0b, #f97316); border-radius: 20px; font-size: 11px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 0.05em;">Consigliato</div>
+                    <div style="display: inline-block; padding: 6px 16px; background: var(--gradient-success); border-radius: 20px; font-size: 12px; font-weight: 700; color: white; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; margin-top: 8px;">ECN</div>
+                    <h4 style="font-size: 22px; font-weight: 700; margin-bottom: 12px;">Conto ECN</h4>
+                    <div style="background: rgba(16,185,129,0.15); border-radius: 12px; padding: 16px; margin-bottom: 20px;">
+                        <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 4px;">Costo di trading</div>
+                        <div style="font-size: 20px; font-weight: 700; color: var(--accent-success);">Spread RAW + Commissioni</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Spread piu bassi, commissioni fisse</div>
+                    </div>
+                    <ul style="text-align: left; margin-bottom: 24px; font-size: 14px; color: var(--text-secondary);">
+                        <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">&#x2714; Spread RAW ultra-bassi</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">&#x2714; Ideale per trader esperti</li>
+                        <li style="padding: 8px 0;">&#x2714; Scarica: <strong>VaultBot ECN</strong></li>
+                    </ul>
+                    <a href="https://portal.fortuneprime.com/getview?view=register&token=0pSM2I" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--gradient-success); color: white; font-weight: 700; font-size: 15px; border-radius: 12px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 8px 24px rgba(16,185,129,0.3); width: 100%; justify-content: center;">
+                        Apri Conto ECN &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 24px; padding: 16px; background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3); border-radius: 12px;">
+                <span style="color: #fbbf24;">&#x26A0;</span>
+                <span style="color: var(--text-secondary); font-size: 14px;"> <strong>Importante:</strong> Dopo l'acquisto riceverai entrambe le versioni del bot. Scarica quella corrispondente al tipo di conto che hai aperto.</span>
             </div>
         </div>
     </section>
@@ -2215,148 +2938,215 @@
             <h2 class="section-title">Interfaccia del Bot</h2>
         </div>
 
-        <div class="bot-preview reveal" style="max-width: 950px; margin: 0 auto; border-radius: 16px; overflow: hidden; box-shadow: 0 25px 80px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
-            <!-- Bot Header -->
-            <div class="bot-header" style="background: linear-gradient(135deg, #0a0e17, #0d1220); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.06); flex-wrap: wrap; gap: 12px;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #638bff, #a78bfa); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; font-size: 16px;">V</div>
-                    <div>
-                        <div style="font-size: 15px; font-weight: 700; color: #f4f7ff;">VaultSystemFx</div>
-                        <div style="font-size: 9px; color: #4a5568; text-transform: uppercase; letter-spacing: 0.1em;">Automated Trading System</div>
-                    </div>
-                </div>
-                <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-                    <div style="background: rgba(12,16,24,0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 14px; display: flex; align-items: center; gap: 12px;">
-                        <span style="font-size: 13px; color: #f4f7ff; font-weight: 600;">USD 105.842,50</span>
-                        <span style="font-size: 13px; color: #f4f7ff; font-weight: 600;">USD 105.920,30</span>
-                        <span style="font-size: 13px; color: #34d399; font-weight: 700;">+77,80</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 6px; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); border-radius: 6px; padding: 6px 12px;">
-                        <span style="font-size: 11px; color: #34d399; font-weight: 600;">SESSIONE</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bot Tabs -->
-            <div class="bot-tabs" style="background: #0a0e17; display: flex; padding: 0 16px; border-bottom: 1px solid rgba(255,255,255,0.06); gap: 2px; overflow-x: auto;">
-                <div style="padding: 12px 16px; font-size: 12px; font-weight: 600; color: #638bff; border-bottom: 2px solid #638bff; display: flex; align-items: center; gap: 6px;">&#x1F4CA; Dashboard</div>
-                <div style="padding: 12px 16px; font-size: 12px; color: #4a5568; display: flex; align-items: center; gap: 6px;">&#x1F4BB; Account MT5</div>
-                <div style="padding: 12px 16px; font-size: 12px; color: #4a5568; display: flex; align-items: center; gap: 6px;">&#x1F4B9; Simboli</div>
-                <div style="padding: 12px 16px; font-size: 12px; color: #4a5568; display: flex; align-items: center; gap: 6px;">&#x1F4C4; Log</div>
-                <div style="padding: 12px 16px; font-size: 12px; color: #4a5568; display: flex; align-items: center; gap: 6px;">&#x1F4D6; Guida</div>
-                <div style="padding: 12px 16px; font-size: 12px; color: #4a5568; display: flex; align-items: center; gap: 6px;">&#x1F4E9; Telegram</div>
-                <div style="padding: 12px 16px; font-size: 12px; color: #4a5568; display: flex; align-items: center; gap: 6px;">&#x1F4C8; Backtest</div>
-            </div>
-
-            <!-- Bot Content -->
-            <div style="background: #06080d; padding: 20px;">
-                <!-- Stats Row -->
-                <div class="bot-stats" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px;">
-                    <div style="background: rgba(12,16,24,0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px;">
-                        <div style="font-size: 10px; color: #4a5568; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Equity</div>
-                        <div style="font-size: 20px; font-weight: 700; color: #638bff;">USD 105.842,50</div>
-                        <div style="font-size: 11px; color: #4a5568; margin-top: 4px;">Balance: USD 105.764,70</div>
-                    </div>
-                    <div style="background: rgba(12,16,24,0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px;">
-                        <div style="font-size: 10px; color: #4a5568; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Profitto Aperto</div>
-                        <div style="font-size: 20px; font-weight: 700; color: #34d399;">+USD 77,80</div>
-                        <div style="font-size: 11px; color: #4a5568; margin-top: 4px;">Posizioni aperte: 3</div>
-                    </div>
-                    <div style="background: rgba(12,16,24,0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px;">
-                        <div style="font-size: 10px; color: #4a5568; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Win Rate</div>
-                        <div style="font-size: 20px; font-weight: 700; color: #34d399;">70.2%</div>
-                        <div style="font-size: 11px; color: #4a5568; margin-top: 4px;">Win: 45 | Lose: 19</div>
-                    </div>
-                    <div style="background: rgba(12,16,24,0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px;">
-                        <div style="font-size: 10px; color: #4a5568; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Profit Factor</div>
-                        <div style="font-size: 20px; font-weight: 700; color: #a78bfa;">2.45</div>
-                        <div style="font-size: 11px; color: #4a5568; margin-top: 4px;">Drawdown: 3.2%</div>
-                    </div>
-                </div>
-
-                <!-- Two Columns -->
-                <div class="bot-columns" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                    <!-- Chart -->
-                    <div style="background: rgba(12,16,24,0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px;">
-                        <div style="font-size: 13px; font-weight: 600; color: #f4f7ff; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
-                            <span style="color: #638bff;">&#x1F4C8;</span> Curva Equity
+        <div class="bot-preview-wrapper">
+            <div class="bot-preview reveal">
+                <!-- Bot Header -->
+                <div class="bot-header">
+                    <div class="bot-brand">
+                        <div class="bot-logo">V</div>
+                        <div class="bot-brand-info">
+                            <h3>VaultSystemFx</h3>
+                            <span>Automated Trading System</span>
                         </div>
-                        <div style="display: flex; gap: 8px;">
-                            <!-- Y Axis -->
-                            <div style="display: flex; flex-direction: column; justify-content: space-between; font-size: 9px; color: #4a5568; font-family: 'JetBrains Mono', monospace; text-align: right; padding: 5px 0;">
-                                <span>106k</span>
-                                <span>104k</span>
-                                <span>102k</span>
-                                <span>100k</span>
+                    </div>
+                    <div class="bot-header-right">
+                        <div class="bot-balance">
+                            <span class="bot-balance-item" data-target="105842.50">USD <span class="counter">105.842,50</span></span>
+                            <span class="bot-balance-item" data-target="105920.30">USD <span class="counter">105.920,30</span></span>
+                            <span class="bot-balance-item bot-balance-profit">+<span class="counter">77,80</span></span>
+                        </div>
+                        <div class="bot-status">
+                            <span class="bot-status-dot"></span>
+                            <span>Attivo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bot Tabs -->
+                <div class="bot-tabs">
+                    <div class="bot-tab active">
+                        <span class="bot-tab-icon">&#x1F4CA;</span> Dashboard
+                    </div>
+                    <div class="bot-tab">
+                        <span class="bot-tab-icon">&#x1F4BB;</span> Account MT5
+                    </div>
+                    <div class="bot-tab">
+                        <span class="bot-tab-icon">&#x1F4B9;</span> Simboli
+                    </div>
+                    <div class="bot-tab">
+                        <span class="bot-tab-icon">&#x1F4C4;</span> Log
+                    </div>
+                    <div class="bot-tab">
+                        <span class="bot-tab-icon">&#x1F4D6;</span> Guida
+                    </div>
+                    <div class="bot-tab">
+                        <span class="bot-tab-icon">&#x1F4E9;</span> Telegram
+                    </div>
+                    <div class="bot-tab">
+                        <span class="bot-tab-icon">&#x1F4C8;</span> Backtest
+                    </div>
+                </div>
+
+                <!-- Bot Content -->
+                <div class="bot-content">
+                    <!-- Stats Row -->
+                    <div class="bot-stats">
+                        <div class="bot-stat-card">
+                            <div class="bot-stat-label">Equity</div>
+                            <div class="bot-stat-value">USD <span class="counter" data-target="105842.50">105.842,50</span></div>
+                            <div class="bot-stat-sub">Balance: USD 105.764,70</div>
+                        </div>
+                        <div class="bot-stat-card">
+                            <div class="bot-stat-label">Profitto Aperto</div>
+                            <div class="bot-stat-value positive">+USD <span class="counter" data-target="77.80">77,80</span></div>
+                            <div class="bot-stat-sub">Posizioni aperte: 3</div>
+                        </div>
+                        <div class="bot-stat-card">
+                            <div class="bot-stat-label">Win Rate</div>
+                            <div class="bot-stat-value positive"><span class="counter" data-target="70.2">70.2</span>%</div>
+                            <div class="bot-stat-sub">Win: 45 | Lose: 19</div>
+                        </div>
+                        <div class="bot-stat-card">
+                            <div class="bot-stat-label">Profit Factor</div>
+                            <div class="bot-stat-value purple"><span class="counter" data-target="2.45">2.45</span></div>
+                            <div class="bot-stat-sub">Drawdown: 3.2%</div>
+                        </div>
+                    </div>
+
+                    <!-- Two Columns -->
+                    <div class="bot-columns">
+                        <!-- Chart -->
+                        <div class="bot-panel">
+                            <div class="bot-panel-header">
+                                <span class="bot-panel-icon">&#x1F4C8;</span> Curva Equity
+                                <span style="margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 10px; color: #34d399;">
+                                    <span style="width: 6px; height: 6px; background: #34d399; border-radius: 50%; animation: statusPulse 1s infinite;"></span>
+                                    LIVE
+                                </span>
                             </div>
-                            <!-- Chart Area -->
-                            <div style="flex: 1;">
-                                <svg viewBox="0 0 400 120" style="width: 100%; height: 110px;">
-                                    <defs>
-                                        <linearGradient id="chartGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" style="stop-color:#638bff;stop-opacity:0.3"/>
-                                            <stop offset="100%" style="stop-color:#638bff;stop-opacity:0.02"/>
-                                        </linearGradient>
-                                    </defs>
-                                    <!-- Grid lines -->
-                                    <line x1="0" y1="30" x2="400" y2="30" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-                                    <line x1="0" y1="60" x2="400" y2="60" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-                                    <line x1="0" y1="90" x2="400" y2="90" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
-                                    <!-- Chart fill -->
-                                    <path d="M0,95 L20,90 L40,85 L60,80 L80,75 L100,78 L120,70 L140,65 L160,68 L180,60 L200,55 L220,58 L240,50 L260,45 L280,48 L300,40 L320,35 L340,30 L360,25 L380,20 L400,15 L400,100 L0,100 Z" fill="url(#chartGrad)"/>
-                                    <!-- Chart line -->
-                                    <path d="M0,95 L20,90 L40,85 L60,80 L80,75 L100,78 L120,70 L140,65 L160,68 L180,60 L200,55 L220,58 L240,50 L260,45 L280,48 L300,40 L320,35 L340,30 L360,25 L380,20 L400,15" fill="none" stroke="#638bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <!-- Current point -->
-                                    <circle cx="400" cy="15" r="4" fill="#34d399">
-                                        <animate attributeName="r" values="4;6;4" dur="2s" repeatCount="indefinite"/>
-                                    </circle>
-                                    <circle cx="400" cy="15" r="8" fill="rgba(52,211,153,0.3)">
-                                        <animate attributeName="r" values="8;12;8" dur="2s" repeatCount="indefinite"/>
-                                        <animate attributeName="opacity" values="0.3;0.1;0.3" dur="2s" repeatCount="indefinite"/>
-                                    </circle>
-                                </svg>
-                                <!-- X Axis -->
-                                <div style="display: flex; justify-content: space-between; font-size: 9px; color: #4a5568; font-family: 'JetBrains Mono', monospace; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.06);">
-                                    <span>1 Mar</span>
-                                    <span>5 Mar</span>
-                                    <span>10 Mar</span>
-                                    <span>15 Mar</span>
-                                    <span>20 Mar</span>
+                            <div class="bot-chart-container">
+                                <div class="bot-chart-yaxis">
+                                    <span>106k</span>
+                                    <span>104k</span>
+                                    <span>102k</span>
+                                    <span>100k</span>
+                                </div>
+                                <div class="bot-chart-main">
+                                    <svg viewBox="0 0 400 120" class="bot-chart-svg">
+                                        <defs>
+                                            <linearGradient id="chartGradNew" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.4"/>
+                                                <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0.02"/>
+                                            </linearGradient>
+                                            <filter id="glow">
+                                                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                                                <feMerge>
+                                                    <feMergeNode in="coloredBlur"/>
+                                                    <feMergeNode in="SourceGraphic"/>
+                                                </feMerge>
+                                            </filter>
+                                            <filter id="glowStrong">
+                                                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                                <feMerge>
+                                                    <feMergeNode in="coloredBlur"/>
+                                                    <feMergeNode in="coloredBlur"/>
+                                                    <feMergeNode in="SourceGraphic"/>
+                                                </feMerge>
+                                            </filter>
+                                        </defs>
+                                        <!-- Grid lines -->
+                                        <line x1="0" y1="30" x2="400" y2="30" stroke="rgba(99,102,241,0.08)" stroke-width="1"/>
+                                        <line x1="0" y1="60" x2="400" y2="60" stroke="rgba(99,102,241,0.08)" stroke-width="1"/>
+                                        <line x1="0" y1="90" x2="400" y2="90" stroke="rgba(99,102,241,0.08)" stroke-width="1"/>
+                                        <!-- Vertical grid -->
+                                        <line x1="100" y1="0" x2="100" y2="120" stroke="rgba(99,102,241,0.05)" stroke-width="1"/>
+                                        <line x1="200" y1="0" x2="200" y2="120" stroke="rgba(99,102,241,0.05)" stroke-width="1"/>
+                                        <line x1="300" y1="0" x2="300" y2="120" stroke="rgba(99,102,241,0.05)" stroke-width="1"/>
+                                        <!-- Chart fill (animated) -->
+                                        <path class="bot-chart-fill" d="M0,95 L20,90 L40,85 L60,80 L80,75 L100,78 L120,70 L140,65 L160,68 L180,60 L200,55 L220,58 L240,50 L260,45 L280,48 L300,40 L320,35 L340,30 L360,25 L380,20 L400,15 L400,120 L0,120 Z" fill="url(#chartGradNew)"/>
+                                        <!-- Chart line (animated draw) -->
+                                        <path class="bot-chart-line" d="M0,95 L20,90 L40,85 L60,80 L80,75 L100,78 L120,70 L140,65 L160,68 L180,60 L200,55 L220,58 L240,50 L260,45 L280,48 L300,40 L320,35 L340,30 L360,25 L380,20 L400,15" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+                                        <!-- Data points (animated pop-in) -->
+                                        <g class="bot-chart-point">
+                                            <circle cx="100" cy="78" r="4" fill="#0a0f1a" stroke="#6366f1" stroke-width="2"/>
+                                        </g>
+                                        <g class="bot-chart-point">
+                                            <circle cx="200" cy="55" r="4" fill="#0a0f1a" stroke="#6366f1" stroke-width="2"/>
+                                        </g>
+                                        <g class="bot-chart-point">
+                                            <circle cx="300" cy="40" r="4" fill="#0a0f1a" stroke="#6366f1" stroke-width="2"/>
+                                        </g>
+                                        <!-- Current point (live pulse) -->
+                                        <g class="bot-chart-point">
+                                            <circle cx="400" cy="15" r="20" fill="rgba(52, 211, 153, 0.1)" class="live-pulse-ring"/>
+                                            <circle cx="400" cy="15" r="12" fill="none" stroke="rgba(52, 211, 153, 0.3)" stroke-width="1" class="live-pulse-ring"/>
+                                            <circle cx="400" cy="15" r="6" fill="#34d399" filter="url(#glowStrong)" class="live-pulse"/>
+                                        </g>
+                                    </svg>
+                                    <div class="bot-chart-xaxis">
+                                        <span>1 Mar</span>
+                                        <span>8 Mar</span>
+                                        <span>15 Mar</span>
+                                        <span>22 Mar</span>
+                                        <span>Oggi</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Trades -->
+                        <div class="bot-panel">
+                            <div class="bot-panel-header">
+                                <span class="bot-panel-icon">&#x1F4CB;</span> Ultimi Trade
+                            </div>
+                            <div class="trade-header">
+                                <span>Ora</span>
+                                <span>Simbolo</span>
+                                <span>Tipo</span>
+                                <span>Lotto</span>
+                                <span>P&L</span>
+                            </div>
+                            <div class="trade-row">
+                                <span class="trade-time">14:32</span>
+                                <span class="trade-symbol">EURUSD</span>
+                                <span class="trade-type-buy">BUY</span>
+                                <span>0.07</span>
+                                <span class="trade-profit-pos">+42.50</span>
+                            </div>
+                            <div class="trade-row">
+                                <span class="trade-time">13:15</span>
+                                <span class="trade-symbol">GBPUSD</span>
+                                <span class="trade-type-sell">SELL</span>
+                                <span>0.07</span>
+                                <span class="trade-profit-pos">+28.30</span>
+                            </div>
+                            <div class="trade-row">
+                                <span class="trade-time">11:48</span>
+                                <span class="trade-symbol">XAUUSD</span>
+                                <span class="trade-type-buy">BUY</span>
+                                <span>0.02</span>
+                                <span class="trade-profit-pos">+156.80</span>
+                            </div>
+                            <div class="trade-row">
+                                <span class="trade-time">10:22</span>
+                                <span class="trade-symbol">USDJPY</span>
+                                <span class="trade-type-buy">BUY</span>
+                                <span>0.07</span>
+                                <span class="trade-profit-neg">-18.40</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Trades -->
-                    <div style="background: rgba(12,16,24,0.85); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px;">
-                        <div style="font-size: 13px; font-weight: 600; color: #f4f7ff; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
-                            <span style="color: #638bff;">&#x1F4CB;</span> Ultimi Trade
-                        </div>
-                        <div class="trade-grid" style="font-size: 10px; color: #4a5568; display: grid; grid-template-columns: 50px 70px 40px 50px 70px; gap: 8px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); text-transform: uppercase;">
-                            <span>Ora</span><span>Simbolo</span><span>Tipo</span><span>Lotto</span><span>P&L</span>
-                        </div>
-                        <div class="trade-grid" style="font-size: 12px; display: grid; grid-template-columns: 50px 70px 40px 50px 70px; gap: 8px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03); color: #f4f7ff;">
-                            <span style="color: #7a8ba8;">14:32</span><span style="color: #638bff;">EURUSD</span><span style="color: #34d399;">BUY</span><span>0.07</span><span style="color: #34d399;">+42.50</span>
-                        </div>
-                        <div class="trade-grid" style="font-size: 12px; display: grid; grid-template-columns: 50px 70px 40px 50px 70px; gap: 8px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03); color: #f4f7ff;">
-                            <span style="color: #7a8ba8;">13:15</span><span style="color: #638bff;">GBPUSD</span><span style="color: #f87171;">SELL</span><span>0.07</span><span style="color: #34d399;">+28.30</span>
-                        </div>
-                        <div class="trade-grid" style="font-size: 12px; display: grid; grid-template-columns: 50px 70px 40px 50px 70px; gap: 8px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03); color: #f4f7ff;">
-                            <span style="color: #7a8ba8;">11:48</span><span style="color: #638bff;">XAUUSD</span><span style="color: #34d399;">BUY</span><span>0.02</span><span style="color: #34d399;">+156.80</span>
-                        </div>
-                        <div class="trade-grid" style="font-size: 12px; display: grid; grid-template-columns: 50px 70px 40px 50px 70px; gap: 8px; padding: 10px 0; color: #f4f7ff;">
-                            <span style="color: #7a8ba8;">10:22</span><span style="color: #638bff;">USDJPY</span><span style="color: #34d399;">BUY</span><span>0.07</span><span style="color: #f87171;">-18.40</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bottom Buttons -->
-                <div style="display: flex; gap: 12px; margin-top: 20px;">
-                    <div style="background: linear-gradient(135deg, #34d399, #10b981); border: none; border-radius: 10px; padding: 12px 28px; font-size: 13px; font-weight: 700; color: white; display: flex; align-items: center; gap: 8px;">
-                        &#x25B6; AVVIA BOT
-                    </div>
-                    <div style="background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.4); border-radius: 10px; padding: 12px 28px; font-size: 13px; font-weight: 700; color: #f87171; display: flex; align-items: center; gap: 8px;">
-                        &#x25A0; FERMA
+                    <!-- Action Buttons -->
+                    <div class="bot-actions">
+                        <button class="bot-btn bot-btn-start">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            Avvia Bot
+                        </button>
+                        <button class="bot-btn bot-btn-stop">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12"/></svg>
+                            Ferma
+                        </button>
                     </div>
                 </div>
             </div>
@@ -2537,6 +3327,74 @@
         };
         window.addEventListener('scroll', revealOnScroll);
         revealOnScroll();
+
+        // Bot Preview Number Counter Animation
+        const botCounters = document.querySelectorAll('.bot-preview .counter');
+        const formatNumber = (num, template) => {
+            if (template.includes(',')) {
+                // European format (comma as decimal separator)
+                return num.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            }
+            return num.toFixed(2);
+        };
+
+        const animateBotCounter = (el) => {
+            const finalText = el.textContent;
+            const cleanNumber = parseFloat(finalText.replace(/[^\d.,]/g, '').replace(',', '.'));
+            if (isNaN(cleanNumber)) return;
+
+            const duration = 2500;
+            const start = performance.now();
+            const startValue = 0;
+
+            const animate = (now) => {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                // Easing: ease-out cubic
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = startValue + (cleanNumber - startValue) * eased;
+
+                // Format based on original template
+                if (finalText.includes('.') && finalText.includes(',')) {
+                    // Format like 105.842,50
+                    const formatted = current.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    el.textContent = formatted;
+                } else if (finalText.includes(',')) {
+                    // Format like 77,80
+                    el.textContent = current.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                } else {
+                    // Simple number
+                    el.textContent = current.toFixed(1);
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    el.textContent = finalText;
+                }
+            };
+
+            requestAnimationFrame(animate);
+        };
+
+        // Trigger bot counter animation when visible
+        const botPreview = document.querySelector('.bot-preview');
+        if (botPreview) {
+            const botObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Stagger the counter animations
+                        botCounters.forEach((counter, index) => {
+                            setTimeout(() => {
+                                animateBotCounter(counter);
+                            }, index * 150);
+                        });
+                        botObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            botObserver.observe(botPreview);
+        }
 
         // Counter animation
         const counters = document.querySelectorAll('[data-count]');

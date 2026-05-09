@@ -950,16 +950,16 @@
 
                     <div class="summary-row">
                         <span class="summary-label">Prezzo originale</span>
-                        <span class="summary-value strike">€799</span>
+                        <span class="summary-value strike">€1399</span>
                     </div>
                     <div class="summary-row">
                         <span class="summary-label">Sconto lancio</span>
-                        <span class="summary-value green">-€300</span>
+                        <span class="summary-value green">-€600</span>
                     </div>
 
                     <div class="summary-total">
                         <span class="summary-total-label">Totale</span>
-                        <span class="summary-total-value" id="display-price">€499</span>
+                        <span class="summary-total-value" id="display-price">€799</span>
                     </div>
                 </div>
 
@@ -999,7 +999,7 @@
                         <div id="stripe-card-element"></div>
                         <div id="stripe-card-errors"></div>
                         <button type="button" class="submit-btn" id="stripe-pay-btn">
-                            Paga €499 con Carta
+                            Paga €799 con Carta
                         </button>
                     </div>
 
@@ -1030,7 +1030,7 @@
                                     </div>
                                 </div>
                                 <div class="address-box">
-                                    <div class="address-label">Invia <strong id="crypto-amount" style="color: var(--usdt);">579 USDT</strong></div>
+                                    <div class="address-label">Invia <strong id="crypto-amount" style="color: var(--usdt);">927 USDT</strong></div>
                                     <div class="address-label" style="margin-top: 10px;">Address:</div>
                                     <div class="address-value" id="crypto-address">TUyfj5TrX6Ejwr1gLRJY18GtHV8USwjW21</div>
                                     <button type="button" class="copy-btn" onclick="copyAddress()">📋 Copia</button>
@@ -1078,8 +1078,8 @@
         const BACKEND_URL = 'https://vaultsystemfx-backend.vercel.app';
         const STRIPE_PK = 'pk_live_51TCTc6GzOgTLXR0ez5U2sHWbZDqbRO1ZSNqDGvD5yVdv71OYYrFh3HMGE4AvYJrqsHiDsqKAOCLqwgOIiY3oTKsj00kYS8lsCt';
 
-        let currentPrice = 499;
-        let currentPriceUSDT = 579;
+        let currentPrice = 799;
+        let currentPriceUSDT = 927;
         let currentPlan = 'standard';
         let discountApplied = false;
 
@@ -1176,8 +1176,8 @@
                 const result = await response.json();
 
                 if (result.valid) {
-                    currentPrice = 499 - result.discount;
-                    currentPriceUSDT = 579 - result.discountUSDT;
+                    currentPrice = 799 - result.discount;
+                    currentPriceUSDT = 927 - result.discountUSDT;
                     discountApplied = true;
 
                     document.getElementById('display-price').textContent = '€' + currentPrice;

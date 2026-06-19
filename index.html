@@ -1049,7 +1049,9 @@
         }
 
         .testimonial-card {
-            min-width: 400px;
+            flex: 0 0 400px;
+            width: 400px;
+            max-width: 400px;
             background: var(--bg-card);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border-subtle);
@@ -2405,7 +2407,13 @@
             .step-desc { font-size: 14px; }
 
             /* Testimonials */
-            .testimonial-card { min-width: 280px; padding: 24px; }
+            .testimonial-card {
+                flex: 0 0 80vw;
+                width: 80vw;
+                max-width: 340px;
+                min-width: 0;
+                padding: 24px;
+            }
             .testimonial-text { font-size: 14px; }
 
             /* CTA/Pricing */

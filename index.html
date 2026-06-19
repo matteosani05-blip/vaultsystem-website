@@ -1028,19 +1028,24 @@
         .testimonials-wrapper {
             max-width: 1200px;
             margin: 0 auto;
-            overflow: hidden;
             position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+            cursor: grab;
+            touch-action: pan-x;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;        /* Firefox */
+            -ms-overflow-style: none;     /* IE/Edge */
         }
+        .testimonials-wrapper::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+        .testimonials-wrapper.grabbing { cursor: grabbing; }
 
         .testimonials-track {
             display: flex;
             gap: 24px;
-            animation: scrollTestimonials 30s linear infinite;
-        }
-
-        @keyframes scrollTestimonials {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
+            width: max-content;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .testimonial-card {
@@ -1094,11 +1099,6 @@
         .testimonial-role {
             font-size: 13px;
             color: var(--text-muted);
-        }
-
-        /* Pausa scroll al passaggio del mouse per leggere */
-        .testimonials-wrapper:hover .testimonials-track {
-            animation-play-state: paused;
         }
 
         /* ── Pulsante "Lascia una recensione" ── */
@@ -4444,7 +4444,83 @@
             });
         }
 
-        // Carica le recensioni all'avvio
+        // ── Carosello scorrevole con le dita / mouse + auto-scroll ──
+        function initMarquee() {
+            const wrapper = document.querySelector('.testimonials-wrapper');
+            if (!wrapper || !track || wrapper.dataset.marqueeInit) return;
+            wrapper.dataset.marqueeInit = '1';
+
+            const SPEED = 0.5;            // px per frame dell'auto-scroll
+            let paused = false;
+            let resumeTimer = null;
+            let dragging = false;
+
+            // Larghezza di un "set" completo di card: il punto dove ricominciare
+            function loopWidth() {
+                const cards = track.querySelectorAll('.testimonial-card');
+                const perSet = userReviews.length + DEFAULT_REVIEWS.length;
+                if (perSet > 0 && cards.length >= perSet * 2 && cards[perSet]) {
+                    return cards[perSet].offsetLeft;
+                }
+                return track.scrollWidth / 2;
+            }
+
+            // Mantiene lo scroll dentro il primo set per un loop infinito
+            function normalize() {
+                const w = loopWidth();
+                if (w <= 0) return;
+                if (wrapper.scrollLeft >= w) wrapper.scrollLeft -= w;
+                else if (wrapper.scrollLeft < 0) wrapper.scrollLeft += w;
+            }
+
+            function frame() {
+                if (!paused) wrapper.scrollLeft += SPEED;
+                normalize();
+                requestAnimationFrame(frame);
+            }
+            requestAnimationFrame(frame);
+
+            function pause() { paused = true; clearTimeout(resumeTimer); }
+            function scheduleResume(delay) {
+                clearTimeout(resumeTimer);
+                resumeTimer = setTimeout(() => { if (!dragging) paused = false; }, delay);
+            }
+
+            // Hover col mouse: pausa per leggere
+            wrapper.addEventListener('mouseenter', pause);
+            wrapper.addEventListener('mouseleave', () => { if (!dragging) scheduleResume(300); });
+
+            // Drag col mouse (grab-to-scroll). Il touch usa lo scroll nativo.
+            let startX = 0, startScroll = 0;
+            wrapper.addEventListener('mousedown', (e) => {
+                if (e.button !== 0) return;
+                dragging = true;
+                startX = e.pageX;
+                startScroll = wrapper.scrollLeft;
+                pause();
+                wrapper.classList.add('grabbing');
+                e.preventDefault(); // evita la selezione/trascinamento di testo e immagini
+            });
+            window.addEventListener('mousemove', (e) => {
+                if (!dragging) return;
+                wrapper.scrollLeft = startScroll - (e.pageX - startX);
+            });
+            window.addEventListener('mouseup', () => {
+                if (!dragging) return;
+                dragging = false;
+                wrapper.classList.remove('grabbing');
+                scheduleResume(1500);
+            });
+
+            // Touch (dita): scroll nativo, pausa mentre si tocca/scorre
+            wrapper.addEventListener('touchstart', pause, { passive: true });
+            wrapper.addEventListener('touchend', () => scheduleResume(1500), { passive: true });
+            wrapper.addEventListener('touchcancel', () => scheduleResume(1500), { passive: true });
+        }
+
+        // Avvio: render pulito (set duplicato per loop), drag/scroll, poi fetch
+        renderTrack();
+        initMarquee();
         loadReviews();
     })();
     </script>

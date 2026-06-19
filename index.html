@@ -1096,6 +1096,173 @@
             color: var(--text-muted);
         }
 
+        /* Pausa scroll al passaggio del mouse per leggere */
+        .testimonials-wrapper:hover .testimonials-track {
+            animation-play-state: paused;
+        }
+
+        /* ── Pulsante "Lascia una recensione" ── */
+        .review-cta {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .review-cta-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 14px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            color: var(--text-primary, #fff);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .review-cta-btn:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        /* ── Modale recensione ── */
+        .review-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(6px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        .review-modal-overlay.active {
+            display: flex;
+        }
+
+        .review-modal {
+            width: 100%;
+            max-width: 480px;
+            background: #0a0e16;
+            border: 1px solid var(--border-subtle);
+            border-radius: 24px;
+            padding: 32px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .review-modal h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .review-modal p.review-sub {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+        .review-close {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .review-close:hover { color: #fff; border-color: var(--accent-primary); }
+
+        .review-field { margin-bottom: 18px; }
+        .review-field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        .review-field input,
+        .review-field textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+            background: rgba(255,255,255,0.03);
+            color: #fff;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+        .review-field input:focus,
+        .review-field textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+        .review-field textarea { resize: vertical; min-height: 110px; }
+        .review-charcount {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* Honeypot nascosto */
+        .review-hp {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+            height: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        /* Selettore stelle interattivo */
+        .review-stars-input {
+            display: flex;
+            gap: 6px;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        .review-stars-input span {
+            color: rgba(255,255,255,0.18);
+            transition: color 0.15s ease, transform 0.15s ease;
+        }
+        .review-stars-input span.active { color: var(--accent-gold); }
+        .review-stars-input span:hover { transform: scale(1.15); }
+
+        .review-submit {
+            width: 100%;
+            padding: 14px;
+            border-radius: 14px;
+            border: none;
+            background: var(--gradient-main);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        .review-submit:hover { transform: translateY(-2px); }
+        .review-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .review-msg {
+            margin-top: 14px;
+            font-size: 14px;
+            text-align: center;
+            min-height: 18px;
+        }
+        .review-msg.error { color: #f87171; }
+        .review-msg.success { color: var(--accent-success); }
+
         /* ═══════════════════════════════════════════════════════════
            PRICING CTA
         ═══════════════════════════════════════════════════════════ */
@@ -2814,7 +2981,7 @@
         </div>
 
         <div class="testimonials-wrapper">
-            <div class="testimonials-track">
+            <div class="testimonials-track" id="testimonials-track">
                 <div class="testimonial-card">
                     <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
                     <p class="testimonial-text">"Finalmente un bot che funziona davvero. L'interfaccia &egrave; intuitiva e le notifiche Telegram sono comodissime. Lo uso da 3 mesi con ottimi risultati."</p>
@@ -2889,7 +3056,61 @@
                 </div>
             </div>
         </div>
+
+        <div class="review-cta reveal">
+            <button class="review-cta-btn" id="open-review-modal" type="button">
+                <span>&#9733;</span>
+                <span id="review-cta-label">Lascia una recensione</span>
+            </button>
+        </div>
     </section>
+
+    <!-- Modale: Scrivi una recensione -->
+    <div class="review-modal-overlay" id="review-modal-overlay">
+        <div class="review-modal">
+            <button class="review-close" id="close-review-modal" type="button" aria-label="Chiudi">&times;</button>
+            <h3 id="review-modal-title">Scrivi una recensione</h3>
+            <p class="review-sub" id="review-modal-sub">Condividi la tua esperienza con VaultSystemFx</p>
+
+            <form id="review-form" autocomplete="off">
+                <div class="review-field">
+                    <label id="review-label-rating">Valutazione</label>
+                    <div class="review-stars-input" id="review-stars-input">
+                        <span data-value="1">&#9733;</span>
+                        <span data-value="2">&#9733;</span>
+                        <span data-value="3">&#9733;</span>
+                        <span data-value="4">&#9733;</span>
+                        <span data-value="5">&#9733;</span>
+                    </div>
+                </div>
+
+                <div class="review-field">
+                    <label for="review-name" id="review-label-name">Nome</label>
+                    <input type="text" id="review-name" maxlength="40" placeholder="Es. Marco R." required>
+                </div>
+
+                <div class="review-field">
+                    <label for="review-role" id="review-label-role">Ruolo (facoltativo)</label>
+                    <input type="text" id="review-role" maxlength="40" placeholder="Es. Trader Indipendente">
+                </div>
+
+                <div class="review-field">
+                    <label for="review-text" id="review-label-text">La tua recensione</label>
+                    <textarea id="review-text" maxlength="600" minlength="10" placeholder="Raccontaci la tua esperienza..." required></textarea>
+                    <div class="review-charcount"><span id="review-charcount">0</span>/600</div>
+                </div>
+
+                <!-- Honeypot anti-spam (nascosto agli utenti reali) -->
+                <div class="review-hp" aria-hidden="true">
+                    <label>Lascia vuoto questo campo</label>
+                    <input type="text" id="review-website" tabindex="-1" autocomplete="off">
+                </div>
+
+                <button type="submit" class="review-submit" id="review-submit-btn">Invia recensione</button>
+                <div class="review-msg" id="review-msg"></div>
+            </form>
+        </div>
+    </div>
 
     <!-- Pricing CTA -->
     <section class="cta-section" id="pricing">
@@ -3571,6 +3792,21 @@
                 // Reviews
                 'reviews-label': 'Recensioni',
                 'reviews-title': 'Cosa Dicono i Trader',
+                'review-cta-label': 'Lascia una recensione',
+                'review-modal-title': 'Scrivi una recensione',
+                'review-modal-sub': 'Condividi la tua esperienza con VaultSystemFx',
+                'review-label-rating': 'Valutazione',
+                'review-label-name': 'Nome',
+                'review-label-role': 'Ruolo (facoltativo)',
+                'review-label-text': 'La tua recensione',
+                'review-placeholder-name': 'Es. Marco R.',
+                'review-placeholder-role': 'Es. Trader Indipendente',
+                'review-placeholder-text': 'Raccontaci la tua esperienza...',
+                'review-submit-btn': 'Invia recensione',
+                'review-submitting': 'Invio in corso...',
+                'review-success': 'Grazie! La tua recensione \u00e8 stata pubblicata.',
+                'review-err-fields': 'Compila tutti i campi (min. 10 caratteri) e scegli una valutazione.',
+                'review-err-generic': 'Errore durante l\'invio. Riprova pi\u00f9 tardi.',
                 'testimonial-1-text': '"Finalmente un bot che funziona davvero. L\'interfaccia \u00e8 intuitiva e le notifiche Telegram sono comodissime. Lo uso da 3 mesi con ottimi risultati."',
                 'testimonial-1-role': 'Trader Indipendente',
                 'testimonial-2-text': '"La gestione del rischio automatica \u00e8 fantastica. Imposto il mio 1% e il bot calcola tutto. Niente pi\u00f9 calcoli manuali."',
@@ -3682,6 +3918,21 @@
                 // Reviews
                 'reviews-label': 'Reviews',
                 'reviews-title': 'What Traders Say',
+                'review-cta-label': 'Write a review',
+                'review-modal-title': 'Write a review',
+                'review-modal-sub': 'Share your experience with VaultSystemFx',
+                'review-label-rating': 'Rating',
+                'review-label-name': 'Name',
+                'review-label-role': 'Role (optional)',
+                'review-label-text': 'Your review',
+                'review-placeholder-name': 'E.g. Marco R.',
+                'review-placeholder-role': 'E.g. Independent Trader',
+                'review-placeholder-text': 'Tell us about your experience...',
+                'review-submit-btn': 'Submit review',
+                'review-submitting': 'Submitting...',
+                'review-success': 'Thank you! Your review has been published.',
+                'review-err-fields': 'Fill in all fields (min. 10 characters) and pick a rating.',
+                'review-err-generic': 'Error while submitting. Please try again later.',
                 'testimonial-1-text': '"Finally a bot that actually works. The interface is intuitive and Telegram notifications are super convenient. I\'ve been using it for 3 months with great results."',
                 'testimonial-1-role': 'Independent Trader',
                 'testimonial-2-text': '"The automatic risk management is fantastic. I set my 1% and the bot calculates everything. No more manual calculations."',
@@ -3843,15 +4094,17 @@
                 if (label) label.textContent = t['reviews-label'];
                 const title = testimonialsSection.querySelector('.section-title');
                 if (title) title.innerHTML = t['reviews-title'];
-                // Testimonial cards
-                const testimonialCards = testimonialsSection.querySelectorAll('.testimonial-card');
-                testimonialCards.forEach((card, i) => {
-                    const idx = (i % 4) + 1; // 4 unique testimonials, repeated
+                // Testimonial cards predefiniti (i card utente hanno data-user e non si traducono)
+                const testimonialCards = testimonialsSection.querySelectorAll('.testimonial-card[data-tindex]');
+                testimonialCards.forEach((card) => {
+                    const idx = card.getAttribute('data-tindex');
                     const text = card.querySelector('.testimonial-text');
                     const role = card.querySelector('.testimonial-role');
                     if (text && t['testimonial-' + idx + '-text']) text.textContent = t['testimonial-' + idx + '-text'];
                     if (role && t['testimonial-' + idx + '-role']) role.textContent = t['testimonial-' + idx + '-role'];
                 });
+                // Aggiorna etichette UI recensioni (pulsante + modale)
+                if (typeof applyReviewI18n === 'function') applyReviewI18n(lang);
             }
 
             // Preview section
@@ -3963,6 +4216,237 @@
             if (reqBadges[0]) reqBadges[0].textContent = lang === 'it' ? 'GRATUITO' : 'FREE';
             if (reqBadges[1]) reqBadges[1].textContent = lang === 'it' ? 'CONSIGLIATO' : 'RECOMMENDED';
         }
+    </script>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         RECENSIONI — caricamento, invio e rendering dinamico
+    ═══════════════════════════════════════════════════════════ -->
+    <script>
+    (function () {
+        const BACKEND_URL = 'https://vaultsystemfx-backend.vercel.app';
+
+        // Recensioni predefinite (testo IT; vengono tradotte via data-tindex)
+        const DEFAULT_REVIEWS = [
+            { tindex: 1, rating: 5, name: 'Marco R.', role: 'Trader Indipendente', text: '"Finalmente un bot che funziona davvero. L\'interfaccia è intuitiva e le notifiche Telegram sono comodissime. Lo uso da 3 mesi con ottimi risultati."' },
+            { tindex: 2, rating: 4, name: 'Luca T.', role: 'Investitore Privato', text: '"La gestione del rischio automatica è fantastica. Imposto il mio 1% e il bot calcola tutto. Niente più calcoli manuali."' },
+            { tindex: 3, rating: 4, name: 'Andrea G.', role: 'Day Trader', text: '"Supporto eccellente e aggiornamenti costanti. Il team risponde sempre velocemente. Prodotto serio e professionale."' },
+            { tindex: 4, rating: 5, name: 'Stefano B.', role: 'Forex Trader', text: '"Ho provato altri bot prima, ma VaultSystemFx è su un altro livello. L\'algoritmo è solido e la dashboard è bellissima."' }
+        ];
+
+        let userReviews = []; // recensioni caricate dal backend
+        let selectedRating = 0;
+
+        const track = document.getElementById('testimonials-track');
+
+        function starsHtml(rating) {
+            let h = '';
+            for (let i = 1; i <= 5; i++) {
+                h += i <= rating ? '&#9733;' : '&#9734;';
+            }
+            return h;
+        }
+
+        function avatarLetter(name) {
+            const clean = (name || '').replace(/&[^;]+;/g, '').trim();
+            return (clean.charAt(0) || '?').toUpperCase();
+        }
+
+        // I valori delle recensioni utente arrivano già "escaped" dal backend:
+        // sicuri da inserire via innerHTML.
+        function cardHtml(r, isUser) {
+            const roleHtml = r.role ? '<div class="testimonial-role">' + r.role + '</div>' : '';
+            const attrs = isUser ? ' data-user="1"' : ' data-tindex="' + r.tindex + '"';
+            const text = isUser ? '&ldquo;' + r.text + '&rdquo;' : r.text;
+            return '' +
+                '<div class="testimonial-card"' + attrs + '>' +
+                    '<div class="testimonial-stars">' + starsHtml(r.rating) + '</div>' +
+                    '<p class="testimonial-text">' + text + '</p>' +
+                    '<div class="testimonial-author">' +
+                        '<div class="testimonial-avatar">' + avatarLetter(r.name) + '</div>' +
+                        '<div>' +
+                            '<div class="testimonial-name">' + r.name + '</div>' +
+                            roleHtml +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+        }
+
+        function renderTrack() {
+            if (!track) return;
+            const userHtml = userReviews.map(r => cardHtml(r, true)).join('');
+            const defaultHtml = DEFAULT_REVIEWS.map(r => cardHtml(r, false)).join('');
+            const setHtml = userHtml + defaultHtml;
+            // Duplico il set completo per lo scorrimento infinito (-50%)
+            track.innerHTML = setHtml + setHtml;
+            // Riapplico la lingua corrente alle card predefinite
+            if (typeof translatePage === 'function') {
+                translatePage(window.currentLang || localStorage.getItem('lang') || 'it');
+            }
+        }
+
+        async function loadReviews() {
+            try {
+                const res = await fetch(BACKEND_URL + '/api/reviews');
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data && Array.isArray(data.reviews)) {
+                    userReviews = data.reviews;
+                    renderTrack();
+                }
+            } catch (e) {
+                // In caso di errore restano le recensioni predefinite già presenti
+                console.warn('Recensioni non caricate:', e);
+            }
+        }
+
+        // ── Etichette UI tradotte (chiamata da translatePage) ──
+        window.applyReviewI18n = function (lang) {
+            const dict = {
+                it: {
+                    cta: 'Lascia una recensione', title: 'Scrivi una recensione',
+                    sub: 'Condividi la tua esperienza con VaultSystemFx',
+                    rating: 'Valutazione', name: 'Nome', role: 'Ruolo (facoltativo)',
+                    text: 'La tua recensione', phName: 'Es. Marco R.',
+                    phRole: 'Es. Trader Indipendente', phText: 'Raccontaci la tua esperienza...',
+                    submit: 'Invia recensione'
+                },
+                en: {
+                    cta: 'Write a review', title: 'Write a review',
+                    sub: 'Share your experience with VaultSystemFx',
+                    rating: 'Rating', name: 'Name', role: 'Role (optional)',
+                    text: 'Your review', phName: 'E.g. Marco R.',
+                    phRole: 'E.g. Independent Trader', phText: 'Tell us about your experience...',
+                    submit: 'Submit review'
+                }
+            };
+            const t = dict[lang] || dict.it;
+            const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+            const ph = (id, val) => { const el = document.getElementById(id); if (el) el.placeholder = val; };
+            set('review-cta-label', t.cta);
+            set('review-modal-title', t.title);
+            set('review-modal-sub', t.sub);
+            set('review-label-rating', t.rating);
+            set('review-label-name', t.name);
+            set('review-label-role', t.role);
+            set('review-label-text', t.text);
+            ph('review-name', t.phName);
+            ph('review-role', t.phRole);
+            ph('review-text', t.phText);
+            const btn = document.getElementById('review-submit-btn');
+            if (btn && !btn.disabled) btn.textContent = t.submit;
+        };
+
+        function msgText(key) {
+            const lang = window.currentLang || localStorage.getItem('lang') || 'it';
+            const m = {
+                it: {
+                    submitting: 'Invio in corso...',
+                    success: 'Grazie! La tua recensione è stata pubblicata.',
+                    fields: 'Compila tutti i campi (min. 10 caratteri) e scegli una valutazione.',
+                    generic: 'Errore durante l\'invio. Riprova più tardi.',
+                    submit: 'Invia recensione'
+                },
+                en: {
+                    submitting: 'Submitting...',
+                    success: 'Thank you! Your review has been published.',
+                    fields: 'Fill in all fields (min. 10 characters) and pick a rating.',
+                    generic: 'Error while submitting. Please try again later.',
+                    submit: 'Submit review'
+                }
+            };
+            return (m[lang] || m.it)[key];
+        }
+
+        // ── Gestione modale ──
+        const overlay = document.getElementById('review-modal-overlay');
+        const openBtn = document.getElementById('open-review-modal');
+        const closeBtn = document.getElementById('close-review-modal');
+        const form = document.getElementById('review-form');
+        const starsInput = document.getElementById('review-stars-input');
+        const textArea = document.getElementById('review-text');
+        const charCount = document.getElementById('review-charcount');
+        const msgEl = document.getElementById('review-msg');
+        const submitBtn = document.getElementById('review-submit-btn');
+
+        function openModal() { if (overlay) { overlay.classList.add('active'); document.body.style.overflow = 'hidden'; } }
+        function closeModal() { if (overlay) { overlay.classList.remove('active'); document.body.style.overflow = ''; } }
+
+        if (openBtn) openBtn.addEventListener('click', openModal);
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        if (overlay) overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+        // ── Selettore stelle ──
+        function paintStars(value) {
+            if (!starsInput) return;
+            starsInput.querySelectorAll('span').forEach(s => {
+                s.classList.toggle('active', parseInt(s.dataset.value, 10) <= value);
+            });
+        }
+        if (starsInput) {
+            starsInput.querySelectorAll('span').forEach(s => {
+                s.addEventListener('mouseenter', () => paintStars(parseInt(s.dataset.value, 10)));
+                s.addEventListener('click', () => { selectedRating = parseInt(s.dataset.value, 10); paintStars(selectedRating); });
+            });
+            starsInput.addEventListener('mouseleave', () => paintStars(selectedRating));
+        }
+
+        // ── Contatore caratteri ──
+        if (textArea && charCount) {
+            textArea.addEventListener('input', () => { charCount.textContent = textArea.value.length; });
+        }
+
+        // ── Invio recensione ──
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (msgEl) { msgEl.textContent = ''; msgEl.className = 'review-msg'; }
+
+                const name = document.getElementById('review-name').value.trim();
+                const role = document.getElementById('review-role').value.trim();
+                const text = textArea.value.trim();
+                const website = document.getElementById('review-website').value; // honeypot
+
+                if (name.length < 2 || text.length < 10 || selectedRating < 1) {
+                    if (msgEl) { msgEl.textContent = msgText('fields'); msgEl.className = 'review-msg error'; }
+                    return;
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = msgText('submitting');
+
+                try {
+                    const res = await fetch(BACKEND_URL + '/api/reviews', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, role, rating: selectedRating, text, website })
+                    });
+                    const data = await res.json().catch(() => ({}));
+
+                    if (res.ok && data.success) {
+                        if (data.review) userReviews.unshift(data.review);
+                        renderTrack();
+                        if (msgEl) { msgEl.textContent = msgText('success'); msgEl.className = 'review-msg success'; }
+                        form.reset();
+                        selectedRating = 0;
+                        paintStars(0);
+                        if (charCount) charCount.textContent = '0';
+                        setTimeout(closeModal, 1500);
+                    } else {
+                        if (msgEl) { msgEl.textContent = data.error || msgText('generic'); msgEl.className = 'review-msg error'; }
+                    }
+                } catch (err) {
+                    if (msgEl) { msgEl.textContent = msgText('generic'); msgEl.className = 'review-msg error'; }
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = msgText('submit');
+                }
+            });
+        }
+
+        // Carica le recensioni all'avvio
+        loadReviews();
+    })();
     </script>
 </body>
 </html>

@@ -1329,10 +1329,10 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        amount: currentPrice,
                         email: ev.payerEmail || document.getElementById('email').value.trim(),
                         firstName: document.getElementById('firstName').value.trim(),
-                        lastName: document.getElementById('lastName').value.trim()
+                        lastName: document.getElementById('lastName').value.trim(),
+                        discountCode: document.getElementById('discountCode').value.trim()
                     })
                 });
 
@@ -1399,10 +1399,10 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        amount: currentPrice,
                         email: document.getElementById('email').value.trim(),
                         firstName: document.getElementById('firstName').value.trim(),
-                        lastName: document.getElementById('lastName').value.trim()
+                        lastName: document.getElementById('lastName').value.trim(),
+                        discountCode: document.getElementById('discountCode').value.trim()
                     })
                 });
 
@@ -1610,6 +1610,43 @@
         }
 
         setLanguage(localStorage.getItem('lang') || 'it');
+
+        // ═══════════════════════════════════════════════════════════════
+        // ACQUISTI TEMPORANEAMENTE SOSPESI (kill switch frontend)
+        // Metti PURCHASES_ENABLED = true per riattivare gli acquisti.
+        // NB: il vero blocco è lato server; questo è solo per l'esperienza utente.
+        // ═══════════════════════════════════════════════════════════════
+        const PURCHASES_ENABLED = false;
+        if (!PURCHASES_ENABLED) {
+            (function disablePurchases() {
+                const lang = (localStorage.getItem('lang') || 'it');
+                const msg = lang === 'en'
+                    ? '⚠️ Purchases are temporarily suspended for maintenance. Please try again later.'
+                    : '⚠️ Gli acquisti sono temporaneamente sospesi per manutenzione. Riprova più tardi.';
+
+                // Banner di avviso in cima
+                const banner = document.createElement('div');
+                banner.textContent = msg;
+                banner.style.cssText = 'position:sticky;top:0;z-index:9999;background:#b91c1c;color:#fff;'
+                    + 'padding:14px 18px;text-align:center;font-weight:600;font-size:15px;line-height:1.4;';
+                document.body.prepend(banner);
+
+                // Disabilita i pulsanti di pagamento
+                ['stripe-pay-btn', 'confirm-usdt-btn'].forEach(function(id) {
+                    const btn = document.getElementById(id);
+                    if (btn) {
+                        btn.disabled = true;
+                        btn.style.opacity = '0.5';
+                        btn.style.cursor = 'not-allowed';
+                        btn.onclick = function(e) { e.preventDefault(); e.stopPropagation(); return false; };
+                    }
+                });
+
+                // Nascondi Apple Pay / Google Pay
+                const prc = document.getElementById('payment-request-button-container');
+                if (prc) prc.style.display = 'none';
+            })();
+        }
     </script>
 </body>
 </html>

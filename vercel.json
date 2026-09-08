@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/download",
+      "destination": "https://dl.dropboxusercontent.com/scl/fi/61aq8yphq16v358s89bvy/VaultSystemFx_XAU.zip?rlkey=o1rg45cx9jb8hooaifgpcl5yn&dl=1",
+      "permanent": false
+    }
+  ]
+}
